@@ -3,34 +3,46 @@
 #include <include/GL/glew.h>
 #include <include/GLFW/glfw3.h>
 
-const char* vss = "#version 330 core\n"
+const char* vss = "#version 430 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "void main()\n"
     "{\n"
     "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
     "}\0";
 
-const char* fss = "#version 330 core\n"
+const char* fss = "#version 430 core\n"
 "out vec4 FragColor;\n"
 "void main()\n"
 "{\n"
 "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 "}\0";
 
-unsigned int createVBO(float vertices[])
+unsigned int createVBO(float vertices[], unsigned int count)
 {
 unsigned int vbo;
 glGenBuffers(1, &vbo);  // generate the buffer
 glBindBuffer(GL_ARRAY_BUFFER, vbo); // bind the vbo to type of array buffer to be targetted by buffer data
-glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);  // targets the buffer of type GL_ARRAY_BUFFER and then sets its data
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * count, vertices, GL_STATIC_DRAW);  // targets the buffer of type GL_ARRAY_BUFFER and then sets its data
+
+return vbo;
 }
 
 unsigned int createShader(const char* vertsrc, const char* fragsrc)
 {
+char errmsg[512];
+int success;
+
 unsigned int vertshad;
 vertshad = glCreateShader(GL_VERTEX_SHADER);    // creating the shader
 glShaderSource(vertshad, 1, &vertsrc, NULL);    // sets the source of the shader
 glCompileShader(vertshad);  // compiles the shader
+
+glGetShaderiv(vertshad, GL_COMPILE_STATUS, &success);
+if (!success)
+    {
+    glGetShaderInfoLog(vertshad, 512, NULL, errmsg);
+    printf("ERROR: Vertex Shader %s", errmsg);
+    }
 
 /*
 do error management here
@@ -44,12 +56,25 @@ glCompileShader(fragshad);
 /*
 do error management here
 */
+glGetShaderiv(fragshad, GL_COMPILE_STATUS, &success);
+if (!success)
+    {
+    glGetShaderInfoLog(fragshad, 512, NULL, errmsg);
+    printf("ERROR: Fragment Shader %s", errmsg);
+    }
 
 unsigned int program;   // the program linking both shaders
 program = glCreateProgram();
 glAttachShader(program, vertshad);
 glAttachShader(program, fragshad);
+glLinkProgram(program);
 
+glGetProgramiv(program, GL_LINK_STATUS, &success);
+if (!success)
+    {
+    glGetProgramInfoLog(program, 512, NULL, errmsg);
+    printf("ERROR: %s", errmsg);
+    }
 /*
 do error checking here
 */
@@ -58,6 +83,8 @@ glUseProgram(program);  // actually using the shaders for all future objects
 
 glDeleteShader(vertshad);   // delete the unnecessary shaders
 glDeleteShader(fragshad);
+
+return program;
 }
 
 void processVertexBuffer(unsigned int vbo)
@@ -71,16 +98,17 @@ glVertexAttribPointer(0, 3, GL_FLOAT, 0, 3 * sizeof(float), (void*)0);  // the f
 glEnableVertexAttribArray(0);   // attribute the data in the 0th buffer to the vertex data
 }
 
-unsigned int createVertexArray(float vertices[], unsigned int vbo)
+unsigned int createVertexArray(float vertices[])
 {
 unsigned int vao;
+unsigned int count = 3;
+
 glGenVertexArrays(1, &vao); // only bind one array and generate the arrays
+glBindVertexArray(vao); // bind the array to be used
+unsigned int vbo = createVBO(vertices, count);  // create the vbo
+processVertexBuffer(vbo);  // process the vbo
 
-glBindBuffer(GL_ARRAY_BUFFER, vbo); // bind the buffer
-glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);  // copy the buffer data into the vertex array
-
-glVertexAttribPointer(0, 3, GL_FLOAT, 0, 3 * sizeof(float), (void*)0);  // set the vertex pointer
-glEnableVertexAttribArray(0);   // set the attributes
+return vao;
 }
 
 void processInput(GLFWwindow* window)
@@ -94,13 +122,13 @@ if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  // if the escape key is 
 int main()
 {
 glfwInit();
-
-GLFWwindow* window = glfwCreateWindow(100, 100, "Title", 0, 0); // creates the window of size 100x100
+GLFWwindow* window = glfwCreateWindow(1020, 960, "Title", 0, 0); // creates the window of size 100x100
 
 glfwMakeContextCurrent(window); // sets the context of the window
-glViewport(0, 0, 100, 100);
+glViewport(0, 0, 1020, 960);
 
 glewInit();
+unsigned int prog = createShader(vss, fss);
 
 float vertices[] = {
     -0.5f, -0.5f, 0.0f,
@@ -108,9 +136,7 @@ float vertices[] = {
      0.0f,  0.5f, 0.0f
 };
 
-unsigned int vbo = createVBO(vertices);
-unsigned int prog = createShader(vss, fss);
-unsigned int vao = createVertexArray(vertices, vbo);
+unsigned int vao = createVertexArray(vertices);
 
 while(!glfwWindowShouldClose(window))
     {
@@ -119,7 +145,9 @@ while(!glfwWindowShouldClose(window))
     
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
-
+    
+    glUseProgram(prog);
+    glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glfwSwapBuffers(window);
