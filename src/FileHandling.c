@@ -14,7 +14,6 @@ strcpy(*lineptr, line); // copies the line back into the pointer
 return (len);
 }
 
-/*
 int getline(char **lineptr, size_t *n, FILE *stream)
 {
 static char line[256];
@@ -53,7 +52,7 @@ unsigned int len;
    strcpy(*lineptr,line); 
    return(len);
 }
-*/
+
 
 const char* ParseShaderSource(const char* filePath)
 {
@@ -65,20 +64,22 @@ if (file == NULL)   // error handling
     }
 
 const int size = sizeof(char*) * (1024);    // num of chars expected
-// char* source = (char*)malloc(size); // where formatting is done
 char** output = (char**)malloc(size);  // setting up an output
-
-// fscanf(file, "s", &source);
 
 char* line = NULL;
 int i = 0;
-int bufsize = 0;
-while (getlne(&line, bufsize, file) != NULL)  // while not at the end of the file
+size_t bufsize = 0;
+printf("\nReaches 1");
+while (getline(&line, &bufsize, file) != -1)  // while not at the end of the file
     {
-    //strcat(*output, line);  // add the line to the pointer
+    printf("\nLine %d: %s", i, line);
+    strcat(output[0], line);  // add the line to the pointer
+    printf("\nReaches 2");
+    i++;
     }
 fclose(file);   // close the file
 
+printf("\nReaches 3");
 const char* res = *output;
 
 return res;
