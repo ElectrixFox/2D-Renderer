@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <include/GL/glew.h>
 #include <include/GLFW/glfw3.h>
+#include "src/FileHandling.h"
 
 const char* vss = "#version 430 core\n"
     "layout (location = 0) in vec3 aPos;\n"
@@ -98,17 +99,39 @@ glVertexAttribPointer(0, 3, GL_FLOAT, 0, 3 * sizeof(float), (void*)0);  // the f
 glEnableVertexAttribArray(0);   // attribute the data in the 0th buffer to the vertex data
 }
 
-unsigned int createVertexArray(float vertices[])
+unsigned int createIndexArrayBuffer(unsigned int indices[], int count)
+{
+unsigned int ibo;
+glGenBuffers(1, &ibo);  // generating the buffer
+glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo); // binding the buffer to an element array buffer
+glBufferData(GL_ELEMENT_ARRAY_BUFFER, count, indices, GL_STATIC_DRAW);    // writing the indices to it
+
+glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo); // binding the buffer
+
+return ibo;
+}
+
+unsigned int createVertexArrayObject(float vertices[], unsigned int vertcount, unsigned int indices[], unsigned int indcount)
 {
 unsigned int vao;
-unsigned int count = 3;
 
 glGenVertexArrays(1, &vao); // only bind one array and generate the arrays
 glBindVertexArray(vao); // bind the array to be used
-unsigned int vbo = createVBO(vertices, count);  // create the vbo
+unsigned int vbo = createVBO(vertices, vertcount);  // create the vbo
+unsigned int ibo = createIndexArrayBuffer(indices, indcount);   // create the ibo
 processVertexBuffer(vbo);  // process the vbo
 
 return vao;
+}
+
+void BindVertexArrayObject(unsigned int vao)
+{
+glBindVertexArray(vao); // simple bind
+}
+
+void BindShader(unsigned int program)
+{
+glUseProgram(program);  // binds the shader program
 }
 
 void processInput(GLFWwindow* window)
@@ -128,15 +151,26 @@ glfwMakeContextCurrent(window); // sets the context of the window
 glViewport(0, 0, 1020, 960);
 
 glewInit();
-unsigned int prog = createShader(vss, fss);
+    
+char* vertsrc[128];
+readFile("res/vertex.shader", vertsrc);
+char* out;
+flattenString(vertsrc, out);
+unsigned int prog = createShader(vertsrc, fss);
 
 float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-     0.0f,  0.5f, 0.0f
+    0.5f,  0.5f, 0.0f,
+    0.5f, -0.5f, 0.0f,
+   -0.5f, -0.5f, 0.0f,
+   -0.5f,  0.5f, 0.0f
 };
 
-unsigned int vao = createVertexArray(vertices);
+unsigned int indices[] = {
+    0, 1, 3,
+    1, 2, 3
+};
+
+unsigned int vao = createVertexArrayObject(vertices, sizeof(vertices), indices, sizeof(indices));
 
 while(!glfwWindowShouldClose(window))
     {
@@ -147,8 +181,9 @@ while(!glfwWindowShouldClose(window))
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
     
     glUseProgram(prog);
-    glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    BindShader(prog);
+    BindVertexArrayObject(vao);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
