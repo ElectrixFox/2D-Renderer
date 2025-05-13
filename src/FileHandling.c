@@ -1,46 +1,79 @@
 #include "FileHandling.h"
 
-void readFile(const char* filePath, char* output[])
+int getline(char **lineptr, size_t *n, FILE *stream)
+{
+static char line[256];
+char *ptr;
+unsigned int len;
+
+   if (lineptr == NULL || n == NULL)
+   {
+      errno = EINVAL;
+      return -1;
+   }
+
+   if (ferror (stream))
+      return -1;
+
+   if (feof(stream))
+      return -1;
+     
+   fgets(line,256,stream);
+
+   ptr = strchr(line,'\n');   
+   if (ptr)
+      *ptr = '\0';
+
+   len = strlen(line);
+   
+   if ((len+1) < 256)
+   {
+      ptr = realloc(*lineptr, 256);
+      if (ptr == NULL)
+         return(-1);
+      *lineptr = ptr;
+      *n = 256;
+   }
+
+   strcpy(*lineptr,line); 
+   return(len);
+}
+
+const char* ParseShaderSource(const char* filePath)
 {
 FILE* file = fopen(filePath, "r");  // open the file to read
-
-// error handling
-if (file == NULL)
+if (file == NULL)   // error handling
     {
     printf("ERROR: File %s is not found\n", filePath);
     return NULL;
     }
 
-char line[128];
+const int size = sizeof(char*) * (1024);    // num of chars expected
+// char* source = (char*)malloc(size); // where formatting is done
+char** output = (char**)malloc(size);  // setting up an output
+
+// fscanf(file, "s", &source);
+
+char* line = NULL;
 int i = 0;
-while (fgets(line, sizeof(line), file) != NULL)
+int bufsize = 0;
+while (getline(&line, &bufsize, file) != NULL)  // while not at the end of the file
     {
-    output[i] = (char*)malloc(sizeof(line) * strlen(line));   // allocate the memory for the line
-    strcpy(output[i], line); // copy the line data into the lines
-    i++;
+    strcat(*output, line);  // add the line to the pointer
     }
-fclose(file);
+fclose(file);   // close the file
+
+const char* res = *output;
+
+return res;
+}
+
+const char* readFile(const char* filePath)
+{
+// To-Do
 }
 
 void writeFile(const char* filePath)
 {
-
-}
-
-void flattenString(char* str[], char* output)
-{
-int count = sizeof(str);
-unsigned int tsize = 0;
-for (int i = 0; i < count; i++)
-    {
-    tsize += strlen(str[i]);
-    }
-output = (char*)malloc(tsize * sizeof(char));
-printf("%d %d", count, strlen(str[0]));
-for (int i = 0; i < count; i++)
-    {
-    strcat(output, str[i]);
-    }
-
-printf("%s", output);
+// To-Do
 }

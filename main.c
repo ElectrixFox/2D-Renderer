@@ -144,6 +144,11 @@ if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  // if the escape key is 
 
 int main()
 {
+const char* tst = ParseShaderSource("res/vertex.shader");
+
+printf("%s", tst);
+
+return 0;
 glfwInit();
 GLFWwindow* window = glfwCreateWindow(1020, 960, "Title", 0, 0); // creates the window of size 100x100
 
@@ -152,10 +157,7 @@ glViewport(0, 0, 1020, 960);
 
 glewInit();
     
-char* vertsrc[128];
-readFile("res/vertex.shader", vertsrc);
-char* out;
-flattenString(vertsrc, out);
+const char* vertsrc = ParseShaderSource("res/vertex.shader");
 unsigned int prog = createShader(vertsrc, fss);
 
 float vertices[] = {
