@@ -1,5 +1,20 @@
 #include "FileHandling.h"
 
+int getlne(char** lineptr, unsigned int size, FILE* stream)
+{
+if (feof(stream))   // if the end of the file exit
+    return -1;
+
+char line[256];
+
+fgets(line, 256, stream);   // gets the line from the stream
+unsigned int len = strlen(line);
+strcpy(*lineptr, line); // copies the line back into the pointer
+
+return (len);
+}
+
+/*
 int getline(char **lineptr, size_t *n, FILE *stream)
 {
 static char line[256];
@@ -38,6 +53,7 @@ unsigned int len;
    strcpy(*lineptr,line); 
    return(len);
 }
+*/
 
 const char* ParseShaderSource(const char* filePath)
 {
@@ -57,9 +73,9 @@ char** output = (char**)malloc(size);  // setting up an output
 char* line = NULL;
 int i = 0;
 int bufsize = 0;
-while (getline(&line, &bufsize, file) != NULL)  // while not at the end of the file
+while (getlne(&line, bufsize, file) != NULL)  // while not at the end of the file
     {
-    strcat(*output, line);  // add the line to the pointer
+    //strcat(*output, line);  // add the line to the pointer
     }
 fclose(file);   // close the file
 

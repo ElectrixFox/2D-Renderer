@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <include/GL/glew.h>
 #include <include/GLFW/glfw3.h>
 #include "src/FileHandling.h"
@@ -149,6 +150,7 @@ const char* tst = ParseShaderSource("res/vertex.shader");
 printf("%s", tst);
 
 return 0;
+
 glfwInit();
 GLFWwindow* window = glfwCreateWindow(1020, 960, "Title", 0, 0); // creates the window of size 100x100
 
