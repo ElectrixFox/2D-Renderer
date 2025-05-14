@@ -121,6 +121,69 @@ void BindShader(unsigned int program)
 glUseProgram(program);  // binds the shader program
 }
 
+void SetUniform1f(unsigned int program, const char* varname, float value)
+{
+int uniloc = glGetUniformLocation(program, varname);
+BindShader(program);
+glUniform1f(uniloc, value);
+}
+
+struct vec3 { float x, y, z; };
+typedef struct vec3 vec3;
+
+void TransformObject(float vertices[], float moveBy[2])
+{
+unsigned int nvecs = sizeof(vertices) / 3;
+float transmatr[3][3] = {
+    {1.0f, 0.0f, moveBy[0]},
+    {0.0f, 1.0f, moveBy[1]},
+    {0.0f, 0.0f, 1.0f}
+};
+
+for (int i = 0; i < nvecs; i++)
+    {
+    float tmpvec[3] = {vertices[0 + 3 * i], vertices[1 + 3 * i], vertices[2 + 3 * i]};
+    }
+}
+
+float dotprod(vec3 u, vec3 v)
+{
+float tu[3] = {u.x, u.y, u.z}; 
+float tv[3] = {v.x, v.y, v.z}; 
+
+float res = 0;
+
+for (int i = 0; i < 3; i++)
+    {
+    res += tu[i] * tv[i];
+    }
+
+return res;
+}
+
+
+
+vec3 TransformObjectAlt(vec3 vertices[], float moveBy[2])
+{
+unsigned int nvecs = sizeof(vertices);
+vec3 transmatr[3] = {
+    {1.0f, 0.0f, moveBy[0]},
+    {0.0f, 1.0f, moveBy[1]},
+    {0.0f, 0.0f, 1.0f}
+};
+
+
+
+
+for (int i = 0; i < nvecs; i++)
+    {
+    vec3 tvec = vertices[i];
+
+    }
+
+
+}
+
 void processInput(GLFWwindow* window)
 {
 if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  // if the escape key is pressed close the window
@@ -144,10 +207,10 @@ const char* fragsrc = ParseShaderSource("res/fragment.shader");
 unsigned int prog = createShader(vertsrc, fragsrc);
 
 float vertices[] = {
-    0.5f,  0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-   -0.5f, -0.5f, 0.0f,
-   -0.5f,  0.5f, 0.0f
+    0.5f,  0.5f, 1.0f,
+    0.5f, -0.5f, 1.0f,
+   -0.5f, -0.5f, 1.0f,
+   -0.5f,  0.5f, 1.0f
 };
 
 unsigned int indices[] = {
@@ -165,7 +228,6 @@ while(!glfwWindowShouldClose(window))
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
     
-    glUseProgram(prog);
     BindShader(prog);
     BindVertexArrayObject(vao);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
