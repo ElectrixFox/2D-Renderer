@@ -131,6 +131,9 @@ glUniform1f(uniloc, value);
 struct vec3 { float x, y, z; };
 typedef struct vec3 vec3;
 
+struct vec2 { float x, y; };
+typedef struct vec2 vec2;
+
 void TransformObject(float vertices[], float moveBy[2])
 {
 unsigned int nvecs = sizeof(vertices) / 3;
@@ -161,27 +164,36 @@ for (int i = 0; i < 3; i++)
 return res;
 }
 
+vec3 matrMult(vec3 A[], vec3 v)
+{
+vec3 res;
+
+res.x = dotprod(A[0], (vec3){v.x, v.y, v.z});
+res.y = dotprod(A[1], (vec3){v.x, v.y, v.z});
+res.z = dotprod(A[2], (vec3){v.x, v.y, v.z});
+
+return res;
+}
 
 
-vec3 TransformObjectAlt(vec3 vertices[], float moveBy[2])
+vec3 TransformObjectAlt(vec3 vertices[], vec2 moveBy)
 {
 unsigned int nvecs = sizeof(vertices);
 vec3 transmatr[3] = {
-    {1.0f, 0.0f, moveBy[0]},
-    {0.0f, 1.0f, moveBy[1]},
+    {1.0f, 0.0f, moveBy.x},
+    {0.0f, 1.0f, moveBy.y},
     {0.0f, 0.0f, 1.0f}
 };
 
 
 
 
+
 for (int i = 0; i < nvecs; i++)
     {
-    vec3 tvec = vertices[i];
-
+    vec3 res = matrMult(transmatr, (vec3){moveBy.x, moveBy.y, 0});
+    vertices[i] = res;
     }
-
-
 }
 
 void processInput(GLFWwindow* window)
