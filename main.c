@@ -5,20 +5,6 @@
 #include <include/GLFW/glfw3.h>
 #include "src/FileHandling.h"
 
-const char* vss = "#version 430 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-
-const char* fss = "#version 430 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\0";
-
 unsigned int createVBO(float vertices[], unsigned int count)
 {
 unsigned int vbo;
@@ -145,12 +131,6 @@ if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  // if the escape key is 
 
 int main()
 {
-const char* tst = ParseShaderSource("res/vertex.shader");
-
-printf("%s", tst);
-
-return 0;
-
 glfwInit();
 GLFWwindow* window = glfwCreateWindow(1020, 960, "Title", 0, 0); // creates the window of size 100x100
 
@@ -160,7 +140,8 @@ glViewport(0, 0, 1020, 960);
 glewInit();
     
 const char* vertsrc = ParseShaderSource("res/vertex.shader");
-unsigned int prog = createShader(vertsrc, fss);
+const char* fragsrc = ParseShaderSource("res/fragment.shader");
+unsigned int prog = createShader(vertsrc, fragsrc);
 
 float vertices[] = {
     0.5f,  0.5f, 0.0f,
