@@ -51,7 +51,7 @@ void BindVertexArrayObject(unsigned int vao)
 glBindVertexArray(vao); // simple bind
 }
 
-void CreateObject(LC_SQUARE)
+void CreateObject(vec3 vertices[] = LC_SQUARE)
 {
 
 }
