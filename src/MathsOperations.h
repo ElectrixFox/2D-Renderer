@@ -19,4 +19,5 @@ void generalisedMatrMult3(float m1[][3], float m2[][3], unsigned int n, unsigned
 vec3 applyMatrix(vec3 matr[3], vec3 vec);
 void changeVerts(vec3 verts[], vec3 matr[3], unsigned int n);
 
-void TransformObject(float vertices[], float moveBy[2], unsigned int n);
+void TransformObject(vec3 vertices[], vec2 moveBy, unsigned int n);
+void ScaleObject(vec3 vertices[], vec2 scale, unsigned int n);

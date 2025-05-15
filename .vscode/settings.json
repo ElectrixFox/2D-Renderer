@@ -4,6 +4,9 @@
         "stdlib.h": "c",
         "string.h": "c",
         "glfw3.h": "c",
-        "filehandling.h": "c"
+        "filehandling.h": "c",
+        "renderobject.h": "c",
+        "glew.h": "c",
+        "mathsoperations.h": "c"
     }
 }

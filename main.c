@@ -6,12 +6,12 @@
 #include "src/FileHandling.h"
 #include "src/MathsOperations.h"
 
-unsigned int createVBO(float vertices[], unsigned int count)
+unsigned int createVBO(vec3 vertices[], unsigned int count)
 {
 unsigned int vbo;
 glGenBuffers(1, &vbo);  // generate the buffer
 glBindBuffer(GL_ARRAY_BUFFER, vbo); // bind the vbo to type of array buffer to be targetted by buffer data
-glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * count, vertices, GL_STATIC_DRAW);  // targets the buffer of type GL_ARRAY_BUFFER and then sets its data
+glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * count, vertices, GL_STATIC_DRAW);  // targets the buffer of type GL_ARRAY_BUFFER and then sets its data
 
 return vbo;
 }
@@ -99,7 +99,7 @@ glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo); // binding the buffer
 return ibo;
 }
 
-unsigned int createVertexArrayObject(float vertices[], unsigned int vertcount, unsigned int indices[], unsigned int indcount)
+unsigned int createVertexArrayObject(vec3 vertices[], unsigned int vertcount, unsigned int indices[], unsigned int indcount)
 {
 unsigned int vao;
 
@@ -111,20 +111,6 @@ processVertexBuffer(vbo);  // process the vbo
 
 return vao;
 }
-
-unsigned int createVertexArrayObjectAlt(vec3 vertices[], unsigned int vertcount, unsigned int indices[], unsigned int indcount)
-{
-unsigned int vao;
-
-glGenVertexArrays(1, &vao); // only bind one array and generate the arrays
-glBindVertexArray(vao); // bind the array to be used
-unsigned int vbo = createVBO(vertices, vertcount);  // create the vbo
-unsigned int ibo = createIndexArrayBuffer(indices, indcount);   // create the ibo
-processVertexBuffer(vbo);  // process the vbo
-
-return vao;
-}
-
 
 void BindVertexArrayObject(unsigned int vao)
 {
@@ -165,14 +151,7 @@ const char* vertsrc = ParseShaderSource("res/vertex.shader");
 const char* fragsrc = ParseShaderSource("res/fragment.shader");
 unsigned int prog = createShader(vertsrc, fragsrc);
 
-float vertices[] = {
-    0.5f,  0.5f, 1.0f,
-    0.5f, -0.5f, 1.0f,
-   -0.5f, -0.5f, 1.0f,
-   -0.5f,  0.5f, 1.0f
-};
-
-vec3 verticesalt[] = {
+vec3 vertices[] = {
     {0.5f,  0.5f, 1.0f},
     {0.5f, -0.5f, 1.0f},
     {-0.5f, -0.5f, 1.0f},
@@ -184,11 +163,10 @@ unsigned int indices[] = {
     1, 2, 3
 };
 
-float trans[] = { 1.0f, 1.0f };
-printf("\n%d", sizeof(verticesalt) / sizeof(vec3));
-TransformObject(verticesalt, trans, sizeof(verticesalt) / sizeof(vec3));
+vec2 trans = { 1.0f, 1.0f };
+TransformObject(vertices, trans, sizeof(vertices) / sizeof(vec3));
+unsigned int vao = createVertexArrayObject(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices));
 
-unsigned int vao = createVertexArrayObjectAlt(verticesalt, sizeof(verticesalt) / sizeof(verticesalt[0]), indices, sizeof(indices));
 
 while(!glfwWindowShouldClose(window))
     {

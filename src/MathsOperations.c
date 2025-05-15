@@ -69,27 +69,24 @@ for (int i = 0; i < n; i++)
     }
 }
 
-void TransformObject(float vertices[], float moveBy[2], unsigned int n)
+void TransformObject(vec3 vertices[], vec2 moveBy, unsigned int n)
 {
 vec3 matr[3] = {
-    { 1.0f, 0.0f, moveBy[0] },
-    { 0.0f, 1.0f, moveBy[1] },
+    { 1.0f, 0.0f, moveBy.x },
+    { 0.0f, 1.0f, moveBy.y },
     { 0.0f, 0.0f, 1.0f }
 };
 
-vec3* verts = (vec3*)malloc(sizeof(float) * n * sizeof(vec3));
-for (int i = 0; i < n; i++)
-    {
-    verts[i] = (vec3){vertices[0 + 3 * i], vertices[1 + 3 * i], vertices[2 + 3 * i]};   // setting the vec3 vertices
-    }
+changeVerts(vertices, matr, n);
+}
 
+void ScaleObject(vec3 vertices[], vec2 scale, unsigned int n)
+{
+vec3 matr[3] = {
+    { scale.x, 0.0f, 0.0f },
+    { 0.0f, scale.y, 0.0f },
+    { 0.0f, 0.0f, 1.0f }
+};
 
-changeVerts(verts, matr, n);
-
-for (int i = 0; i < n; i++)
-    {
-    vertices[0 + 3 * i] = verts[i].x;
-    vertices[1 + 3 * i] = verts[i].y;
-    vertices[2 + 3 * i] = verts[i].z;
-    }
+changeVerts(vertices, matr, n);
 }
