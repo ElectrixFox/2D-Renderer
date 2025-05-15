@@ -4,6 +4,7 @@
 #include <include/GL/glew.h>
 #include <include/GLFW/glfw3.h>
 #include "src/FileHandling.h"
+#include "src/MathsOperations.h"
 
 unsigned int createVBO(float vertices[], unsigned int count)
 {
@@ -111,6 +112,20 @@ processVertexBuffer(vbo);  // process the vbo
 return vao;
 }
 
+unsigned int createVertexArrayObjectAlt(vec3 vertices[], unsigned int vertcount, unsigned int indices[], unsigned int indcount)
+{
+unsigned int vao;
+
+glGenVertexArrays(1, &vao); // only bind one array and generate the arrays
+glBindVertexArray(vao); // bind the array to be used
+unsigned int vbo = createVBO(vertices, vertcount);  // create the vbo
+unsigned int ibo = createIndexArrayBuffer(indices, indcount);   // create the ibo
+processVertexBuffer(vbo);  // process the vbo
+
+return vao;
+}
+
+
 void BindVertexArrayObject(unsigned int vao)
 {
 glBindVertexArray(vao); // simple bind
@@ -126,74 +141,6 @@ void SetUniform1f(unsigned int program, const char* varname, float value)
 int uniloc = glGetUniformLocation(program, varname);
 BindShader(program);
 glUniform1f(uniloc, value);
-}
-
-struct vec3 { float x, y, z; };
-typedef struct vec3 vec3;
-
-struct vec2 { float x, y; };
-typedef struct vec2 vec2;
-
-void TransformObject(float vertices[], float moveBy[2])
-{
-unsigned int nvecs = sizeof(vertices) / 3;
-float transmatr[3][3] = {
-    {1.0f, 0.0f, moveBy[0]},
-    {0.0f, 1.0f, moveBy[1]},
-    {0.0f, 0.0f, 1.0f}
-};
-
-for (int i = 0; i < nvecs; i++)
-    {
-    float tmpvec[3] = {vertices[0 + 3 * i], vertices[1 + 3 * i], vertices[2 + 3 * i]};
-    }
-}
-
-float dotprod(vec3 u, vec3 v)
-{
-float tu[3] = {u.x, u.y, u.z}; 
-float tv[3] = {v.x, v.y, v.z}; 
-
-float res = 0;
-
-for (int i = 0; i < 3; i++)
-    {
-    res += tu[i] * tv[i];
-    }
-
-return res;
-}
-
-vec3 matrMult(vec3 A[], vec3 v)
-{
-vec3 res;
-
-res.x = dotprod(A[0], (vec3){v.x, v.y, v.z});
-res.y = dotprod(A[1], (vec3){v.x, v.y, v.z});
-res.z = dotprod(A[2], (vec3){v.x, v.y, v.z});
-
-return res;
-}
-
-
-vec3 TransformObjectAlt(vec3 vertices[], vec2 moveBy)
-{
-unsigned int nvecs = sizeof(vertices);
-vec3 transmatr[3] = {
-    {1.0f, 0.0f, moveBy.x},
-    {0.0f, 1.0f, moveBy.y},
-    {0.0f, 0.0f, 1.0f}
-};
-
-
-
-
-
-for (int i = 0; i < nvecs; i++)
-    {
-    vec3 res = matrMult(transmatr, (vec3){moveBy.x, moveBy.y, 0});
-    vertices[i] = res;
-    }
 }
 
 void processInput(GLFWwindow* window)
@@ -225,12 +172,23 @@ float vertices[] = {
    -0.5f,  0.5f, 1.0f
 };
 
+vec3 verticesalt[] = {
+    {0.5f,  0.5f, 1.0f},
+    {0.5f, -0.5f, 1.0f},
+    {-0.5f, -0.5f, 1.0f},
+    {-0.5f,  0.5f, 1.0f}
+};
+
 unsigned int indices[] = {
     0, 1, 3,
     1, 2, 3
 };
 
-unsigned int vao = createVertexArrayObject(vertices, sizeof(vertices), indices, sizeof(indices));
+float trans[] = { 1.0f, 1.0f };
+printf("\n%d", sizeof(verticesalt) / sizeof(vec3));
+TransformObject(verticesalt, trans, sizeof(verticesalt) / sizeof(vec3));
+
+unsigned int vao = createVertexArrayObjectAlt(verticesalt, sizeof(verticesalt) / sizeof(verticesalt[0]), indices, sizeof(indices));
 
 while(!glfwWindowShouldClose(window))
     {
