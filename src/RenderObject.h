@@ -3,8 +3,8 @@
 
 struct viobject // vertex index object
 {
-vec3* verts;
-unsigned int indices[];
+unsigned int vao;
+unsigned int shader;
 };
 
 typedef struct viobject viobject;
