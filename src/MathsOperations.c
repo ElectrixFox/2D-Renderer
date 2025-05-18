@@ -29,14 +29,14 @@ return res;
 
 void transposeMatr3(float m[][3], unsigned int n)
 {
-float** res = (float*)malloc(sizeof(float) * n * n);  // setting up the result matrix
+float** res = (float**)malloc(sizeof(float) * n * n);  // setting up the result matrix
 
 for (int i = 0; i < n; i++)
     for (int j = 0; j < n; j++)
         res[i][j] = m[j][i];    // doing the transposing
 
 for (int i = 0; i < n; i++)
-    strcpy(m[i], res[i]);   // copying into the input
+    memcpy(m[i], res[i], sizeof(m[i]) / sizeof(m[0][0]));   // copying into the input
 
 }
 

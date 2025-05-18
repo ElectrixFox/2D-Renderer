@@ -71,7 +71,7 @@ output[0] = '\0'; // setting the start as the end
 
 char* line = NULL;
 int i = 0;
-size_t bufsize = 0;
+unsigned int bufsize = 0;
 while (getlne(&line, &bufsize, file) != -1)  // while not at the end of the file
    {
    strcat(output, line);  // add the line to the pointer
@@ -85,6 +85,8 @@ return res;
 const char* readFile(const char* filePath)
 {
 // To-Do
+
+return "";
 }
 
 void writeFile(const char* filePath)
