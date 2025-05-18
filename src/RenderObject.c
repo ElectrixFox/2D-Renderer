@@ -51,7 +51,6 @@ void BindVertexArrayObject(unsigned int vao)
 glBindVertexArray(vao); // simple bind
 }
 
-
 Entity CreateEntity(unsigned int shape, vec2 position, const char* shader)
 {
 // do something here to determine shape

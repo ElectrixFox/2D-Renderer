@@ -23,28 +23,6 @@ glViewport(0, 0, 1020, 960);
 
 glewInit();
     
-/*
-const char* vertsrc = ParseShaderSource("res/vertex.shader");
-const char* fragsrc = ParseShaderSource("res/fragment.shader");
-unsigned int prog = createShader(vertsrc, fragsrc);
-
-vec3 vertices[] = {
-    {0.5f,  0.5f, 1.0f},
-    {0.5f, -0.5f, 1.0f},
-    {-0.5f, -0.5f, 1.0f},
-    {-0.5f,  0.5f, 1.0f}
-};
-
-unsigned int indices[] = {
-    0, 1, 3,
-    1, 2, 3
-};
-
-vec2 trans = { 1.0f, 1.0f };
-TransformObject(vertices, trans, sizeof(vertices) / sizeof(vec3));
-unsigned int vao = createVertexArrayObject(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices));
-*/
-
 Entity ent = CreateEntity(0, (vec2){0.0f, 0.0f}, "");
 
 while(!glfwWindowShouldClose(window))
@@ -56,11 +34,6 @@ while(!glfwWindowShouldClose(window))
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
     
     DrawEntity(ent);
-    /*
-    BindShader(prog);
-    BindVertexArrayObject(vao);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    */
 
     glfwSwapBuffers(window);
     glfwPollEvents();
