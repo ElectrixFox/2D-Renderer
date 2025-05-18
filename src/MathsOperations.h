@@ -2,17 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct vec2 { float x, y; };
-typedef struct vec2 vec2;
+typedef struct vec2 { float x, y; } vec2;
+typedef struct vec3 { float x, y, z; } vec3;
 
-struct vec3 { float x, y, z; };
-typedef struct vec3 vec3;
-
-// struct vec4 { float x, y, z, w; };
-// typedef struct vec4 vec4;
-
-struct mat3 { vec3 mat[3]; };
-typedef struct mat3 mat3;
+typedef struct mat3 { vec3 mat[3]; } mat3;
 
 typedef float vec4[4];
 typedef struct m4 { vec4 mat[4]; } m4;

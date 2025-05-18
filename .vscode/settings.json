@@ -7,6 +7,7 @@
         "filehandling.h": "c",
         "renderobject.h": "c",
         "glew.h": "c",
-        "mathsoperations.h": "c"
+        "mathsoperations.h": "c",
+        "shader.h": "c"
     }
 }

@@ -1,5 +1,4 @@
 #include "Shader.h"
-#include "MathsOperations.h"
 
 struct viobject // vertex index object
 {

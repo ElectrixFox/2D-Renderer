@@ -103,18 +103,10 @@ return (m4){
 
 m4 getProjection(unsigned int wid, unsigned int len)
 {
-m4 proj = 
-    {
-         1 / wid, 0.0f, 0.0f, 0.0f,
-         0.0f, 1 / len, 0.0f, 0.0f,
-         0.0f, 0.0f, 1.0f, 0.0f,
-         0.0f, 0.0f, 0.0f, 1.0f
-    };
-
 return 
     (m4){
-         1 / wid, 0.0f, 0.0f, 0.0f,
-         0.0f, 1 / len, 0.0f, 0.0f,
+         1 / (float)wid, 0.0f, 0.0f, 0.0f,
+         0.0f, 1 / (float)len, 0.0f, 0.0f,
          0.0f, 0.0f, 1.0f, 0.0f,
          0.0f, 0.0f, 0.0f, 1.0f
     };
