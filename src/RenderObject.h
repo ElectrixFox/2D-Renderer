@@ -9,14 +9,17 @@ unsigned int shader;
 
 typedef struct viobject viobject;
 
-struct robj
+struct Entity
 {
 vec2 pos;
 vec2 scale;
 viobject rdets;
 };
 
-typedef struct robj robj;
+// a renderable needs vertices, a vao and shader
+// an object needs position and scale 
+
+typedef struct Entity Entity;
 
 unsigned int createVBO(vec3 vertices[], unsigned int count);
 
@@ -28,5 +31,6 @@ unsigned int createVertexArrayObject(vec3 vertices[], unsigned int vertcount, un
 
 void BindVertexArrayObject(unsigned int vao);
 
+Entity CreateEntity(unsigned int shape, vec2 position, const char* shader);
 
-void CreateObject();
+void DrawEntity(Entity e);

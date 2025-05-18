@@ -50,18 +50,18 @@ for (int i = 0; i < n; i++)
     }
 }
 
-vec3 applyMatrix(vec3 matr[3], vec3 vec)
+vec3 applyMatrix(mat3 matr, vec3 vec)
 {
 vec3 res;
 
-res.x = dotprod(matr[0], (vec3){vec.x, vec.y, vec.z});
-res.y = dotprod(matr[1], (vec3){vec.x, vec.y, vec.z});
-res.z = dotprod(matr[2], (vec3){vec.x, vec.y, vec.z});
+res.x = dotprod(matr.mat[0], (vec3){vec.x, vec.y, vec.z});
+res.y = dotprod(matr.mat[1], (vec3){vec.x, vec.y, vec.z});
+res.z = dotprod(matr.mat[2], (vec3){vec.x, vec.y, vec.z});
 
 return res;
 }
 
-void changeVerts(vec3 verts[], vec3 matr[3], unsigned int n)
+void changeVerts(vec3 verts[], mat3 matr, unsigned int n)
 {
 for (int i = 0; i < n; i++)
     {
@@ -71,8 +71,8 @@ for (int i = 0; i < n; i++)
 
 void TransformObject(vec3 vertices[], vec2 moveBy, unsigned int n)
 {
-vec3 matr[3] = {
-    { 1.0f, 0.0f, moveBy.x },
+mat3 matr = {
+    (vec3){ 1.0f, 0.0f, moveBy.x },
     { 0.0f, 1.0f, moveBy.y },
     { 0.0f, 0.0f, 1.0f }
 };
@@ -82,11 +82,40 @@ changeVerts(vertices, matr, n);
 
 void ScaleObject(vec3 vertices[], vec2 scale, unsigned int n)
 {
-vec3 matr[3] = {
-    { scale.x, 0.0f, 0.0f },
+mat3 matr = {
+    (vec3){ scale.x, 0.0f, 0.0f },
     { 0.0f, scale.y, 0.0f },
     { 0.0f, 0.0f, 1.0f }
 };
 
 changeVerts(vertices, matr, n);
+}
+
+m4 mat3Tomat4(mat3 matr)
+{
+return (m4){
+    matr.mat[0].x, matr.mat[0].y, matr.mat[0].z, 0.0f,
+    matr.mat[1].x, matr.mat[1].y, matr.mat[1].z, 0.0f,
+    matr.mat[2].x, matr.mat[2].y, matr.mat[2].z, 0.0f,
+    0.0f, 0.0f, 0.0f, 1.0f
+};
+}
+
+m4 getProjection(unsigned int wid, unsigned int len)
+{
+m4 proj = 
+    {
+         1 / wid, 0.0f, 0.0f, 0.0f,
+         0.0f, 1 / len, 0.0f, 0.0f,
+         0.0f, 0.0f, 1.0f, 0.0f,
+         0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+return 
+    (m4){
+         1 / wid, 0.0f, 0.0f, 0.0f,
+         0.0f, 1 / len, 0.0f, 0.0f,
+         0.0f, 0.0f, 1.0f, 0.0f,
+         0.0f, 0.0f, 0.0f, 1.0f
+    };
 }

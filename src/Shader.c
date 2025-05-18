@@ -71,3 +71,10 @@ int uniloc = glGetUniformLocation(program, varname);
 BindShader(program);
 glUniform1f(uniloc, value);
 }
+
+void SetUniformM4(unsigned int program, const char* varname, m4 matr)
+{
+int uniloc = glGetUniformLocation(program, varname);
+BindShader(program);
+glUniformMatrix4fv(uniloc, 1, GL_FALSE, &matr.mat[0][0]);
+}

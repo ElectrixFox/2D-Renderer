@@ -51,7 +51,44 @@ void BindVertexArrayObject(unsigned int vao)
 glBindVertexArray(vao); // simple bind
 }
 
-void CreateObject(vec3 vertices[] = LC_SQUARE)
-{
 
+Entity CreateEntity(unsigned int shape, vec2 position, const char* shader)
+{
+// do something here to determine shape
+
+vec3 vertices[] = {
+    {0.5f,  0.5f, 1.0f},
+    {0.5f, -0.5f, 1.0f},
+    {-0.5f, -0.5f, 1.0f},
+    {-0.5f,  0.5f, 1.0f}
+};
+
+unsigned int indices[] = {
+    0, 1, 3,
+    1, 2, 3
+};
+
+ScaleObject(vertices, (vec2){2.0f, 2.0f}, 4);
+/*
+ScaleObject(vertices, (vec2){1 / 1020.0f, 1 / 960.0f}, 4);
+printf("\n%f %f %f", vertices[0].x, vertices[0].y, vertices[0].z);
+printf("\n%f %f %f", vertices[1].x, vertices[1].y, vertices[1].z);
+printf("\n%f %f %f", vertices[2].x, vertices[2].y, vertices[2].z);
+printf("\n%f %f %f", vertices[3].x, vertices[3].y, vertices[3].z);
+ScaleObject(vertices, (vec2){100.0f, 100.0f}, sizeof(vertices) / sizeof(vertices[0]));
+*/
+const char* vertsrc = ParseShaderSource("res/vertex.shader");
+const char* fragsrc = ParseShaderSource("res/fragment.shader");
+unsigned int prog = createShader(vertsrc, fragsrc);
+SetUniformM4(prog, "projection", getProjection(1020, 960));
+
+unsigned int vao = createVertexArrayObject(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices));
+return (Entity){ {position.x, position.y}, {1.0f, 1.0f}, {vao, prog}};
+}
+
+void DrawEntity(Entity e)
+{
+BindShader(e.rdets.shader);
+BindVertexArrayObject(e.rdets.vao);
+glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }

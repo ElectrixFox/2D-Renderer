@@ -2,12 +2,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct vec3 { float x, y, z; };
-typedef struct vec3 vec3;
-
 struct vec2 { float x, y; };
 typedef struct vec2 vec2;
 
+struct vec3 { float x, y, z; };
+typedef struct vec3 vec3;
+
+// struct vec4 { float x, y, z, w; };
+// typedef struct vec4 vec4;
+
+struct mat3 { vec3 mat[3]; };
+typedef struct mat3 mat3;
+
+typedef float vec4[4];
+typedef struct m4 { vec4 mat[4]; } m4;
 
 float generalisedDot(float u[], float v[], unsigned int n);
 float dotprod(vec3 u, vec3 v);
@@ -16,8 +24,12 @@ void transposeMatr3(float m[][3], unsigned int n);
 
 void generalisedMatrMult3(float m1[][3], float m2[][3], unsigned int n, unsigned int m);
 
-vec3 applyMatrix(vec3 matr[3], vec3 vec);
-void changeVerts(vec3 verts[], vec3 matr[3], unsigned int n);
+vec3 applyMatrix(mat3 matr, vec3 vec);
+void changeVerts(vec3 verts[], mat3 matr, unsigned int n);
 
 void TransformObject(vec3 vertices[], vec2 moveBy, unsigned int n);
 void ScaleObject(vec3 vertices[], vec2 scale, unsigned int n);
+
+m4 mat3Tomat4(mat3 matr);
+
+m4 getProjection(unsigned int wid, unsigned int len);
