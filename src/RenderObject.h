@@ -30,6 +30,10 @@ unsigned int createVertexArrayObject(vec3 vertices[], unsigned int vertcount, un
 
 void BindVertexArrayObject(unsigned int vao);
 
+m4 getEntityModelMatrix4(Entity e);
+
+void UpdateEntity(Entity e);
+
 Entity CreateEntity(unsigned int shape, vec2 position, const char* shader);
 
 void DrawEntity(Entity e);

@@ -51,9 +51,26 @@ void BindVertexArrayObject(unsigned int vao)
 glBindVertexArray(vao); // simple bind
 }
 
+m4 getEntityModelMatrix4(Entity e)
+{
+return mat3Tomat4((mat3){
+    (vec3){e.scale.x, 0.0f, e.pos.x},
+    (vec3){0.0f, e.scale.y, e.pos.y},
+    (vec3){0.0f, 0.0f, 1.0f}
+});
+}
+
+void UpdateEntity(Entity e)
+{
+const unsigned int prog = e.rdets.shader;  // constant just for safety
+BindShader(prog);
+SetUniformM4(prog, "model", getEntityModelMatrix4(e)); // getting and setting the model matrix
+}
+
 Entity CreateEntity(unsigned int shape, vec2 position, const char* shader)
 {
 // do something here to determine shape
+vec2 scale = {1.0f, 1.0f}; // default scale
 
 vec3 vertices[] = {
     {0.5f,  0.5f, 1.0f},
@@ -75,13 +92,22 @@ unsigned int prog = createShader(vertsrc, fragsrc);
 BindShader(prog);
 SetUniformM4(prog, "projection", getProjection(1020, 960)); // getting and setting the projection
 
+mat3 modelmat = {
+    (vec3){scale.x, 0.0f, position.x},
+    (vec3){0.0f, scale.y, position.y},
+    (vec3){0.0f, 0.0f, 1.0f}
+};
+
+SetUniformM4(prog, "model", mat3Tomat4(modelmat)); // getting and setting the model matrix
+
 unsigned int vao = createVertexArrayObject(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices));
-return (Entity){ {position.x, position.y}, {1.0f, 1.0f}, {vao, prog}};
+return (Entity){ position, scale, (viobject){vao, prog}};
 }
 
 void DrawEntity(Entity e)
 {
 BindShader(e.rdets.shader);
+UpdateEntity(e); // update the entity
 BindVertexArrayObject(e.rdets.vao);
 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
