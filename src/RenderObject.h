@@ -21,12 +21,15 @@ viobject rdets;
 typedef struct Entity Entity;
 
 unsigned int createVBO(vec3 vertices[], unsigned int count);
+unsigned int createVBOFloat(float vertices[], unsigned int count);
 
 void processVertexBuffer(unsigned int vbo);
+void processVertexBufferFloat(unsigned int vbo, unsigned int count);
 
 unsigned int createIndexArrayBuffer(unsigned int indices[], int count);
 
 unsigned int createVertexArrayObject(vec3 vertices[], unsigned int vertcount, unsigned int indices[], unsigned int indcount);
+unsigned int createVertexArrayObjectFloat(float vertices[], unsigned int vertcount, unsigned int indices[], unsigned int indcount);
 
 void BindVertexArrayObject(unsigned int vao);
 
@@ -35,5 +38,7 @@ m4 getEntityModelMatrix4(Entity e);
 void UpdateEntity(Entity e);
 
 Entity CreateEntity(unsigned int shape, vec2 position, const char* shader);
+
+Entity CreateEntityTexture(unsigned int shape, vec2 position, const char* shader, const char* texture);
 
 void DrawEntity(Entity e);

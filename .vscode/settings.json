@@ -8,6 +8,7 @@
         "renderobject.h": "c",
         "glew.h": "c",
         "mathsoperations.h": "c",
-        "shader.h": "c"
+        "shader.h": "c",
+        "stb_image.h": "c"
     }
 }

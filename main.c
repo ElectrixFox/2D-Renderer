@@ -23,7 +23,12 @@ glViewport(0, 0, 1020, 960);
 
 glewInit();
     
-Entity ent = CreateEntity(0, (vec2){0.0f, 0.0f}, "");
+// Entity ent = CreateEntity(0, (vec2){0.0f, 0.0f}, "");
+// ent.scale = (vec2){50, 50};
+// ent.pos = (vec2){-100.0f, 100.0f};
+
+Entity ent1 = CreateEntityTexture(0, (vec2){0.0f, 0.0f}, "", "res/wood.png");
+ent1.scale = (vec2){50, 50};
 
 while(!glfwWindowShouldClose(window))
     {
@@ -32,9 +37,8 @@ while(!glfwWindowShouldClose(window))
     
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
-    
-    ent.scale = (vec2){glfwGetTime(), glfwGetTime()};
-    DrawEntity(ent);
+    // DrawEntity(ent);
+    DrawEntity(ent1);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
