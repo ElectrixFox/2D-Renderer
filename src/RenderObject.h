@@ -21,15 +21,15 @@ viobject rdets;
 typedef struct Entity Entity;
 
 unsigned int createVBO(vec3 vertices[], unsigned int count);
-unsigned int createVBOFloat(float vertices[], unsigned int count);
+unsigned int createVBOVecn(float vertices[], unsigned int count, unsigned int n);
 
 void processVertexBuffer(unsigned int vbo);
-void processVertexBufferFloat(unsigned int vbo, unsigned int count);
+void processVertexBufferVecn(unsigned int vbo, unsigned int count, unsigned int n);
 
 unsigned int createIndexArrayBuffer(unsigned int indices[], int count);
 
 unsigned int createVertexArrayObject(vec3 vertices[], unsigned int vertcount, unsigned int indices[], unsigned int indcount);
-unsigned int createVertexArrayObjectFloat(float vertices[], unsigned int vertcount, unsigned int indices[], unsigned int indcount);
+unsigned int createVertexArrayObjectVecn(float vertices[], unsigned int vertcount, unsigned int indices[], unsigned int indcount, unsigned int n);
 
 void BindVertexArrayObject(unsigned int vao);
 

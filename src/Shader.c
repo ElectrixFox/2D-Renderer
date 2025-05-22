@@ -87,7 +87,7 @@ if (!data)  // if the texture is not loaded
     stbi_image_free(data);
     return -1;
     }
-
+    
 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);   // generates the texture
 glGenerateMipmap(GL_TEXTURE_2D);   // generates the mipmap
 stbi_image_free(data);   // frees the data

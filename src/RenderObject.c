@@ -10,12 +10,12 @@ glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * count, vertices, GL_STATIC_DRAW);  
 return vbo;
 }
 
-unsigned int createVBOFloat(float vertices[], unsigned int count)
+unsigned int createVBOFloatVecn(float vertices[], unsigned int count, unsigned int n)
 {
 unsigned int vbo;
 glGenBuffers(1, &vbo);  // generate the buffer
 glBindBuffer(GL_ARRAY_BUFFER, vbo); // bind the vbo to type of array buffer to be targetted by buffer data
-glBufferData(GL_ARRAY_BUFFER, sizeof(float) * count, vertices, GL_STATIC_DRAW);  // targets the buffer of type GL_ARRAY_BUFFER and then sets its data
+glBufferData(GL_ARRAY_BUFFER, n * sizeof(float) * count, vertices, GL_STATIC_DRAW);  // targets the buffer of type GL_ARRAY_BUFFER and then sets its data
 
 return vbo;
 }
@@ -31,11 +31,13 @@ glVertexAttribPointer(0, 3, GL_FLOAT, 0, 3 * sizeof(float), (void*)0);  // the f
 glEnableVertexAttribArray(0);   // attribute the data in the 0th buffer to the vertex data
 }
 
-void processVertexBufferFloat(unsigned int vbo, unsigned int count)
+void processVertexBufferFloatVecn(unsigned int vbo, unsigned int count, unsigned int n)
 {
 glBindBuffer(GL_VERTEX_ARRAY, vbo);
-glVertexAttribPointer(0, 3, GL_FLOAT, 0, count * sizeof(float), (void*)0);
+glVertexAttribPointer(0, 3, GL_FLOAT, 0, n * count * sizeof(float), (void*)0);
 glEnableVertexAttribArray(0);
+glVertexAttribPointer(1, 2, GL_FLOAT, 0, n * count * sizeof(float), (void*)(sizeof(vec3)));
+glEnableVertexAttribArray(1);
 }
 
 unsigned int createIndexArrayBuffer(unsigned int indices[], int count)
@@ -63,15 +65,15 @@ processVertexBuffer(vbo);  // process the vbo
 return vao;
 }
 
-unsigned int createVertexArrayObjectFloat(float vertices[], unsigned int vertcount, unsigned int indices[], unsigned int indcount)
+unsigned int createVertexArrayObjectFloatVecn(float vertices[], unsigned int vertcount, unsigned int indices[], unsigned int indcount, unsigned int n)
 {
 unsigned int vao;
 
 glGenVertexArrays(1, &vao); // only bind one array and generate the arrays
 glBindVertexArray(vao); // bind the array to be used
-unsigned int vbo = createVBOFloat(vertices, sizeof(vertices[0]));  // create the vbo
+unsigned int vbo = createVBOFloatVecn(vertices, vertcount, n);  // create the vbo
 unsigned int ibo = createIndexArrayBuffer(indices, indcount);   // create the ibo
-processVertexBufferFloat(vbo, 5);  // process the vbo
+processVertexBufferFloatVecn(vbo, vertcount, n);  // process the vbo
 return vao;
 }
 
@@ -166,16 +168,19 @@ mat3 modelmat = {
 
 SetUniformM4(prog, "model", mat3Tomat4(modelmat)); // getting and setting the model matrix
 
-unsigned int vao = createVertexArrayObjectFloat(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices));
+unsigned int vao = createVertexArrayObjectFloatVecn(vertices, 4, indices, 6, 5);
+/*
 unsigned int tex = createTexture(texture); // create the texture
-
-glVertexAttribPointer(1, 2, GL_FLOAT, 0, sizeof(vertices[0]) * sizeof(float), (void*)(sizeof(vec3))); // setting the texture coordinates
+glVertexAttribPointer(1, 2, GL_FLOAT, 0, 5 * sizeof(float), (void*)(sizeof(vec3))); // setting the texture coordinates
 glEnableVertexAttribArray(1);   // attribute the data in the 1th buffer to the vertex data
+*/
+
+/*
 glActiveTexture(GL_TEXTURE0);   // activate the texture
 
 BindTexture(tex); // bind the texture
 SetUniform1i(prog, "texture1", 1); // set the texture uniform to 0
-
+*/
 return (Entity){ position, scale, (viobject){vao, prog}};
 }
 
