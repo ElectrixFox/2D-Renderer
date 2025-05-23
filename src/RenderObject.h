@@ -1,6 +1,7 @@
 #include "Shader.h"
 #include "Texture.h"
 
+// optimise to store the data more compactly
 struct viobject // vertex index object
 {
 unsigned int vao;
@@ -25,10 +26,35 @@ typedef struct Entity Entity;
 unsigned int createVBO(vec3 vertices[], unsigned int count);
 unsigned int createVBOVecn(float vertices[], unsigned int count, unsigned int n);
 
-/*@param n is the number of elements (total including elements of vectors).
- *@note Example: if it is an array of 8 vec3's then n would be 8 * 3 = 24.
+/**
+ * @param n n is the number of elements (total including elements of vectors)
+ * @note Example: if it is an array of 8 vec3's then n would be 8 * 3 = 24
  */
 unsigned int CreateVBO(float vertices[], unsigned int n);
+
+/**
+ * creates an ibo.
+ * @param n n is the number of elements (total including elements of vectors)
+ * @note n is the number of vectors multiplied by their length
+ */
+unsigned int CreateIBO(unsigned int indices[], unsigned int n);
+
+/**
+ * simply creates the vao
+ */
+unsigned int CreateVAO();
+
+// To-Do: optimise this so the number and buffer length are both stored in one variable
+typedef struct VAOLayout
+    {
+    unsigned int* sizes;
+    unsigned int number;
+    unsigned int bufflen;
+    } VAOLayout;
+
+VAOLayout CreateVertexLayout(unsigned int sizes[], unsigned int bufflen, unsigned int n);
+void InitialiseVertexLayout(VAOLayout layout);
+void AddToVertexLayout(VAOLayout* layout, unsigned int size);
 
 void processVertexBuffer(unsigned int vbo);
 void processVertexBufferVecn(unsigned int vbo, unsigned int count, unsigned int n);
