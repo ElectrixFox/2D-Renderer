@@ -7,11 +7,9 @@
 
 unsigned int createShader(const char* vertsrc, const char* fragsrc);
 
+unsigned int CreateShader(const char* vertfp, const char* fragfp);
+
 void BindShader(unsigned int program);
-
-unsigned int createTexture(const char* path);
-
-void BindTexture(unsigned int texture);
 
 void SetUniform1f(unsigned int program, const char* varname, float value);
 void SetUniformM4(unsigned int program, const char* varname, m4 matr);

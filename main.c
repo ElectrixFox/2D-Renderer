@@ -56,55 +56,13 @@ VAOLayout layout = CreateVertexLayout(ss, 5, 1);
 AddToVertexLayout(&layout, 2);
 InitialiseVertexLayout(layout);
 
-
-/*
-glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-glEnableVertexAttribArray(0);
-
-glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-glEnableVertexAttribArray(1);
-*/
-
 unsigned int texture = CreateTexture("res/wood.png"); // create the texture
 
-/*
-glGenTextures(1, &texture);
-glBindTexture(GL_TEXTURE_2D, texture);
+unsigned int prog = CreateShader("res/texvert.shader", "res/texfrag.shader");
 
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-int width, height, nrChannels;
-stbi_set_flip_vertically_on_load(1); // flip the texture vertically
-unsigned char* data = stbi_load("res/wood.png", &width, &height, &nrChannels, 0);
-if (data)
-    {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    }
-else
-    {
-    printf("Failed to load texture\n");
-    }
-stbi_image_free(data);
-*/
-const char* vss = ParseShaderSource("res/texvert.shader");
-const char* fss = ParseShaderSource("res/texfrag.shader");
-
-m4 id = (m4){
-    {1.0f, 0.0f, 0.0f, 0.0f,
-     0.0f, 1.0f, 0.0f, 0.0f,
-     0.0f, 0.0f, 1.0f, 0.0f,
-     0.0f, 0.0f, 0.0f, 1.0f}
-};
-
-unsigned int prog = createShader(vss, fss);
 SetUniform1i(prog, "intexture", 0); // set the texture to be used
-SetUniformM4(prog, "projection", id);
-SetUniformM4(prog, "model", id);
+SetUniformM4(prog, "projection", getM4ID());
+SetUniformM4(prog, "model", getM4ID());
 
 // Entity ent1 = { {0.0f, 0.0f}, {1.0f, 1.0f}, (viobject){vao, prog, texture}};
 
@@ -120,8 +78,7 @@ while(!glfwWindowShouldClose(window))
     // DrawEntity(ent1);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
+    BindTexture(texture);
     BindShader(prog);
     BindVertexArrayObject(vao);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // draw the object

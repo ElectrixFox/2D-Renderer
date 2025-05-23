@@ -32,3 +32,8 @@ stbi_image_free(data);
 
 return texture;
 }
+
+void BindTexture(unsigned int texture)
+{
+glBindTexture(GL_TEXTURE_2D, texture);   // binds the texture
+}
