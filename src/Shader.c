@@ -1,7 +1,8 @@
 #include "Shader.h"
 
+/*
 #define STB_IMAGE_IMPLEMENTATION
-#include "include/stb/stb_image.h"
+#include "include/stb/stb_image.h"*/
 
 unsigned int createShader(const char* vertsrc, const char* fragsrc)
 {
@@ -80,6 +81,7 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); 
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 int width, height, nrChannels;
+/*
 unsigned char* data = stbi_load(path, &width, &height, &nrChannels, 0);   // loads the texture
 if (!data)  // if the texture is not loaded
     {
@@ -91,6 +93,7 @@ if (!data)  // if the texture is not loaded
 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);   // generates the texture
 glGenerateMipmap(GL_TEXTURE_2D);   // generates the mipmap
 stbi_image_free(data);   // frees the data
+*/
 
 return texture;
 }

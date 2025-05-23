@@ -13,3 +13,6 @@ obj/%.o: %.c
 
 all: $(OBJS)
 	$(CXX) $(CXXFLAGS) $(addprefix obj/, $(notdir $^)) -o $(APPNAME) $(LIBS)
+
+clean:
+	rm obj/*.o

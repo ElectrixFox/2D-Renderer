@@ -20,6 +20,16 @@ glBufferData(GL_ARRAY_BUFFER, n * sizeof(float) * count, vertices, GL_STATIC_DRA
 return vbo;
 }
 
+unsigned int CreateVBO(float vertices[], unsigned int n)
+{
+unsigned int vbo;
+glGenBuffers(1, &vbo);  // generate the buffer
+glBindBuffer(GL_ARRAY_BUFFER, vbo); // bind the vbo to type of array buffer to be targetted by buffer data
+glBufferData(GL_ARRAY_BUFFER, sizeof(float) * n, vertices, GL_STATIC_DRAW);  // targets the buffer of type GL_ARRAY_BUFFER and then sets its data
+
+return vbo;
+}
+
 void processVertexBuffer(unsigned int vbo)
 {
 glBindBuffer(GL_VERTEX_ARRAY, vbo); // bind the buffer
@@ -168,19 +178,32 @@ mat3 modelmat = {
 
 SetUniformM4(prog, "model", mat3Tomat4(modelmat)); // getting and setting the model matrix
 
-unsigned int vao = createVertexArrayObjectFloatVecn(vertices, 4, indices, 6, 5);
-/*
-unsigned int tex = createTexture(texture); // create the texture
-glVertexAttribPointer(1, 2, GL_FLOAT, 0, 5 * sizeof(float), (void*)(sizeof(vec3))); // setting the texture coordinates
-glEnableVertexAttribArray(1);   // attribute the data in the 1th buffer to the vertex data
-*/
+unsigned int vao, vbo, ibo;
+glGenVertexArrays(1, &vao);
+glGenBuffers(1, &ibo);
+glBindVertexArray(vao);
 
-/*
+vbo = createVBOFloatVecn(vertices, sizeof(vertices) / sizeof(vertices[0]), 5);
+
+glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+glEnableVertexAttribArray(0);
+
+glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+glEnableVertexAttribArray(1);
+
+
+// unsigned int vao = createVertexArrayObjectFloatVecn(vertices, 4, indices, 6, 5);
+unsigned int tex = CreateTexture(texture); // create the texture
+// glVertexAttribPointer(1, 2, GL_FLOAT, 0, 5 * sizeof(float), (void*)(sizeof(vec3))); // setting the texture coordinates
+// glEnableVertexAttribArray(1);   // attribute the data in the 1th buffer to the vertex data
+
 glActiveTexture(GL_TEXTURE0);   // activate the texture
 
 BindTexture(tex); // bind the texture
-SetUniform1i(prog, "texture1", 1); // set the texture uniform to 0
-*/
+SetUniform1i(prog, "intexture", 1); // set the texture uniform to 0
 return (Entity){ position, scale, (viobject){vao, prog}};
 }
 
