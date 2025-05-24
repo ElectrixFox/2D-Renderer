@@ -124,6 +124,13 @@ BindShader(program);
 glUniform1f(uniloc, value);
 }
 
+void SetUniform4f(unsigned int program, const char* varname, vec4 value)
+{
+int uniloc = glGetUniformLocation(program, varname);
+BindShader(program);
+glUniform4f(uniloc, value[0], value[1], value[2], value[3]);
+}
+
 void SetUniformM4(unsigned int program, const char* varname, m4 matr)
 {
 int uniloc = glGetUniformLocation(program, varname);

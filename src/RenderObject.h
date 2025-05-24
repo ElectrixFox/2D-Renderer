@@ -7,6 +7,7 @@ struct viobject // vertex index object
 unsigned int vao;
 unsigned int shader;
 unsigned int texture;
+unsigned int ibo;
 };
 
 typedef struct viobject viobject;
@@ -53,6 +54,8 @@ typedef struct VAOLayout
     unsigned int number;
     unsigned int bufflen;
     } VAOLayout;
+
+void BindIBO(unsigned int ibo);
 
 VAOLayout CreateVertexLayout(unsigned int sizes[], unsigned int bufflen, unsigned int n);
 void InitialiseVertexLayout(VAOLayout layout);
