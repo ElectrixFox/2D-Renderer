@@ -149,6 +149,11 @@ void BindVertexArrayObject(unsigned int vao)
 glBindVertexArray(vao); // simple bind
 }
 
+void BindVAO(unsigned int vao)
+{
+glBindVertexArray(vao); // simple bind
+}
+
 m4 getEntityModelMatrix4(Entity e)
 {
 return mat3Tomat4((mat3){
@@ -270,4 +275,61 @@ BindShader(e.rdets.shader);
 UpdateEntity(e); // update the entity
 BindVertexArrayObject(e.rdets.vao);
 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
+Entity CreateEntityA(unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture)
+{
+unsigned int vao, vbo, ibo, prog;
+unsigned int tex = 0;
+// vertices = GetShapeVertices(shape);
+// indices = GetShapeIndices(shape);
+
+float vertices[] = {
+    0.5f,  0.5f, 1.0f,      1.0f, 1.0f,
+    0.5f, -0.5f, 1.0f,      1.0f, 0.0f,
+    -0.5f, -0.5f, 1.0f,     0.0f, 0.0f,
+    -0.5f,  0.5f, 1.0f,     0.0f, 1.0f
+};
+
+unsigned int indices[] = {
+    0, 1, 3,
+    1, 2, 3
+};
+
+vao = CreateVAO();  // creating the vao
+ibo = CreateIBO(indices, sizeof(indices) / sizeof(indices[0])); // creating the ibo
+vbo = CreateVBO(vertices, sizeof(vertices) / sizeof(vertices[0]));  // creating the vbo
+
+unsigned int ilay[1] = {3};
+VAOLayout layout = CreateVertexLayout(ilay, 5, 1);  // setting up the layout
+AddToVertexLayout(&layout, 2);  // adding the texture coords to the layout
+InitialiseVertexLayout(layout); // initialising the layout to be used
+
+if(texture != NULL)
+    {
+    tex = CreateTexture(texture);
+    }
+
+prog = CreateShader(vshader, fshader);
+
+SetUniform1i(prog, "intexture", 0); // set the texture to be used (the 0th active texture)
+SetUniformM4(prog, "projection", getM4ID());
+SetUniformM4(prog, "model", getM4ID());
+
+return (Entity){position, (vec2){1.0f, 1.0f}, {vao, prog, tex}};
+}
+
+void DrawEntityA(Entity e)
+{
+if (e.rdets.texture != 0)
+    {
+    glActiveTexture(GL_TEXTURE0);
+    BindTexture(e.rdets.texture);
+    }
+
+BindShader(e.rdets.shader);
+BindVAO(e.rdets.vao);
+//  the 6 should be changed to the number of indices
+glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 }

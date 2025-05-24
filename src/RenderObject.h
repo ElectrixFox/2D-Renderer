@@ -26,6 +26,8 @@ typedef struct Entity Entity;
 unsigned int createVBO(vec3 vertices[], unsigned int count);
 unsigned int createVBOVecn(float vertices[], unsigned int count, unsigned int n);
 
+void BindVAO(unsigned int vao);
+
 /**
  * @param n n is the number of elements (total including elements of vectors)
  * @note Example: if it is an array of 8 vec3's then n would be 8 * 3 = 24
@@ -73,5 +75,8 @@ void UpdateEntity(Entity e);
 Entity CreateEntity(unsigned int shape, vec2 position, const char* shader);
 
 Entity CreateEntityTexture(unsigned int shape, vec2 position, const char* shader, const char* texture);
+
+Entity CreateEntityA(unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture);
+void DrawEntityA(Entity e);
 
 void DrawEntity(Entity e);
