@@ -101,12 +101,12 @@ return (m4){
 };
 }
 
-m4 getProjection(unsigned int wid, unsigned int len)
+m4 getProjection(unsigned int wid, unsigned int hig, unsigned int transformed)
 {
 return 
     (m4){
-         1 / (float)wid, 0.0f, 0.0f, 0.0f,
-         0.0f, 1 / (float)len, 0.0f, 0.0f,
+         2 / (float)wid, 0.0f, 0.0f, -(float)(transformed),
+         0.0f, 2 / (float)hig, 0.0f, -(float)(transformed),
          0.0f, 0.0f, 1.0f, 0.0f,
          0.0f, 0.0f, 0.0f, 1.0f
     };

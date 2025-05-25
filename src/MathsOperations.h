@@ -25,6 +25,6 @@ void ScaleObject(vec3 vertices[], vec2 scale, unsigned int n);
 
 m4 mat3Tomat4(mat3 matr);
 
-m4 getProjection(unsigned int wid, unsigned int len);
+m4 getProjection(unsigned int wid, unsigned int hig, unsigned int transformed);
 
 m4 getM4ID();
