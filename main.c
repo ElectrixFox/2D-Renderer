@@ -3,8 +3,7 @@
 
 #include <include/GL/glew.h>
 #include <include/GLFW/glfw3.h>
-#include "src/RenderObject.h"
-#include "src/Texture.h"
+#include "src/Entity.h"
 
 void processInput(GLFWwindow* window)
 {
@@ -16,24 +15,22 @@ if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  // if the escape key is 
 
 int main()
 {
+unsigned int width = 1020;
+unsigned int height = 960;
 glfwInit();
-GLFWwindow* window = glfwCreateWindow(1020, 960, "Title", 0, 0); // creates the window of size 100x100
+GLFWwindow* window = glfwCreateWindow(width, height, "Title", 0, 0); // creates the window of size 100x100
 
 glfwMakeContextCurrent(window); // sets the context of the window
-glViewport(0, 0, 1020, 960);
+glViewport(0, 0, width, height);
 
 glewInit();
-/*
-Entity ent1 = CreateEntityA(0, (vec2){0.0f, 0.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
+Entity ent1 = CreateEntity(0, (vec2){0.0f, 0.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
 ent1.scale = (vec2){100.0f, 100.0f};
-*/
-// Entity ent1 = CreateEntityA(0, (vec2){0.0f, 0.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
-// ent1.scale = (vec2){100.0f, 100.0f};
-// SetUniform4f(ent1.rdets.shader, "colour", (vec4){0.75f, 0.0f, 0.0f, 1.0f});
+SetUniform4f(ent1.rdets.shader, "colour", (vec4){0.75f, 0.0f, 0.0f, 1.0f});
 
-Entity ent2 = CreateEntityA(0, (vec2){0.0f, 0.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
+Entity ent2 = CreateEntity(0, (vec2){0.0f, 0.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
 ent2.scale = (vec2){100.0f, 100.0f};
-ent2.pos = (vec2){1.0f, 1.0f};
+ent2.pos = (vec2){50.0f, 50.0f};
 SetUniform4f(ent2.rdets.shader, "colour", (vec4){0.0f, 0.75f, 0.0f, 1.0f});
 
 while(!glfwWindowShouldClose(window))
@@ -44,9 +41,9 @@ while(!glfwWindowShouldClose(window))
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
-    // DrawEntityA(ent1);
+    DrawEntity(ent1);
     
-    DrawEntityA(ent2);
+    DrawEntity(ent2);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
