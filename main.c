@@ -93,12 +93,7 @@ EntityQueue eq;
 eq = InitQueueEntityQueue(10);
 EnqueueEntityQueue(&eq, ent1);
 EnqueueEntityQueue(&eq, ent2);
-printf("\nTail: %d", eq.tail);
-printf("\nHead: %d", eq.head);
 
-printf("\nStarting loop");
-printf("\nEnt 0: (%.2f, %.2f)", eq.data[0].pos.x, eq.data[0].pos.y);
-printf("\nEnt 1: (%.2f, %.2f)", eq.data[1].pos.x, eq.data[1].pos.y);
 while(!glfwWindowShouldClose(window))
     {
     // loop
@@ -112,11 +107,6 @@ while(!glfwWindowShouldClose(window))
         DrawEntity(eq.data[i]);
         }
     
-    /*
-    DrawEntity(ent1);
-    DrawEntity(ent2);
-    */
-
     glfwSwapBuffers(window);
     glfwPollEvents();
     }

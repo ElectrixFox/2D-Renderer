@@ -1,10 +1,19 @@
 #include "Entity.h"
 
+vec2 PositionToEntitySpace(Entity e)
+{
+vec2 pos;
+pos.x = e.pos.x - e.scale.x / 2;
+pos.y = e.pos.y - e.scale.y / 2;
+return pos;
+}
+
 m4 getEntityModelMatrix4(Entity e)
 {
+vec2 transformed = PositionToEntitySpace(e);
 return (m4){
-        e.scale.x, 0.0f, 0.0f, e.pos.x,
-        0.0f, e.scale.y, 0.0f, e.pos.y,
+        e.scale.x, 0.0f, 0.0f, transformed.x,
+        0.0f, e.scale.y, 0.0f, transformed.y,
         0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
 };
@@ -67,7 +76,7 @@ if(texture != NULL)
 SetUniformM4(prog, "projection", getProjection(1020, 960, 1));
 SetUniformM4(prog, "model", model);
 
-return (Entity){position, scale, {vao, prog, tex, ibo}};
+return (Entity){0, position, scale, {vao, prog, tex, ibo}};
 }
 
 void DrawEntity(Entity e)

@@ -2,6 +2,7 @@
 
 struct Entity
 {
+unsigned int id;
 vec2 pos;
 vec2 scale;
 viobject rdets;
@@ -11,6 +12,8 @@ viobject rdets;
 // an object needs position and scale 
 
 typedef struct Entity Entity;
+
+vec2 PositionToEntitySpace(Entity e);
 
 m4 getEntityModelMatrix4(Entity e);
 
