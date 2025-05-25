@@ -84,3 +84,57 @@ BindVAO(e.rdets.vao);
 //  the 6 should be changed to the number of indices
 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
+
+
+
+EntityQueue InitQueueEntityQueue(unsigned int size)
+{
+EntityQueue q;
+q.head = -1;
+q.tail = -1;
+q.size = size;
+q.data = (void*)malloc(size * sizeof(Entity));
+
+return q;
+}
+
+int isEmptyEntityQueue(EntityQueue queue)
+{
+if(queue.head == -1)
+    return 1;
+return 0;
+}
+
+int isFullEntityQueue(EntityQueue queue)
+{
+if(queue.tail == queue.size - 1)
+    return 1;
+return 0;
+}
+
+void EnqueueEntityQueue(EntityQueue* q, Entity item)
+{
+if (isFull(*q))
+    return 0;
+if (isEmpty(*q))
+    q->head = 0;
+(*q).tail++;
+q->data[q->tail] = item;
+}
+
+Entity DequeueEntityQueue(EntityQueue* q)
+{
+if(!isEmpty(*q))
+    return *((Entity*)NULL);
+q->head++;
+if(q->head > q->tail)
+    q->head = q->tail = -1;
+return q->data[q->head];
+}
+
+Entity PeekEntityQueue(EntityQueue q)
+{
+if(!isEmpty(q))
+    return *((Entity*)NULL);
+return q.data[q.head];
+}
