@@ -1,5 +1,19 @@
 #include "MathsOperations.h"
 
+void ExpandArray(void* arr, unsigned int osize, unsigned int nsize, unsigned int elesize)
+{
+void* nptr = malloc(elesize * osize); // allocating the new memory
+nptr = realloc(arr, elesize * nsize);  // making the array bigger
+arr = nptr;    // setting the old array to the new bigger one
+}
+
+void AppendToArray(void* arr, unsigned int size, void* item, unsigned int elesize)
+{
+ExpandArray(arr, size, size + 1, elesize);
+memcpy((&arr)[size], item, elesize);
+// memmove(((int*)arr + size) * elesize, item, elesize);
+}
+
 vec2 LeftCornerFromCentre(vec2 centre, vec2 scale)
 {
 vec2 pos;

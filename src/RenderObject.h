@@ -4,9 +4,9 @@
 // optimise to store the data more compactly
 struct viobject // vertex index object
 {
-unsigned int vao;
-unsigned int shader;
-unsigned int texture;
+unsigned int* vaos;
+unsigned int* shaders;
+unsigned int* textures;
 };
 
 typedef struct viobject viobject;

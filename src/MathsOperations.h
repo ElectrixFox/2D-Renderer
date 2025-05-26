@@ -11,6 +11,26 @@ typedef struct mat3 { vec3 mat[3]; } mat3;
 typedef float vec4[4];
 typedef struct m4 { vec4 mat[4]; } m4;
 
+/**
+ * Expands an array
+ * 
+ * @param arr The actual array
+ * @param osize The old size
+ * @param nsize The new size to resize to
+ * @param elesize Sizeof an element in the array, e.g. if it was an array of integers elesize would be sizeof(int)
+ */
+void ExpandArray(void* arr, unsigned int osize, unsigned int nsize, unsigned int elesize);
+
+/**
+ * Appends an element to an array
+ * 
+ * @param arr The actual array
+ * @param size The size of the array
+ * @param item The item to add
+ * @param elesize The size of the element to add
+ */
+void AppendToArray(void* arr, unsigned int size, void* item, unsigned int elesize);
+
 vec2 LeftCornerFromCentre(vec2 centre, vec2 scale);
 
 /**

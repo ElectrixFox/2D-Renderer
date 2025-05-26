@@ -36,8 +36,27 @@ int main()
 {
 unsigned int width = 1020;
 unsigned int height = 960;
+
+unsigned int* tarr = (unsigned int*)malloc(sizeof(unsigned int) * 3);
+tarr[0] = 1;
+tarr[1] = 2;
+tarr[2] = 3;
+printf("\nOrigional");
+for (int i = 0; i < 3; i++)
+    {
+    printf("\n%d: %d", i, tarr[i]);
+    }
+printf("\nAppending");
+unsigned int item = 4;
+AppendToArray(tarr, 3, item, sizeof(unsigned int));
+
+for (int i = 0; i < 4; i++)
+    {
+    printf("\n%d: %d", i, tarr[i]);
+    }
+
+/*
 glfwInit();
-// (0, 0) is the top left
 GLFWwindow* window = glfwCreateWindow(width, height, "Title", 0, 0); // creates the window of size width x height
 
 glfwMakeContextCurrent(window); // sets the context of the window
@@ -92,6 +111,7 @@ while(!glfwWindowShouldClose(window))
     }
 
 glfwTerminate();    // cleans up all the glfw objects
+*/
 
 return 0;
 }
