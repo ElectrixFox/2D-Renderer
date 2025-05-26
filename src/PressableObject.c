@@ -5,14 +5,25 @@ PressableArray InitPressableArray(unsigned int size)
 
 }
 
-void AddPressable(PressableArray* pa, unsigned int eid)
+void AddPressable(unsigned int* presids, unsigned int eid, unsigned int* n)
 {
-
+(*n)++;
+presids[*n] = eid;
 }
 
-void RemovePressable(PressableArray* pa, unsigned int eid)
+void RemovePressable(unsigned int* presids, unsigned int eid, unsigned int* n)
 {
+for (int i = 0; i < (*n); i++)
+    {
+    if(presids[i] == eid)
+        presids[i] = (NULL);
+    }
+(*n)--;
+}
 
+int CheckPressed(unsigned int* presids, unsigned int n, vec2* poses, unsigned int eid)
+{
+unsigned int index = 0; // some hash function to get where the eid is in the big...
 }
 
 void PressedUpdate(PressableArray pa, EntityQueue eq, GLFWwindow* window)

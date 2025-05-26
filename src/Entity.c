@@ -17,6 +17,16 @@ for(int i = 0; i < e.size; i++)
 
 */
 
+void UpdateEntities(unsigned int* shaders, vec2* positions, vec2* scales, unsigned int size)
+{
+for(int i = 0; i < size; i++)
+    {
+    // can add constant variables here to reference the variables at the indices, these will probably be taken out by the compiler anyway
+    BindShader(shaders[i]);
+    SetUniformM4(shaders[i], "model", GetModelMatrix(positions[i], scales[i]));
+    }
+}
+
 void UpdateEntity(Entity e)
 {
 const unsigned int prog = e.rdets.shader;  // constant just for safety
@@ -75,6 +85,21 @@ SetUniformM4(prog, "projection", getProjection(1020, 960, 1));
 SetUniformM4(prog, "model", model);
 
 return (Entity){0, position, scale, {vao, prog, tex}};
+}
+
+void DrawEntities(unsigned int* textures, unsigned int* shaders, unsigned int* vaos, unsigned int size)
+{
+for (int i = 0; i < size; i++)
+    {
+    if(textures[i] != 0)
+        {
+        glActiveTexture(GL_TEXTURE0);
+        BindTexture(textures[i]);
+        }
+    BindShader(shaders[i]);
+    BindVAO(vaos[i]);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    }
 }
 
 void DrawEntity(Entity e)

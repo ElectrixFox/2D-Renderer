@@ -30,6 +30,14 @@ void ScaleObject(vec3 vertices[], vec2 scale, unsigned int n);
 m4 mat3Tomat4(mat3 matr);
 
 m4 getProjection(unsigned int wid, unsigned int hig, unsigned int transformed);
+
+/**
+ * Gets the model matrix for the (square) entity
+ * 
+ * @param pos The centre of the entity
+ * @param scale The scale vector of the entity
+ * @note This also gets the bottom left corner of the square within the function
+ */
 m4 GetModelMatrix(vec2 pos, vec2 scale);
 
 m4 getM4ID();
