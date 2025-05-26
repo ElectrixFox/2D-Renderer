@@ -121,3 +121,17 @@ return (m4){
      0.0f, 0.0f, 0.0f, 1.0f}
 };
 }
+
+int PointInSquare(vec2 point, vec2 pos, vec2 scale)
+{
+if (abs(point.x - pos.x) < scale.x)
+    if (abs(point.y - pos.y) < scale.y)
+        return 1;
+
+return 0;
+}
+
+vec2 GetMousePositionRelative(vec2 cursor, unsigned int width, unsigned int height)
+{
+return (vec2){cursor.x, height - cursor.y};
+}

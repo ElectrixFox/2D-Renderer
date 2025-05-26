@@ -28,3 +28,7 @@ m4 mat3Tomat4(mat3 matr);
 m4 getProjection(unsigned int wid, unsigned int hig, unsigned int transformed);
 
 m4 getM4ID();
+
+int PointInSquare(vec2 point, vec2 pos, vec2 scale);
+
+vec2 GetMousePositionRelative(vec2 cursor, unsigned int width, unsigned int height);

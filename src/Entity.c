@@ -76,7 +76,7 @@ if(texture != NULL)
 SetUniformM4(prog, "projection", getProjection(1020, 960, 1));
 SetUniformM4(prog, "model", model);
 
-return (Entity){0, position, scale, {vao, prog, tex, ibo}};
+return (Entity){0, position, scale, {vao, prog, tex}};
 }
 
 void DrawEntity(Entity e)

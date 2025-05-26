@@ -7,7 +7,6 @@ struct viobject // vertex index object
 unsigned int vao;
 unsigned int shader;
 unsigned int texture;
-unsigned int ibo;
 };
 
 typedef struct viobject viobject;

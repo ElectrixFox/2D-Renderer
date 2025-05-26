@@ -21,15 +21,6 @@ pressables[*n] = nent;
 (*n)++;
 }
 
-int PointInSquare(vec2 point, vec2 pos, vec2 scale)
-{
-if (abs(point.x - pos.x) < scale.x)
-    if (abs(point.y - pos.y) < scale.y)
-        return 1;
-
-return 0;
-}
-
 void HasBeenPressed(Entity pressable, GLFWwindow* window)
 {
 vec2 point = GetMousePositionRelative(window);
