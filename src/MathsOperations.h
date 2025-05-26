@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,6 +13,13 @@ typedef struct m4 { vec4 mat[4]; } m4;
 
 vec2 LeftCornerFromCentre(vec2 centre, vec2 scale);
 
+/**
+ * Checks if point is in the square at position pos with scale scale
+ * 
+ * @param point The point to check if it is the square
+ * @param pos The position of the centre of the square
+ * @param scale The scale of the square
+ */
 int PointInSquare(vec2 point, vec2 pos, vec2 scale);
 
 float generalisedDot(float u[], float v[], unsigned int n);

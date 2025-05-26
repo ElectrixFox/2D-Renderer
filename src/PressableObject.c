@@ -1,9 +1,11 @@
 #include "PressableObject.h"
 
+/*
 PressableArray InitPressableArray(unsigned int size)
 {
 
 }
+*/
 
 void AddPressable(unsigned int* presids, unsigned int eid, unsigned int* n)
 {
@@ -21,11 +23,16 @@ for (int i = 0; i < (*n); i++)
 (*n)--;
 }
 
-int CheckPressed(unsigned int* presids, unsigned int n, vec2* poses, unsigned int eid)
+int CheckPressed(vec2* poses, vec2* scales, vec2 cursorpos, unsigned int eid)
 {
-unsigned int index = 0; // some hash function to get where the eid is in the big...
+unsigned int index = eid; // some hash function to get where the eid is in the big array
+
+if(PointInSquare(cursorpos, poses[index], scales[index]))
+    return 1;
+return 0;
 }
 
+/*
 void PressedUpdate(PressableArray pa, EntityQueue eq, GLFWwindow* window)
 {
 double x, y;
@@ -43,7 +50,5 @@ for (int i = 0; i < eq.tail; i++)
                 printf("\nPressed!");
         }
     }
-
-
 }
-
+*/

@@ -4,6 +4,7 @@
 #include <include/GL/glew.h>
 #include <include/GLFW/glfw3.h>
 #include "src/Entity.h"
+#include "src/PressableObject.h"
 
 void processInput(GLFWwindow* window)
 {
@@ -11,13 +12,24 @@ if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  // if the escape key is 
     {
     glfwSetWindowShouldClose(window, 1);
     }
-if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)  // if the escape key is pressed close the window
+if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
     {
     /*double x, y;
     vec2 posy = GetMousePositionRelative(window);
     glfwGetCursorPos(window, &x, &y);
     */
     }
+}
+
+vec2 GetCursorPosition(GLFWwindow* window)
+{
+double x, y;
+int wid, hig;
+glfwGetCursorPos(window, &x, &y);
+glfwGetWindowSize(window, &wid, &hig);
+vec2 point = GetMousePositionRelative((vec2){x, y}, wid, hig);
+
+return point;
 }
 
 int main()
@@ -44,18 +56,20 @@ ent2.scale = (vec2){25.0f, 25.0f};
 ent2.pos = (vec2){485.0f, 430.0f};
 SetUniform4f(ent2.rdets.shader, "colour", (vec4){0.0f, 0.75f, 0.0f, 1.0f});
 
-EntityQueue eq;
-eq = InitQueueEntityQueue(10);
-EnqueueEntityQueue(&eq, ent1);
-EnqueueEntityQueue(&eq, ent2);
-
+unsigned int ids[] = {ent1.id, ent2.id};
 unsigned int shads[] = {ent1.rdets.shader, ent2.rdets.shader};
 unsigned int textures[] = {ent1.rdets.texture, ent2.rdets.texture};
 unsigned int vaos[] = {ent1.rdets.vao, ent2.rdets.vao};
 vec2 poses[] = {ent1.pos, ent2.pos};
 vec2 scales[] = {ent1.scale, ent2.scale};
 unsigned int size = 2;
+
+unsigned int* pressables = (unsigned int*)malloc(sizeof(unsigned int) * 1);
+unsigned int n = 0;
+
 UpdateEntities(shads, poses, scales, size);
+AddPressable(pressables, ids[0], &n);
+
 
 while(!glfwWindowShouldClose(window))
     {
@@ -65,6 +79,11 @@ while(!glfwWindowShouldClose(window))
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+        {
+        vec2 cpos = GetCursorPosition(window);
+        CheckPressed(poses, scales, cpos, ids[0]);
+        }
     UpdateEntities(shads, poses, scales, size);
     DrawEntities(textures, shads, vaos, size);
     

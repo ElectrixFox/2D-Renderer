@@ -36,6 +36,7 @@ SetUniformM4(prog, "model", getEntityModelMatrix4(e)); // getting and setting th
 
 Entity CreateEntity(unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture)
 {
+static unsigned int id = 0;
 unsigned int vao, vbo, ibo, prog;
 unsigned int tex = 0;
 vec2 scale = {1.0f, 1.0f};
@@ -84,7 +85,7 @@ if(texture != NULL)
 SetUniformM4(prog, "projection", getProjection(1020, 960, 1));
 SetUniformM4(prog, "model", model);
 
-return (Entity){0, position, scale, {vao, prog, tex}};
+return (Entity){id++, position, scale, {vao, prog, tex}};
 }
 
 void DrawEntities(unsigned int* textures, unsigned int* shaders, unsigned int* vaos, unsigned int size)
