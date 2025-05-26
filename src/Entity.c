@@ -1,23 +1,21 @@
 #include "Entity.h"
 
-vec2 PositionToEntitySpace(Entity e)
+vec2 PositionToEntitySpace(Entity e) { return LeftCornerFromCentre(e.pos, e.scale); }
+
+m4 getEntityModelMatrix4(Entity e) { return GetModelMatrix(e.pos, e.scale); }
+
+/*
+void UpdateEntities(Entities e)
 {
-vec2 pos;
-pos.x = e.pos.x - e.scale.x / 2;
-pos.y = e.pos.y - e.scale.y / 2;
-return pos;
+for(int i = 0; i < e.size; i++)
+    {
+    // can add constant variables here to reference the variables at the indices, these will probably be taken out by the compiler anyway
+    BindShader(e.shaders[i]);
+    SetUniformM4(e.shaders[i], "model", GetModelMatrix(e.positions[i], e.scales[i]));
+    }
 }
 
-m4 getEntityModelMatrix4(Entity e)
-{
-vec2 transformed = PositionToEntitySpace(e);
-return (m4){
-        e.scale.x, 0.0f, 0.0f, transformed.x,
-        0.0f, e.scale.y, 0.0f, transformed.y,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f
-};
-}
+*/
 
 void UpdateEntity(Entity e)
 {
@@ -94,8 +92,6 @@ BindVAO(e.rdets.vao);
 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-
-
 EntityQueue InitQueueEntityQueue(unsigned int size)
 {
 EntityQueue q;
@@ -123,9 +119,9 @@ return 0;
 
 void EnqueueEntityQueue(EntityQueue* q, Entity item)
 {
-if (isFull(*q))
+if (isFullEntityQueue(*q))
     return 0;
-if (isEmpty(*q))
+if (isEmptyEntityQueue(*q))
     q->head = 0;
 (*q).tail++;
 q->data[q->tail] = item;
@@ -133,7 +129,7 @@ q->data[q->tail] = item;
 
 Entity DequeueEntityQueue(EntityQueue* q)
 {
-if(!isEmpty(*q))
+if(!isEmptyEntityQueue(*q))
     return *((Entity*)NULL);
 q->head++;
 if(q->head > q->tail)
@@ -143,7 +139,7 @@ return q->data[q->head];
 
 Entity PeekEntityQueue(EntityQueue q)
 {
-if(!isEmpty(q))
+if(!isEmptyEntityQueue(q))
     return *((Entity*)NULL);
 return q.data[q.head];
 }

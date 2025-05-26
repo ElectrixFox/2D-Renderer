@@ -5,30 +5,10 @@
 #include <include/GLFW/glfw3.h>
 #include "src/Entity.h"
 
-vec2 GetMousePositionRelative(GLFWwindow* window)
-{
-double x, y;
-glfwGetCursorPos(window, &x, &y);
-// for 1020x960 window
-vec2 pos = {x, 960 - y};
-
-return pos;
-}
-
 void SetPressable(Entity* pressables, Entity nent, unsigned int* n)
 {
 pressables[*n] = nent;
 (*n)++;
-}
-
-void HasBeenPressed(Entity pressable, GLFWwindow* window)
-{
-vec2 point = GetMousePositionRelative(window);
-
-if(PointInSquare(point, pressable.pos, pressable.scale))
-    {
-    printf("\nPressed!");
-    }
 }
 
 void processInput(GLFWwindow* window, Entity e)
@@ -39,7 +19,6 @@ if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  // if the escape key is 
     }
 if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)  // if the escape key is pressed close the window
     {
-    HasBeenPressed(e, window);
     /*double x, y;
     vec2 posy = GetMousePositionRelative(window);
     glfwGetCursorPos(window, &x, &y);

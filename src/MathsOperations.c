@@ -1,5 +1,22 @@
 #include "MathsOperations.h"
 
+vec2 LeftCornerFromCentre(vec2 centre, vec2 scale)
+{
+vec2 pos;
+pos.x = centre.x - scale.x / 2;
+pos.y = centre.y - scale.y / 2;
+return pos;
+}
+
+int PointInSquare(vec2 point, vec2 pos, vec2 scale)
+{
+if (abs(point.x - pos.x) < scale.x)
+    if (abs(point.y - pos.y) < scale.y)
+        return 1;
+
+return 0;
+}
+
 float generalisedDot(float u[], float v[], unsigned int n)
 {
 float res = 0;  // setting up the result
@@ -112,6 +129,17 @@ return
     };
 }
 
+m4 GetModelMatrix(vec2 pos, vec2 scale)
+{
+vec2 transformed = LeftCornerFromCentre(pos, scale);
+return (m4){
+        scale.x, 0.0f, 0.0f, transformed.x,
+        0.0f, scale.y, 0.0f, transformed.y,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+};
+}
+
 m4 getM4ID()
 {
 return (m4){
@@ -120,15 +148,6 @@ return (m4){
      0.0f, 0.0f, 1.0f, 0.0f,
      0.0f, 0.0f, 0.0f, 1.0f}
 };
-}
-
-int PointInSquare(vec2 point, vec2 pos, vec2 scale)
-{
-if (abs(point.x - pos.x) < scale.x)
-    if (abs(point.y - pos.y) < scale.y)
-        return 1;
-
-return 0;
 }
 
 vec2 GetMousePositionRelative(vec2 cursor, unsigned int width, unsigned int height)
