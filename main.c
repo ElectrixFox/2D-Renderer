@@ -46,15 +46,16 @@ for (int i = 0; i < 3; i++)
     {
     printf("\n%d: %d", i, tarr[i]);
     }
-printf("\nAppending");
 unsigned int item = 4;
+printf("\nAppending");
 AppendToArray(tarr, 3, item, sizeof(unsigned int));
-
+printf("\nAppended");
+printf("\n%d", tarr[3]);
 for (int i = 0; i < 4; i++)
     {
     printf("\n%d: %d", i, tarr[i]);
     }
-
+printf("\nDone");
 /*
 glfwInit();
 GLFWwindow* window = glfwCreateWindow(width, height, "Title", 0, 0); // creates the window of size width x height

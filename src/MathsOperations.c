@@ -7,11 +7,14 @@ nptr = realloc(arr, elesize * nsize);  // making the array bigger
 arr = nptr;    // setting the old array to the new bigger one
 }
 
-void AppendToArray(void* arr, unsigned int size, void* item, unsigned int elesize)
+void AppendToArray(void** arr, unsigned int size, void* item, unsigned int elesize)
 {
-ExpandArray(arr, size, size + 1, elesize);
-memcpy((&arr)[size], item, elesize);
-// memmove(((int*)arr + size) * elesize, item, elesize);
+void** nptr = malloc(elesize * size);
+nptr = realloc(arr, elesize * (size + 1));
+nptr[size] = item;
+arr = nptr;
+// arr[size] = item;
+printf("\n%d, %d", arr[size], item);
 }
 
 vec2 LeftCornerFromCentre(vec2 centre, vec2 scale)
