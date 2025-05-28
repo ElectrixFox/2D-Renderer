@@ -109,6 +109,10 @@ SetEntityScale(es, ent1, (vec2){25.0f, 25.0f});
 SetEntityScale(es, ent2, (vec2){25.0f, 25.0f});
 SetEntityColour(es, ent2, (vec4){0.75f, 0.0f, 0.0f, 1.0f});
 
+// setting up the block bar
+unsigned int bar = CreateEntity(&es, 0, (vec2){(float)(width - 25), (float)(height - 50)}, "res/texvert.shader", "res/texfrag.shader", "res/sprites/movable_spritesheet.png");
+SetEntityScale(es, bar, (vec2){25.0f, 50.0f});
+
 unsigned int* pressables = (unsigned int*)malloc(sizeof(unsigned int) * 1);
 unsigned int n = 0;
 
@@ -132,30 +136,30 @@ while(!glfwWindowShouldClose(window))
 
     if(ckey == GLFW_KEY_W)
         {
-        vec2 posi = GetEntityPosition(es, pent);
+        vec2 posi = GetEntityPosition(es, bar);
         MovePointer(&posi, 0);
-        SetEntityPosition(es, pent, posi);
+        SetEntityPosition(es, bar, posi);
         ckey = 0;
         }
     else if(ckey == GLFW_KEY_D)
         {
-        vec2 posi = GetEntityPosition(es, pent);
+        vec2 posi = GetEntityPosition(es, bar);
         MovePointer(&posi, 1);
-        SetEntityPosition(es, pent, posi);
+        SetEntityPosition(es, bar, posi);
         ckey = 0;
         }
     else if(ckey == GLFW_KEY_S)
         {
-        vec2 posi = GetEntityPosition(es, pent);
+        vec2 posi = GetEntityPosition(es, bar);
         MovePointer(&posi, 2);
-        SetEntityPosition(es, pent, posi);
+        SetEntityPosition(es, bar, posi);
         ckey = 0;
         }
     else if(ckey == GLFW_KEY_A)
         {
-        vec2 posi = GetEntityPosition(es, pent);
+        vec2 posi = GetEntityPosition(es, bar);
         MovePointer(&posi, 3);
-        SetEntityPosition(es, pent, posi);
+        SetEntityPosition(es, bar, posi);
         ckey = 0;
         }
     else if(ckey == GLFW_KEY_ENTER)

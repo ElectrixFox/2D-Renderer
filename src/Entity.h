@@ -18,6 +18,11 @@ vec2 scale;
 viobject rdets;
 };
 
+typedef enum SHAPE
+    {
+    SQUARE = 0,
+    } SHAPE;
+
 // a renderable needs vertices, a vao and shader
 // an object needs position and scale 
 

@@ -1,8 +1,73 @@
 #include "Entity.h"
 
+typedef struct viBundle
+    {
+    union
+        {
+        unsigned int* indices;
+        float* vertices;
+        } vi;
+    const unsigned int n;
+    } viBundle;
+
+static viBundle GetShapeVertices(unsigned int, unsigned int, unsigned int);
+static viBundle GetShapeIndices(unsigned int shape);
+
 vec2 PositionToEntitySpace(Entity e) { return LeftCornerFromCentre(e.pos, e.scale); }
 
 m4 getEntityModelMatrix4(Entity e) { return GetModelMatrix(e.pos, e.scale); }
+
+viBundle GetShapeVertices(unsigned int shape, unsigned int sprites, unsigned int sprite)
+{
+if(sprites == 1)    // if there is only one sprite
+    sprite = 1; // default to the first sprite
+
+switch (shape)
+{
+case SQUARE:
+    const float vertices[] = {
+        1.0f,  1.0f, 1.0f,      1.0f, 1.0f,
+        1.0f, -1.0f, 1.0f,      1.0f, 0.0f,
+        -1.0f, -1.0f, 1.0f,     0.0f, 0.0f,
+        -1.0f,  1.0f, 1.0f,     0.0f, 1.0f
+    };
+    unsigned int n = sizeof(vertices) / sizeof(vertices[0]);
+    float* fl = calloc(n, sizeof(float));
+    for (int i = 0; i < n; i++)
+        {
+        fl[i] = vertices[i];
+        }
+
+    return (viBundle){fl, n};
+    break;
+default:
+    break;
+}
+
+}
+
+viBundle GetShapeIndices(unsigned int shape)
+{
+switch (shape)
+{
+case SQUARE:
+    const unsigned int indices[] = {
+        0, 1, 3,
+        1, 2, 3
+    };
+    unsigned int n = sizeof(indices) / sizeof(indices[0]);
+    unsigned int* ui = calloc(n, sizeof(unsigned int));
+    for (int i = 0; i < n; i++)
+        {
+        ui[i] = indices[i];
+        }
+    return (viBundle){ui, n};
+    break;
+default:
+    break;
+}
+
+}
 
 Entities InitialiseEntities()
 {
@@ -36,10 +101,25 @@ static unsigned int id = 0;
 unsigned int vao, vbo, ibo, prog;
 unsigned int tex = 0;
 vec2 scale = {1.0f, 1.0f};
-// vertices = GetShapeVertices(shape);
-// indices = GetShapeIndices(shape);
+viBundle vbund = GetShapeVertices(SQUARE, 1, 1);
+float* vertices = vbund.vi.vertices;
+viBundle ibund = GetShapeIndices(SQUARE);
+unsigned int* indices = ibund.vi.indices;
+
+printf("\n\n");
+for (int i = 0; i < 4; i++)
+    {
+    printf("\n%.2f %.2f %.2f %.2f %.2f", vertices[0 + 5 * i], vertices[1 + 5 * i], vertices[2 + 5 * i], vertices[3 + 5 * i], vertices[4 + 5 * i]);
+    }
+printf("\n\n");
+for (int i = 0; i < ibund.n; i++)
+    {
+    printf("\n%d", indices[i]);
+    }
+printf("\n\n");
 
 
+/*
 float vertices[] = {
     1.0f,  1.0f, 1.0f,      1.0f, 1.0f,
     1.0f, -1.0f, 1.0f,      1.0f, 0.0f,
@@ -51,11 +131,12 @@ unsigned int indices[] = {
     0, 1, 3,
     1, 2, 3
 };
+*/
 m4 model = GetModelMatrix(position, scale);
 
 vao = CreateVAO();  // creating the vao
-ibo = CreateIBO(indices, sizeof(indices) / sizeof(indices[0])); // creating the ibo
-vbo = CreateVBO(vertices, sizeof(vertices) / sizeof(vertices[0]));  // creating the vbo
+ibo = CreateIBO(indices, ibund.n); // creating the ibo
+vbo = CreateVBO(vertices, vbund.n);  // creating the vbo
 
 unsigned int ilay[1] = {3};
 VAOLayout layout = CreateVertexLayout(ilay, 5, 1);  // setting up the layout
