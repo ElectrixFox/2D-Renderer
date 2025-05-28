@@ -45,7 +45,10 @@ vec2 GetEntityPosition(Entities es, unsigned int eid);
 void SetEntityPosition(Entities es, unsigned int eid, vec2 pos);
 
 void SetEntityUniformFloat(Entities es, unsigned int eid, const char* varname, float value);
+
+vec2 GetEntityScale(Entities es, unsigned int eid);
 void SetEntityScale(Entities es, unsigned int eid, vec2 scale);
+
 void SetEntityColour(Entities es, unsigned int eid, vec4 colour);
 
 void _DrawEntities(unsigned int* textures, unsigned int* shaders, unsigned int* vaos, unsigned int size);

@@ -37,8 +37,8 @@ printf("\n%d, %d", arr[size], item);
 vec2 LeftCornerFromCentre(vec2 centre, vec2 scale)
 {
 vec2 pos;
-pos.x = centre.x - scale.x / 2;
-pos.y = centre.y - scale.y / 2;
+pos.x = centre.x;
+pos.y = centre.y;
 return pos;
 }
 

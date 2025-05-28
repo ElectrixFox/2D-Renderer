@@ -51,14 +51,7 @@ unsigned int indices[] = {
     0, 1, 3,
     1, 2, 3
 };
-
-m4 model = (m4){
-        scale.x, 0.0f, 0.0f, position.x,
-        0.0f, scale.y, 0.0f, position.y,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f
-};
-
+m4 model = GetModelMatrix(position, scale);
 
 vao = CreateVAO();  // creating the vao
 ibo = CreateIBO(indices, sizeof(indices) / sizeof(indices[0])); // creating the ibo
@@ -138,6 +131,13 @@ for (int i = 0; i < es.size; i++)
     }
 }
 
+vec2 GetEntityScale(Entities es, unsigned int eid)
+{
+for (int i = 0; i < es.size; i++)
+    if(es.ids[i] == eid)    // if the correct ID
+        return es.scales[i];    // return the scale
+}
+
 void SetEntityScale(Entities es, unsigned int eid, vec2 scale)
 {
 for (int i = 0; i < es.size; i++)
@@ -164,7 +164,8 @@ for (int i = 0; i < es.size; i++)
 
 void _DrawEntities(unsigned int* textures, unsigned int* shaders, unsigned int* vaos, unsigned int size)
 {
-for (int i = 0; i < size; i++)
+// for (int i = 0; i < size; i++)
+for (int i = size; 0 <= i; i--)
     {
     if(textures[i] != 0)
         {

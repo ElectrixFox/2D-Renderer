@@ -101,7 +101,7 @@ unsigned int n = 0;
 UpdateEntities(es);
 AddPressable(pressables, es.ids[0], &n);
 
-unsigned int pent = CreateEntity(&es, 0, (vec2){100.0f, 100.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
+unsigned int pent = CreateEntity(&es, 0, (vec2){0.0f, 0.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
 SetEntityScale(es, pent, (vec2){5.0f, 5.0f});
 SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f});
 UpdateEntities(es);
@@ -147,9 +147,16 @@ while(!glfwWindowShouldClose(window))
     else if(ckey == GLFW_KEY_ENTER)
         {
         vec2 posi = GetEntityPosition(es, pent);
+        vec2 scali = GetEntityScale(es, pent);
         unsigned int nent = CreateEntity(&es, 0, posi, "res/vertex.shader", "res/fragment.shader", NULL);
         SetEntityScale(es, nent, (vec2){25.0f, 25.0f});
         SetEntityColour(es, nent, (vec4){1.0f, 0.0f, 0.0f, 1.0f});
+        ckey = 0;
+        }
+    if(ckey == GLFW_KEY_Z && ckey & GLFW_MOD_CONTROL)
+        {
+        es.size = es.size - 1;
+        printf("\nUndoing");
         ckey = 0;
         }
 
@@ -171,7 +178,7 @@ while(!glfwWindowShouldClose(window))
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
-        if(CheckPressed(es.positions, es.scales, cpos, ent1))
+        if(CheckPressed(es.positions, es.scales, cpos, pent))
             {
             printf("\nPressed");
             }
