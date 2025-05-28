@@ -27,6 +27,8 @@ vec2 PositionToEntitySpace(Entity e);
 
 m4 getEntityModelMatrix4(Entity e);
 
+Entities InitialiseEntities();
+
 void _UpdateEntities(unsigned int* shaders, vec2* positions, vec2* scales, unsigned int size);
 void UpdateEntities(Entities es);
 
@@ -40,6 +42,7 @@ unsigned int _CreateEntity(Entities es, unsigned int shape, vec2 position, const
 unsigned int CreateEntity(Entities* es, unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture);
 
 void SetEntityPosition(Entities es, unsigned int eid, vec2 pos);
+void SetEntityUniformFloat(Entities es, unsigned int eid, const char* varname, float value);
 void SetEntityScale(Entities es, unsigned int eid, vec2 scale);
 void SetEntityColour(Entities es, unsigned int eid, vec4 colour);
 

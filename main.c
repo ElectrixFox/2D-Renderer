@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include <include/GL/glew.h>
 #include <include/GLFW/glfw3.h>
@@ -44,29 +45,48 @@ glfwMakeContextCurrent(window); // sets the context of the window
 glViewport(0, 0, width, height);
 
 glewInit();
+glEnable(GL_BLEND);
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-Entities es;
-es.size = 0;
-es.ids = malloc(sizeof(unsigned int) * 1);
-es.positions = malloc(sizeof(vec2) * 1);
-es.scales = malloc(sizeof(vec2) * 1);
-es.rdets.shaders = malloc(sizeof(unsigned int) * 1);
-es.rdets.textures = malloc(sizeof(unsigned int) * 1);
-es.rdets.vaos = malloc(sizeof(unsigned int) * 1);
+Entities es = InitialiseEntities(); // initialising the entities list and allocating memory
 
+unsigned int ent1 = CreateEntity(&es, 0, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
+unsigned int ent2 = CreateEntity(&es, 0, (vec2){485.0f, 430.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
+SetEntityScale(es, ent1, (vec2){25.0f, 25.0f});
+SetEntityScale(es, ent2, (vec2){25.0f, 25.0f});
+SetEntityColour(es, ent2, (vec4){0.75f, 0.0f, 0.0f, 1.0f});
 
-CreateEntity(&es, 0, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
-CreateEntity(&es, 0, (vec2){485.0f, 430.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
-printf("\n%d", es.size);
-SetEntityScale(es, es.ids[0], (vec2){25.0f, 25.0f});
-SetEntityScale(es, es.ids[1], (vec2){25.0f, 25.0f});
-SetEntityColour(es, es.ids[1], (vec4){0.75f, 0.0f, 0.0f, 1.0f});
-
+printf("\nInitial");
+for (int i = 0; i < es.size; i++)
+    {
+    printf("\n%d\t(%.2f, %.2f)\t%d %d %d\t(%.2f, %.2f)",
+        es.ids[i],
+        es.positions[i].x, es.positions[i].y,
+        es.rdets.shaders[i], es.rdets.textures[i], es.rdets.vaos[i],
+        es.scales[i].x, es.scales[i].y);
+    }
 unsigned int* pressables = (unsigned int*)malloc(sizeof(unsigned int) * 1);
 unsigned int n = 0;
 
 UpdateEntities(es);
 AddPressable(pressables, es.ids[0], &n);
+
+unsigned int pent = CreateEntity(&es, 0, (vec2){0.0f, 0.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
+SetEntityScale(es, pent, (vec2){15.0f, 15.0f});
+SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f});
+printf("\nAdded pent");
+UpdateEntities(es);
+for (int i = 0; i < es.size; i++)
+    {
+    printf("\n%d\t(%.2f, %.2f)\t%d %d %d\t(%.2f, %.2f)",
+        es.ids[i],
+        es.positions[i].x, es.positions[i].y,
+        es.rdets.shaders[i], es.rdets.textures[i], es.rdets.vaos[i],
+        es.scales[i].x, es.scales[i].y);
+    }
+
+
+
 
 
 while(!glfwWindowShouldClose(window))
@@ -80,8 +100,16 @@ while(!glfwWindowShouldClose(window))
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
-        CheckPressed(es.positions, es.scales, cpos, es.ids[0]);
+        if(CheckPressed(es.positions, es.scales, cpos, ent1))
+            {
+            printf("\nPressed");
+            }
         }
+    /*
+    float tim = sin(glfwGetTime());
+    SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f * tim});
+    */
+
     UpdateEntities(es);
     DrawEntities(es);
     

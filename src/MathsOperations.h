@@ -19,7 +19,7 @@ typedef struct m4 { vec4 mat[4]; } m4;
  * @param nsize The new size to resize to
  * @param elesize Sizeof an element in the array, e.g. if it was an array of integers elesize would be sizeof(int)
  */
-void ExpandArray(void* arr, unsigned int osize, unsigned int nsize, unsigned int elesize);
+inline void ExpandArray(void* arr, unsigned int osize, unsigned int nsize, unsigned int elesize);
 
 /**
  * Appends an element to an array

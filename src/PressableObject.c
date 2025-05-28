@@ -9,6 +9,7 @@ PressableArray InitPressableArray(unsigned int size)
 
 void AddPressable(unsigned int* presids, unsigned int eid, unsigned int* n)
 {
+ExpandArray(presids, (*n), (*n + 1), sizeof(unsigned int)); // increasing the size of the array
 (*n)++;
 presids[*n] = eid;
 }

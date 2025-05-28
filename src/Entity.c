@@ -4,6 +4,20 @@ vec2 PositionToEntitySpace(Entity e) { return LeftCornerFromCentre(e.pos, e.scal
 
 m4 getEntityModelMatrix4(Entity e) { return GetModelMatrix(e.pos, e.scale); }
 
+Entities InitialiseEntities()
+{
+Entities es;
+es.size = 0;
+es.ids = malloc(sizeof(unsigned int) * 1);
+es.positions = malloc(sizeof(vec2) * 1);
+es.scales = malloc(sizeof(vec2) * 1);
+es.rdets.shaders = malloc(sizeof(unsigned int) * 1);
+es.rdets.textures = malloc(sizeof(unsigned int) * 1);
+es.rdets.vaos = malloc(sizeof(unsigned int) * 1);
+
+return es;
+}
+
 void _UpdateEntities(unsigned int* shaders, vec2* positions, vec2* scales, unsigned int size)
 {
 for(int i = 0; i < size; i++)
@@ -101,6 +115,18 @@ for (int i = 0; i < es.size; i++)
     if(es.ids[i] == eid)    // if the correct ID
         {
         es.positions[i] = pos;  // set the position
+        break;
+        }
+    }
+}
+
+void SetEntityUniformFloat(Entities es, unsigned int eid, const char* varname, float value)
+{
+for (int i = 0; i < es.size; i++)
+    {
+    if(es.ids[i] == eid)    // if the correct ID
+        {
+        SetUniform1f(es.rdets.shaders[i], varname, value);
         break;
         }
     }
