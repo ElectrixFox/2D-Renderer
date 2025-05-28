@@ -30,7 +30,7 @@ for(int i = 0; i < size; i++)
 
 void UpdateEntities(Entities es) { _UpdateEntities(es.rdets.shaders, es.positions, es.scales, es.size); }
 
-unsigned int _CreateEntity(Entities es, unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture)
+unsigned int _CreateEntity(Entities* es, unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture)
 {
 static unsigned int id = 0;
 unsigned int vao, vbo, ibo, prog;
@@ -81,31 +81,37 @@ if(texture != NULL)
 SetUniformM4(prog, "projection", getProjection(1020, 960, 1));
 SetUniformM4(prog, "model", model);
 
-const unsigned int sze = es.size;
-ExpandArray(es.ids, sze, sze + 1, sizeof(unsigned int));
-ExpandArray(es.positions, sze, sze + 1, sizeof(vec2));
-ExpandArray(es.scales, sze, sze + 1, sizeof(vec2));
-ExpandArray(es.rdets.shaders, sze, sze + 1, sizeof(unsigned int));
-ExpandArray(es.rdets.textures, sze,  + 1, sizeof(unsigned int));
-ExpandArray(es.rdets.vaos, sze, sze + 1, sizeof(unsigned int));
+const unsigned int sze = es->size;
+ExpandArray(&es->ids, sze, sze + 1, sizeof(unsigned int));
+ExpandArray(&es->positions, sze, sze + 1, sizeof(vec2));
+ExpandArray(&es->scales, sze, sze + 1, sizeof(vec2));
+ExpandArray(&es->rdets.shaders, sze, sze + 1, sizeof(unsigned int));
+ExpandArray(&es->rdets.textures, sze, sze + 1, sizeof(unsigned int));
+ExpandArray(&es->rdets.vaos, sze, sze + 1, sizeof(unsigned int));
 
+const unsigned int top = es->size;
+es->ids[top] = id++;
+es->positions[top] = position;
+es->scales[top] = scale;
+es->rdets.shaders[top] = prog;
+es->rdets.textures[top] = tex;
+es->rdets.vaos[top] = vao;
 
-const unsigned int top = es.size;
-es.ids[top] = id++;
-es.positions[top] = position;
-es.scales[top] = scale;
-es.rdets.shaders[top] = prog;
-es.rdets.textures[top] = tex;
-es.rdets.vaos[top] = vao;
-
-return es.ids[top];
+return es->ids[top];
 }
 
 unsigned int CreateEntity(Entities* es, unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture)
 {
-unsigned int id = _CreateEntity(*es, shape, position, vshader, fshader, texture);
+unsigned int id = _CreateEntity(es, shape, position, vshader, fshader, texture);
 es->size++;
 return id;
+}
+
+vec2 GetEntityPosition(Entities es, unsigned int eid)
+{
+for (int i = 0; i < es.size; i++)
+    if(es.ids[i] == eid)    // if the correct ID
+        return es.positions[i];  // return the position
 }
 
 void SetEntityPosition(Entities es, unsigned int eid, vec2 pos)

@@ -32,7 +32,7 @@ Entities InitialiseEntities();
 void _UpdateEntities(unsigned int* shaders, vec2* positions, vec2* scales, unsigned int size);
 void UpdateEntities(Entities es);
 
-unsigned int _CreateEntity(Entities es, unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture);
+unsigned int _CreateEntity(Entities* es, unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture);
 
 /**
  * Creates the entity and adds it to the entities
@@ -41,7 +41,9 @@ unsigned int _CreateEntity(Entities es, unsigned int shape, vec2 position, const
  */
 unsigned int CreateEntity(Entities* es, unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture);
 
+vec2 GetEntityPosition(Entities es, unsigned int eid);
 void SetEntityPosition(Entities es, unsigned int eid, vec2 pos);
+
 void SetEntityUniformFloat(Entities es, unsigned int eid, const char* varname, float value);
 void SetEntityScale(Entities es, unsigned int eid, vec2 scale);
 void SetEntityColour(Entities es, unsigned int eid, vec4 colour);
