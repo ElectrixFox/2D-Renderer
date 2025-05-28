@@ -88,7 +88,6 @@ for (int i = 0; i < es.size; i++)
 
 int main()
 {
-test();
 unsigned int width = 1020;
 unsigned int height = 960;
 
@@ -104,15 +103,15 @@ glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 Entities es = InitialiseEntities(); // initialising the entities list and allocating memory
 
-unsigned int ent1 = CreateEntity(&es, 0, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
-unsigned int ent2 = CreateEntity(&es, 0, (vec2){485.0f, 430.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
+unsigned int ent1 = CreateEntity(&es, SQUARE, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
+unsigned int ent2 = CreateEntity(&es, SQUARE, (vec2){485.0f, 430.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
 SetEntityScale(es, ent1, (vec2){25.0f, 25.0f});
 SetEntityScale(es, ent2, (vec2){25.0f, 25.0f});
 SetEntityColour(es, ent2, (vec4){0.75f, 0.0f, 0.0f, 1.0f});
 
 // setting up the block bar
-unsigned int bar = CreateEntity(&es, 0, (vec2){(float)(width - 25), (float)(height - 50)}, "res/texvert.shader", "res/texfrag.shader", "res/sprites/movable_spritesheet.png");
-SetEntityScale(es, bar, (vec2){25.0f, 50.0f});
+unsigned int bar = CreateEntityFromSpriteSheet(&es, SQUARE, (vec2){(float)(width - 25), (float)(height - 50)}, "res/sprites/movable_spritesheet.png", 1, 2);
+SetEntityScaleFactor(es, bar, 25.0f);
 
 unsigned int* pressables = (unsigned int*)malloc(sizeof(unsigned int) * 1);
 unsigned int n = 0;
@@ -120,7 +119,7 @@ unsigned int n = 0;
 UpdateEntities(es);
 AddPressable(pressables, es.ids[0], &n);
 
-unsigned int pent = CreateEntity(&es, 0, (vec2){0.0f, 0.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
+unsigned int pent = CreateEntity(&es, SQUARE, (vec2){0.0f, 0.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
 SetEntityScale(es, pent, (vec2){5.0f, 5.0f});
 SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f});
 UpdateEntities(es);

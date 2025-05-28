@@ -35,9 +35,10 @@ m4 getEntityModelMatrix4(Entity e);
 void SetNumberOfSprites(unsigned int* shape, unsigned int numofspr);
 void SetActiveSprite(unsigned int* shape, unsigned int sprite);
 void SetActiveShape(unsigned int* shape, unsigned int sh);
-void test();
 
 Entities InitialiseEntities();
+
+unsigned int FindEntityInEntities(Entities es, unsigned int eid);
 
 void _UpdateEntities(unsigned int* shaders, vec2* positions, vec2* scales, unsigned int size);
 void UpdateEntities(Entities es);
@@ -61,6 +62,8 @@ void SetEntityUniformFloat(Entities es, unsigned int eid, const char* varname, f
 
 vec2 GetEntityScale(Entities es, unsigned int eid);
 void SetEntityScale(Entities es, unsigned int eid, vec2 scale);
+
+void SetEntityScaleFactor(Entities es, unsigned int eid, float scfac);
 
 void SetEntityColour(Entities es, unsigned int eid, vec4 colour);
 

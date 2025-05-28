@@ -14,7 +14,7 @@ static unsigned int GetNumberOfSprites(unsigned int shape);
 static unsigned int GetActiveSprite(unsigned int shape);
 static unsigned int GetActiveShape(unsigned int shape);
 
-static viBundle GetShapeVertices(unsigned int, unsigned int, unsigned int);
+static viBundle GetShapeVertices(unsigned int shape);
 static viBundle GetShapeIndices(unsigned int shape);
 
 vec2 PositionToEntitySpace(Entity e) { return LeftCornerFromCentre(e.pos, e.scale); }
@@ -63,55 +63,56 @@ unsigned int mask = 0b000000000001111U;  // the mask for the active sprite
 *(shape) = (((*shape) & (~mask)) | sh);
 }
 
-viBundle GetShapeVertices(unsigned int shape, unsigned int sprites, unsigned int sprite)
+viBundle GetShapeVertices(unsigned int shape)
 {
+unsigned int sprites = GetNumberOfSprites(shape), sprite = GetActiveSprite(shape);
 if(sprites == 1)    // if there is only one sprite
     sprite = 1; // default to the first sprite
 
-switch (shape)
-{
-case SQUARE:
-    const float vertices[] = {
-        1.0f,  1.0f, 1.0f,      sprite / sprites, 1.0f,
-        1.0f, -1.0f, 1.0f,      sprite / sprites, 0.0f,
-        -1.0f, -1.0f, 1.0f,     0.0f, 0.0f,
-        -1.0f,  1.0f, 1.0f,     0.0f, 1.0f
-    };
-    unsigned int n = sizeof(vertices) / sizeof(vertices[0]);
-    float* fl = calloc(n, sizeof(float));
-    for (int i = 0; i < n; i++)
-        {
-        fl[i] = vertices[i];
-        }
+switch (GetActiveShape(shape))  // gets the shape by masking
+    {
+    case SQUARE:
+        const float vertices[] = {
+            1.0f,  1.0f, 1.0f,      1.0f, (float)sprite / (float)sprites,
+            1.0f, -1.0f, 1.0f,      1.0f, 0.0f,
+            -1.0f, -1.0f, 1.0f,     0.0f, 0.0f,
+            -1.0f,  1.0f, 1.0f,     0.0f, (float)sprite / (float)sprites
+        };
+        unsigned int n = sizeof(vertices) / sizeof(vertices[0]);
+        float* fl = calloc(n, sizeof(float));
+        for (int i = 0; i < n; i++)
+            {
+            fl[i] = vertices[i];
+            }
 
-    return (viBundle){fl, n};
-    break;
-default:
-    break;
-}
+        return (viBundle){fl, n};
+        break;
+    default:
+        break;
+    }
 
 }
 
 viBundle GetShapeIndices(unsigned int shape)
 {
-switch (shape)
-{
-case SQUARE:
-    const unsigned int indices[] = {
-        0, 1, 3,
-        1, 2, 3
-    };
-    unsigned int n = sizeof(indices) / sizeof(indices[0]);
-    unsigned int* ui = calloc(n, sizeof(unsigned int));
-    for (int i = 0; i < n; i++)
-        {
-        ui[i] = indices[i];
-        }
-    return (viBundle){ui, n};
-    break;
-default:
-    break;
-}
+switch (GetActiveShape(shape))  // gets the shape by masking
+    {
+    case SQUARE:
+        const unsigned int indices[] = {
+            0, 1, 3,
+            1, 2, 3
+        };
+        unsigned int n = sizeof(indices) / sizeof(indices[0]);
+        unsigned int* ui = calloc(n, sizeof(unsigned int));
+        for (int i = 0; i < n; i++)
+            {
+            ui[i] = indices[i];
+            }
+        return (viBundle){ui, n};
+        break;
+    default:
+        break;
+    }
 
 }
 
@@ -127,6 +128,12 @@ es.rdets.textures = malloc(sizeof(unsigned int) * 1);
 es.rdets.vaos = malloc(sizeof(unsigned int) * 1);
 
 return es;
+}
+
+unsigned int FindEntityInEntities(Entities es, unsigned int eid)
+{
+for (int i = 0; i < es.size; i++)
+    if(es.ids[i] == eid) return i;
 }
 
 void _UpdateEntities(unsigned int* shaders, vec2* positions, vec2* scales, unsigned int size)
@@ -147,9 +154,9 @@ static unsigned int id = 0;
 unsigned int vao, vbo, ibo, prog;
 unsigned int tex = 0;
 vec2 scale = {1.0f, 1.0f};
-viBundle vbund = GetShapeVertices(SQUARE, 1, 1);
+viBundle vbund = GetShapeVertices(shape);
 float* vertices = vbund.vi.vertices;
-viBundle ibund = GetShapeIndices(SQUARE);
+viBundle ibund = GetShapeIndices(shape);
 unsigned int* indices = ibund.vi.indices;
 
 m4 model = GetModelMatrix(position, scale);
@@ -203,7 +210,13 @@ return id;
 
 unsigned int CreateEntityFromSpriteSheet(Entities* es, unsigned int shape, vec2 position, const char* sheet, unsigned int sprite, unsigned int spritenum)
 {
+// setting up the shape details
+SetActiveShape(&shape, shape);
+SetActiveSprite(&shape, sprite);
+SetNumberOfSprites(&shape, spritenum);
+
 unsigned int id = _CreateEntity(es, shape, position, "res/texvert.shader", "res/texfrag.shader", sheet);
+
 es->size++;
 return id;
 }
@@ -256,6 +269,13 @@ for (int i = 0; i < es.size; i++)
         break;
         }
     }
+}
+
+void SetEntityScaleFactor(Entities es, unsigned int eid, float scfac)
+{
+unsigned int index = FindEntityInEntities(es, eid);
+es.scales[index].x *= scfac;
+es.scales[index].y *= scfac;
 }
 
 void SetEntityColour(Entities es, unsigned int eid, vec4 colour)
