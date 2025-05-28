@@ -88,6 +88,7 @@ for (int i = 0; i < es.size; i++)
 
 int main()
 {
+test();
 unsigned int width = 1020;
 unsigned int height = 960;
 

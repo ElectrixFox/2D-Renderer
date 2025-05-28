@@ -10,12 +10,58 @@ typedef struct viBundle
     const unsigned int n;
     } viBundle;
 
+static unsigned int GetNumberOfSprites(unsigned int shape);
+static unsigned int GetActiveSprite(unsigned int shape);
+static unsigned int GetActiveShape(unsigned int shape);
+
 static viBundle GetShapeVertices(unsigned int, unsigned int, unsigned int);
 static viBundle GetShapeIndices(unsigned int shape);
 
 vec2 PositionToEntitySpace(Entity e) { return LeftCornerFromCentre(e.pos, e.scale); }
 
 m4 getEntityModelMatrix4(Entity e) { return GetModelMatrix(e.pos, e.scale); }
+
+/*
+The shape variable is of this form
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0| Num S | Sprite| Shape 
+*/
+
+static unsigned int GetNumberOfSprites(unsigned int shape)
+{
+unsigned int mask = 0b0000111100000000U;  // the mask for the number of sprites
+return ((shape & mask) >> 8);
+}
+
+void SetNumberOfSprites(unsigned int* shape, unsigned int numofspr)
+{
+unsigned int mask = 0b0000111100000000U;  // the mask for the number of sprites
+*(shape) = ((*(shape) & (~mask)) | (numofspr << 8));
+}
+
+static unsigned int GetActiveSprite(unsigned int shape)
+{
+unsigned int mask = 0b000000011110000U;  // the mask for the active sprite
+return ((shape & mask) >> 4);
+}
+
+void SetActiveSprite(unsigned int* shape, unsigned int sprite)
+{
+unsigned int mask = 0b000000011110000U;  // the mask for the active sprite
+*(shape) = ((*(shape) & ~mask) | (sprite << 4));
+}
+
+static unsigned int GetActiveShape(unsigned int shape)
+{
+unsigned int mask = 0b000000000001111U;  // the mask for the active sprite
+return (shape & mask);
+}
+
+void SetActiveShape(unsigned int* shape, unsigned int sh)
+{
+unsigned int mask = 0b000000000001111U;  // the mask for the active sprite
+*(shape) = (((*shape) & (~mask)) | sh);
+}
 
 viBundle GetShapeVertices(unsigned int shape, unsigned int sprites, unsigned int sprite)
 {
@@ -26,8 +72,8 @@ switch (shape)
 {
 case SQUARE:
     const float vertices[] = {
-        1.0f,  1.0f, 1.0f,      1.0f, 1.0f,
-        1.0f, -1.0f, 1.0f,      1.0f, 0.0f,
+        1.0f,  1.0f, 1.0f,      sprite / sprites, 1.0f,
+        1.0f, -1.0f, 1.0f,      sprite / sprites, 0.0f,
         -1.0f, -1.0f, 1.0f,     0.0f, 0.0f,
         -1.0f,  1.0f, 1.0f,     0.0f, 1.0f
     };
@@ -106,32 +152,6 @@ float* vertices = vbund.vi.vertices;
 viBundle ibund = GetShapeIndices(SQUARE);
 unsigned int* indices = ibund.vi.indices;
 
-printf("\n\n");
-for (int i = 0; i < 4; i++)
-    {
-    printf("\n%.2f %.2f %.2f %.2f %.2f", vertices[0 + 5 * i], vertices[1 + 5 * i], vertices[2 + 5 * i], vertices[3 + 5 * i], vertices[4 + 5 * i]);
-    }
-printf("\n\n");
-for (int i = 0; i < ibund.n; i++)
-    {
-    printf("\n%d", indices[i]);
-    }
-printf("\n\n");
-
-
-/*
-float vertices[] = {
-    1.0f,  1.0f, 1.0f,      1.0f, 1.0f,
-    1.0f, -1.0f, 1.0f,      1.0f, 0.0f,
-    -1.0f, -1.0f, 1.0f,     0.0f, 0.0f,
-    -1.0f,  1.0f, 1.0f,     0.0f, 1.0f
-};
-    
-unsigned int indices[] = {
-    0, 1, 3,
-    1, 2, 3
-};
-*/
 m4 model = GetModelMatrix(position, scale);
 
 vao = CreateVAO();  // creating the vao
@@ -177,6 +197,13 @@ return es->ids[top];
 unsigned int CreateEntity(Entities* es, unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture)
 {
 unsigned int id = _CreateEntity(es, shape, position, vshader, fshader, texture);
+es->size++;
+return id;
+}
+
+unsigned int CreateEntityFromSpriteSheet(Entities* es, unsigned int shape, vec2 position, const char* sheet, unsigned int sprite, unsigned int spritenum)
+{
+unsigned int id = _CreateEntity(es, shape, position, "res/texvert.shader", "res/texfrag.shader", sheet);
 es->size++;
 return id;
 }
