@@ -29,7 +29,7 @@ void ExpandArray(void* arr, unsigned int osize, unsigned int nsize, unsigned int
  * @param item The item to add
  * @param elesize The size of the element to add
  */
-void AppendToArray(void** arr, unsigned int size, void* item, unsigned int elesize);
+void AppendToArray(void** arr, unsigned int size, void** item, unsigned int elesize);
 
 vec2 LeftCornerFromCentre(vec2 centre, vec2 scale);
 

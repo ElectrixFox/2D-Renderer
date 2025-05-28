@@ -30,28 +30,18 @@ m4 getEntityModelMatrix4(Entity e);
 void _UpdateEntities(unsigned int* shaders, vec2* positions, vec2* scales, unsigned int size);
 void UpdateEntities(Entities es);
 
-void UpdateEntity(Entity e);
+unsigned int _CreateEntity(Entities es, unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture);
 
-Entity CreateEntity(unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture);
-void CreateEntity_(Entities es, unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture);
+/**
+ * Creates the entity and adds it to the entities
+ * 
+ * @returns The ID of the entity created
+ */
+unsigned int CreateEntity(Entities* es, unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture);
+
+void SetEntityPosition(Entities es, unsigned int eid, vec2 pos);
+void SetEntityScale(Entities es, unsigned int eid, vec2 scale);
+void SetEntityColour(Entities es, unsigned int eid, vec4 colour);
 
 void _DrawEntities(unsigned int* textures, unsigned int* shaders, unsigned int* vaos, unsigned int size);
 void DrawEntities(Entities es);
-
-void DrawEntity(Entity e);
-
-typedef struct EntityQueue
-    {
-    int head, tail;
-    Entity* data;
-    unsigned int size;
-    } EntityQueue;
-
-EntityQueue InitQueueEntityQueue(unsigned int size);
-
-int isEmptyEntityQueue(EntityQueue queue);
-int isFullEntityQueue(EntityQueue queue);
-
-void EnqueueEntityQueue(EntityQueue* q, Entity item);
-Entity DequeueEntityQueue(EntityQueue* q);
-Entity PeekEntityQueue(EntityQueue q);

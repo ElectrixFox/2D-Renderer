@@ -37,26 +37,6 @@ int main()
 unsigned int width = 1020;
 unsigned int height = 960;
 
-unsigned int* tarr = (unsigned int*)malloc(sizeof(unsigned int) * 3);
-tarr[0] = 1;
-tarr[1] = 2;
-tarr[2] = 3;
-printf("\nOrigional");
-for (int i = 0; i < 3; i++)
-    {
-    printf("\n%d: %d", i, tarr[i]);
-    }
-unsigned int item = 4;
-printf("\nAppending");
-AppendToArray(tarr, 3, item, sizeof(unsigned int));
-printf("\nAppended");
-printf("\n%d", tarr[3]);
-for (int i = 0; i < 4; i++)
-    {
-    printf("\n%d: %d", i, tarr[i]);
-    }
-printf("\nDone");
-/*
 glfwInit();
 GLFWwindow* window = glfwCreateWindow(width, height, "Title", 0, 0); // creates the window of size width x height
 
@@ -65,30 +45,28 @@ glViewport(0, 0, width, height);
 
 glewInit();
 
-Entity ent1 = CreateEntity(0, (vec2){0.0f, 0.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
-ent1.scale = (vec2){25.0f, 25.0f};
-ent1.pos = (vec2){535.0f, 430.0f};
-SetUniform4f(ent1.rdets.shader, "colour", (vec4){0.75f, 0.0f, 0.0f, 1.0f});
+Entities es;
+es.size = 0;
+es.ids = malloc(sizeof(unsigned int) * 1);
+es.positions = malloc(sizeof(vec2) * 1);
+es.scales = malloc(sizeof(vec2) * 1);
+es.rdets.shaders = malloc(sizeof(unsigned int) * 1);
+es.rdets.textures = malloc(sizeof(unsigned int) * 1);
+es.rdets.vaos = malloc(sizeof(unsigned int) * 1);
 
 
-Entity ent2 = CreateEntity(0, (vec2){0.0f, 0.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
-ent2.scale = (vec2){25.0f, 25.0f};
-ent2.pos = (vec2){485.0f, 430.0f};
-SetUniform4f(ent2.rdets.shader, "colour", (vec4){0.0f, 0.75f, 0.0f, 1.0f});
-
-unsigned int ids[] = {ent1.id, ent2.id};
-unsigned int shads[] = {ent1.rdets.shader, ent2.rdets.shader};
-unsigned int textures[] = {ent1.rdets.texture, ent2.rdets.texture};
-unsigned int vaos[] = {ent1.rdets.vao, ent2.rdets.vao};
-vec2 poses[] = {ent1.pos, ent2.pos};
-vec2 scales[] = {ent1.scale, ent2.scale};
-unsigned int size = 2;
+CreateEntity(&es, 0, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
+CreateEntity(&es, 0, (vec2){485.0f, 430.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
+printf("\n%d", es.size);
+SetEntityScale(es, es.ids[0], (vec2){25.0f, 25.0f});
+SetEntityScale(es, es.ids[1], (vec2){25.0f, 25.0f});
+SetEntityColour(es, es.ids[1], (vec4){0.75f, 0.0f, 0.0f, 1.0f});
 
 unsigned int* pressables = (unsigned int*)malloc(sizeof(unsigned int) * 1);
 unsigned int n = 0;
 
-UpdateEntities(shads, poses, scales, size);
-AddPressable(pressables, ids[0], &n);
+UpdateEntities(es);
+AddPressable(pressables, es.ids[0], &n);
 
 
 while(!glfwWindowShouldClose(window))
@@ -102,17 +80,16 @@ while(!glfwWindowShouldClose(window))
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
-        CheckPressed(poses, scales, cpos, ids[0]);
+        CheckPressed(es.positions, es.scales, cpos, es.ids[0]);
         }
-    UpdateEntities(shads, poses, scales, size);
-    DrawEntities(textures, shads, vaos, size);
+    UpdateEntities(es);
+    DrawEntities(es);
     
     glfwSwapBuffers(window);
     glfwPollEvents();
     }
 
 glfwTerminate();    // cleans up all the glfw objects
-*/
 
 return 0;
 }
