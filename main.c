@@ -72,6 +72,20 @@ vec2 point = GetMousePositionRelative((vec2){x, y}, wid, hig);
 return point;
 }
 
+void OutputEntitiesDetails(Entities es)
+{
+printf("\nSize: %d", es.size);
+printf("\n%10s\t%s\t%13s\t\t%13s %10s %8s\t", "ID", "Position", "Scale", "Shader", "Texture", "VAO");
+for (int i = 0; i < es.size; i++)
+    {
+    printf("\n%10d\t(%.2f, %.2f)\t(%.2f, %.2f)\t%10d %10d %10d\t",
+        es.ids[i],
+        es.positions[i].x, es.positions[i].y,
+        es.scales[i].x, es.scales[i].y,
+        es.rdets.shaders[i], es.rdets.textures[i], es.rdets.vaos[i]);
+    }
+}
+
 int main()
 {
 unsigned int width = 1020;
@@ -156,32 +170,30 @@ while(!glfwWindowShouldClose(window))
     if(ckey == GLFW_KEY_Z && ckey & GLFW_MOD_CONTROL)
         {
         es.size = es.size - 1;
-        printf("\nUndoing");
         ckey = 0;
         }
 
     if(ckey == GLFW_KEY_TAB)
         {
-        printf("\nSize: %d", es.size);
-        printf("\n%10s\t%s\t%13s\t\t%13s %10s %8s\t", "ID", "Position", "Scale", "Shader", "Texture", "VAO");
-        for (int i = 0; i < es.size; i++)
-            {
-            printf("\n%10d\t(%.2f, %.2f)\t(%.2f, %.2f)\t%10d %10d %10d\t",
-                es.ids[i],
-                es.positions[i].x, es.positions[i].y,
-                es.scales[i].x, es.scales[i].y,
-                es.rdets.shaders[i], es.rdets.textures[i], es.rdets.vaos[i]);
-            }
+        OutputEntitiesDetails(es);
         ckey = 0;
         }
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
+
         if(CheckPressed(es.positions, es.scales, cpos, pent))
             {
-            printf("\nPressed");
+            // printf("\nPressed");
             }
+
+            {   // moving the pointer
+            vec2 posi = GetEntityPosition(es, pent);
+            vec2 nposi = {50 * round(cpos.x / 50), 50 * round(cpos.y / 50)};
+            SetEntityPosition(es, pent, nposi);
+            }
+
         }
     // float tim = sin(2 * glfwGetTime());
     SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f * 1});
