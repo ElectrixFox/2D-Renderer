@@ -149,14 +149,16 @@ while(!glfwWindowShouldClose(window))
     {
     // loop
     // InputAction({if(getCurrentInputInformation().key == GLFW_KEY_ESCAPE)glfwSetWindowShouldClose(window, 1);});  // if the key is escape then close
-    if(getCurrentInputInformation().key == GLFW_KEY_ESCAPE)
+    if(isPressedSingle(GLFW_KEY_ESCAPE))
+        glfwSetWindowShouldClose(window, 1);
+    
+    InputPacket ip = getCurrentInputInformation();
+    if(isPressedSingle(GLFW_KEY_W) || isPressedSingle(GLFW_KEY_A) || isPressedSingle(GLFW_KEY_S) || isPressedSingle(GLFW_KEY_D))
         {
-        printf("\nGot Key");
-        printf("\nPrevious: %d\tCurrent: %d", getCurrentInputInformation().prevact, getCurrentInputInformation().action);
-        if(getCurrentInputInformation().action == GLFW_RELEASE && getCurrentInputInformation().prevact == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, 1);
+        vec2 posi = GetEntityPosition(es, pent);
+        MovePointer(&posi, ip.key);
+        SetEntityPosition(es, pent, posi);
         }
-        
     /*
     InputAction(
         MovePointer(&es.positions[FindEntityInEntities(es, pent)], getCurrentInputInformation().key)
@@ -165,6 +167,10 @@ while(!glfwWindowShouldClose(window))
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
+    if(isPressedSingle(GLFW_KEY_TAB))
+        {
+        OutputEntitiesDetails(es);
+        }
     /*
     if(getCurrentInputInformation().key == GLFW_KEY_Z && getCurrentInputInformation().key & GLFW_MOD_CONTROL)
         {
@@ -172,11 +178,6 @@ while(!glfwWindowShouldClose(window))
         ckey = 0;
         }
 
-    if(ckey == GLFW_KEY_TAB)
-        {
-        OutputEntitiesDetails(es);
-        ckey = 0;
-        }
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);

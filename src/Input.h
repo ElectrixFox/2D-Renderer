@@ -16,5 +16,8 @@ typedef struct InputPacket
 void InitialiseInput(GLFWwindow* window);
 
 InputPacket getCurrentInputInformation();
+void resetInputPacket();
 
 int isPressedSingle(int key);
+
+int isHeldDown(int key);
