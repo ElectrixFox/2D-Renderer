@@ -4,6 +4,7 @@
 
 #include <include/GL/glew.h>
 #include <include/GLFW/glfw3.h>
+#include "src/Input.h"
 #include "src/Entity.h"
 #include "src/PressableObject.h"
 
@@ -22,29 +23,43 @@ if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
     }
 }
 
-void MovePointer(vec2* pos, unsigned int dir)
+void MovePointer(vec2* pos, unsigned int key)
 {
-switch (dir)
+switch (key)
     {
-    case 0: // move up
+    case GLFW_KEY_W:    // move up
         pos->y += 5;
         break;
-    case 1: // move right
-        pos->x += 5;
+    case GLFW_KEY_A:    // move left
+        pos->x -= 5;
         break;
-    case 2: // move down
+    case GLFW_KEY_S:    // move down
         pos->y -= 5;
         break;
-    case 3: // move left
-        pos->x -= 5;
+    case GLFW_KEY_D:    // move right
+        pos->x += 5;
         break;
     default:
         break;
     }
 }
 
-unsigned int ckey = 0;
+void mve()
+{
+/*
+if(ckey == GLFW_KEY_ENTER)
+    {
+    vec2 posi = GetEntityPosition(es, pent);
+    vec2 scali = GetEntityScale(es, pent);
+    unsigned int nent = CreateEntity(&es, 0, posi, "res/vertex.shader", "res/fragment.shader", NULL);
+    SetEntityScale(es, nent, (vec2){25.0f, 25.0f});
+    SetEntityColour(es, nent, (vec4){1.0f, 0.0f, 0.0f, 1.0f});
+    ckey = 0;
+    }
+*/
+}
 
+/*
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 if(action == GLFW_PRESS)
@@ -60,6 +75,7 @@ if(action == GLFW_RELEASE)
     ckey = 0;
     }
 }
+*/
 
 vec2 GetCursorPosition(GLFWwindow* window)
 {
@@ -101,6 +117,8 @@ glewInit();
 glEnable(GL_BLEND);
 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+InitialiseInput(window);
+
 Entities es = InitialiseEntities(); // initialising the entities list and allocating memory
 
 unsigned int ent1 = CreateEntity(&es, SQUARE, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
@@ -126,52 +144,29 @@ SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f});
 
 UpdateEntities(es);
 
-glfwSetKeyCallback(window, key_callback);
+// glfwSetKeyCallback(window, key_callback);
 while(!glfwWindowShouldClose(window))
     {
     // loop
-    processInput(window);   // do all the input processing here
+    // InputAction({if(getCurrentInputInformation().key == GLFW_KEY_ESCAPE)glfwSetWindowShouldClose(window, 1);});  // if the key is escape then close
+    if(getCurrentInputInformation().key == GLFW_KEY_ESCAPE)
+        {
+        printf("\nGot Key");
+        printf("\nPrevious: %d\tCurrent: %d", getCurrentInputInformation().prevact, getCurrentInputInformation().action);
+        if(getCurrentInputInformation().action == GLFW_RELEASE && getCurrentInputInformation().prevact == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, 1);
+        }
+        
+    /*
+    InputAction(
+        MovePointer(&es.positions[FindEntityInEntities(es, pent)], getCurrentInputInformation().key)
+    );*/
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
-    if(ckey == GLFW_KEY_W)
-        {
-        vec2 posi = GetEntityPosition(es, pent);
-        MovePointer(&posi, 0);
-        SetEntityPosition(es, pent, posi);
-        ckey = 0;
-        }
-    else if(ckey == GLFW_KEY_D)
-        {
-        vec2 posi = GetEntityPosition(es, pent);
-        MovePointer(&posi, 1);
-        SetEntityPosition(es, pent, posi);
-        ckey = 0;
-        }
-    else if(ckey == GLFW_KEY_S)
-        {
-        vec2 posi = GetEntityPosition(es, pent);
-        MovePointer(&posi, 2);
-        SetEntityPosition(es, pent, posi);
-        ckey = 0;
-        }
-    else if(ckey == GLFW_KEY_A)
-        {
-        vec2 posi = GetEntityPosition(es, pent);
-        MovePointer(&posi, 3);
-        SetEntityPosition(es, pent, posi);
-        ckey = 0;
-        }
-    else if(ckey == GLFW_KEY_ENTER)
-        {
-        vec2 posi = GetEntityPosition(es, pent);
-        vec2 scali = GetEntityScale(es, pent);
-        unsigned int nent = CreateEntity(&es, 0, posi, "res/vertex.shader", "res/fragment.shader", NULL);
-        SetEntityScale(es, nent, (vec2){25.0f, 25.0f});
-        SetEntityColour(es, nent, (vec4){1.0f, 0.0f, 0.0f, 1.0f});
-        ckey = 0;
-        }
-    if(ckey == GLFW_KEY_Z && ckey & GLFW_MOD_CONTROL)
+    /*
+    if(getCurrentInputInformation().key == GLFW_KEY_Z && getCurrentInputInformation().key & GLFW_MOD_CONTROL)
         {
         es.size = es.size - 1;
         ckey = 0;
@@ -197,6 +192,7 @@ while(!glfwWindowShouldClose(window))
             SetEntityPosition(es, pent, nposi);
             }
         }
+    */
     // float tim = sin(2 * glfwGetTime());
     SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f * 1});
 
