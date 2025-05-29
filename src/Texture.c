@@ -66,16 +66,14 @@ glGenerateMipmap(GL_TEXTURE_2D);
 
 stbi_image_free(data);
 
-// texture = SetTextureVariable(texture, path);
+texture = SetTextureVariable(texture, path);
 
 return texture;
 }
 
 void BindTexture(unsigned int texture)
 {
-glBindTexture(GL_TEXTURE_2D, texture); //getTexture(texture));  // binds the texture
-/*
 // GL_TEXTURE0 is the first of many consecutive numbers referring to active textures so if we just add the active we get the correct thing
-glActiveTexture(GL_TEXTURE0);// + getActiveTexture(texture));
-*/
+glActiveTexture(GL_TEXTURE0 + getActiveTexture(texture));
+glBindTexture(GL_TEXTURE_2D, getTexture(texture));  // binds the texture
 }

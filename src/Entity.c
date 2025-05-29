@@ -175,7 +175,7 @@ prog = CreateShader(vshader, fshader);
 if(texture != NULL)
     {
     tex = CreateTexture(texture);
-    SetUniform1i(prog, "intexture", 0); // set the texture to be used (the 0th active texture)
+    SetUniform1i(prog, "intexture", getActiveTexture(tex)); // set the texture to be used (the 0th active texture)
     }
 
 
@@ -203,6 +203,10 @@ return es->ids[top];
 
 unsigned int CreateEntity(Entities* es, unsigned int shape, vec2 position, const char* vshader, const char* fshader, const char* texture)
 {
+SetActiveShape(&shape, shape);
+SetActiveSprite(&shape, 1);
+SetNumberOfSprites(&shape, 1);
+
 unsigned int id = _CreateEntity(es, shape, position, vshader, fshader, texture);
 es->size++;
 return id;
@@ -297,7 +301,6 @@ for (int i = size - 1; 0 <= i; i--)
     {
     if(textures[i] != 0)
         {
-        glActiveTexture(GL_TEXTURE0);
         BindTexture(textures[i]);
         }
     BindShader(shaders[i]);

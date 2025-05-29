@@ -105,13 +105,13 @@ Entities es = InitialiseEntities(); // initialising the entities list and alloca
 
 unsigned int ent1 = CreateEntity(&es, SQUARE, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
 SetEntityScale(es, ent1, (vec2){25.0f, 25.0f});
-/*unsigned int ent2 = CreateEntity(&es, SQUARE, (vec2){485.0f, 430.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
+unsigned int ent2 = CreateEntity(&es, SQUARE, (vec2){485.0f, 430.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
 SetEntityScale(es, ent2, (vec2){25.0f, 25.0f});
 SetEntityColour(es, ent2, (vec4){0.75f, 0.0f, 0.0f, 1.0f});
-*/
+
 // setting up the block bar
-// unsigned int bar = CreateEntityFromSpriteSheet(&es, SQUARE, (vec2){(float)(width - 25), (float)(height - 50)}, "res/sprites/movable_spritesheet.png", 1, 2);
-// SetEntityScaleFactor(es, bar, 25.0f);
+unsigned int bar = CreateEntityFromSpriteSheet(&es, SQUARE, (vec2){(float)(width - 25), (float)(height - 50)}, "res/sprites/movable_spritesheet.png", 1, 2);
+SetEntityScaleFactor(es, bar, 25.0f);
 
 /*
 unsigned int* pressables = (unsigned int*)malloc(sizeof(unsigned int) * 1);
@@ -119,11 +119,11 @@ unsigned int n = 0;
 
 AddPressable(pressables, es.ids[0], &n);
 */
-/*
+
 unsigned int pent = CreateEntity(&es, SQUARE, (vec2){0.0f, 0.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
 SetEntityScale(es, pent, (vec2){5.0f, 5.0f});
 SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f});
-*/
+
 UpdateEntities(es);
 
 glfwSetKeyCallback(window, key_callback);
@@ -134,7 +134,6 @@ while(!glfwWindowShouldClose(window))
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
-    /*
     if(ckey == GLFW_KEY_W)
         {
         vec2 posi = GetEntityPosition(es, pent);
@@ -177,14 +176,12 @@ while(!glfwWindowShouldClose(window))
         es.size = es.size - 1;
         ckey = 0;
         }
-    */
 
     if(ckey == GLFW_KEY_TAB)
         {
         OutputEntitiesDetails(es);
         ckey = 0;
         }
-    /*
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
@@ -202,7 +199,6 @@ while(!glfwWindowShouldClose(window))
         }
     // float tim = sin(2 * glfwGetTime());
     SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f * 1});
-    */
 
     UpdateEntities(es);
     DrawEntities(es);
