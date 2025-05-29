@@ -3,6 +3,42 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "include/stb/stb_image.h"
 
+static unsigned int SetTextureVariable(unsigned int, const char*);
+
+static unsigned int SetTextureVariable(unsigned int tex, const char* fp)
+{
+static char fps[32][64]; // array of file paths
+unsigned int mask = 0b1111000000000000U;  // the mask for the active texture
+
+int nfps = 0;
+for (int i = 0; i < 32; i++)
+    {
+    if(strlen(fps[i]) != 0)
+        nfps++;
+    }
+
+for (int i = 0; i < nfps; i++)
+    {
+    if(strcmpi(fps[i], fp) == 0)    // if the file paths is already in the array
+        return ((tex & ~mask) | (i << 12)); // clears the tex variable part then appends the new active number
+    }
+
+strcpy(fps[nfps], fp);  // copy the new file path into the filepaths array
+return ((tex & ~mask) | (nfps << 12));
+}
+
+unsigned int getActiveTexture(unsigned int texture)
+{
+unsigned int mask = 0b1111000000000000U;  // the mask for the active texture
+return ((texture & mask) >> 12); // ignores all the other bits then shifts the active part to the front
+}
+
+unsigned int getTexture(unsigned int texture)
+{
+unsigned int mask = 0b1111000000000000U;  // the mask for the active texture
+return (texture & ~mask);   // everything that isn't the mask
+}
+
 unsigned int CreateTexture(const char* path)
 {
 unsigned int texture;
@@ -30,10 +66,16 @@ glGenerateMipmap(GL_TEXTURE_2D);
 
 stbi_image_free(data);
 
+// texture = SetTextureVariable(texture, path);
+
 return texture;
 }
 
 void BindTexture(unsigned int texture)
 {
-glBindTexture(GL_TEXTURE_2D, texture);   // binds the texture
+glBindTexture(GL_TEXTURE_2D, texture); //getTexture(texture));  // binds the texture
+/*
+// GL_TEXTURE0 is the first of many consecutive numbers referring to active textures so if we just add the active we get the correct thing
+glActiveTexture(GL_TEXTURE0);// + getActiveTexture(texture));
+*/
 }

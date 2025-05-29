@@ -293,7 +293,7 @@ for (int i = 0; i < es.size; i++)
 void _DrawEntities(unsigned int* textures, unsigned int* shaders, unsigned int* vaos, unsigned int size)
 {
 // for (int i = 0; i < size; i++)
-for (int i = size; 0 <= i; i--)
+for (int i = size - 1; 0 <= i; i--)
     {
     if(textures[i] != 0)
         {
