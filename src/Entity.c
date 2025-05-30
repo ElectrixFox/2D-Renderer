@@ -74,8 +74,8 @@ switch (GetActiveShape(shape))  // gets the shape by masking
     case SQUARE:
         const float vertices[] = {
             1.0f,  1.0f, 1.0f,      1.0f, (float)sprite / (float)sprites,
-            1.0f, -1.0f, 1.0f,      1.0f, 0.0f,
-            -1.0f, -1.0f, 1.0f,     0.0f, 0.0f,
+            1.0f, -1.0f, 1.0f,      1.0f, (float)(sprite - 1) / (float)sprites,
+            -1.0f, -1.0f, 1.0f,     0.0f, (float)(sprite - 1) / (float)sprites,
             -1.0f,  1.0f, 1.0f,     0.0f, (float)sprite / (float)sprites
         };
         unsigned int n = sizeof(vertices) / sizeof(vertices[0]);

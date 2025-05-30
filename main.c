@@ -44,39 +44,6 @@ switch (key)
     }
 }
 
-void mve()
-{
-/*
-if(ckey == GLFW_KEY_ENTER)
-    {
-    vec2 posi = GetEntityPosition(es, pent);
-    vec2 scali = GetEntityScale(es, pent);
-    unsigned int nent = CreateEntity(&es, 0, posi, "res/vertex.shader", "res/fragment.shader", NULL);
-    SetEntityScale(es, nent, (vec2){25.0f, 25.0f});
-    SetEntityColour(es, nent, (vec4){1.0f, 0.0f, 0.0f, 1.0f});
-    ckey = 0;
-    }
-*/
-}
-
-/*
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-if(action == GLFW_PRESS)
-    {
-    ckey = key;
-    }
-if(action == GLFW_REPEAT)
-    {
-    ckey = key;
-    }
-if(action == GLFW_RELEASE)
-    {
-    ckey = 0;
-    }
-}
-*/
-
 vec2 GetCursorPosition(GLFWwindow* window)
 {
 double x, y;
@@ -100,6 +67,16 @@ for (int i = 0; i < es.size; i++)
         es.scales[i].x, es.scales[i].y,
         es.rdets.shaders[i], es.rdets.textures[i], es.rdets.vaos[i]);
     }
+}
+
+void PlaceNew(Entities es, unsigned int pid, unsigned int sprite)
+{
+vec2 posi = GetEntityPosition(es, pid);
+
+//  To-Do: could check here if there is already an entity with the position and then cancel the action if so
+unsigned int nent = CreateEntityFromSpriteSheet(&es, SQUARE, posi, "res/sprites/movable_spritesheet.png", sprite, 2);
+SetEntityScale(es, nent, (vec2){25.0f, 25.0f});
+SetEntityColour(es, nent, (vec4){1.0f, 0.0f, 0.0f, 1.0f});
 }
 
 int main()
@@ -128,8 +105,11 @@ SetEntityScale(es, ent2, (vec2){25.0f, 25.0f});
 SetEntityColour(es, ent2, (vec4){0.75f, 0.0f, 0.0f, 1.0f});
 
 // setting up the block bar
-unsigned int bar = CreateEntityFromSpriteSheet(&es, SQUARE, (vec2){(float)(width - 25), (float)(height - 50)}, "res/sprites/movable_spritesheet.png", 1, 2);
-SetEntityScaleFactor(es, bar, 25.0f);
+unsigned int bar1 = CreateEntityFromSpriteSheet(&es, SQUARE, (vec2){(float)(width - 25), (float)(height - 50)}, "res/sprites/movable_spritesheet.png", 1, 2);
+unsigned int bar2 = CreateEntityFromSpriteSheet(&es, SQUARE, (vec2){(float)(width - 25), (float)(height - 100)}, "res/sprites/movable_spritesheet.png", 2, 2);
+
+SetEntityScaleFactor(es, bar1, 25.0f);
+SetEntityScaleFactor(es, bar2, 25.0f);
 
 /*
 unsigned int* pressables = (unsigned int*)malloc(sizeof(unsigned int) * 1);
@@ -147,7 +127,6 @@ UpdateEntities(es);
 while(!glfwWindowShouldClose(window))
     {
     // loop
-    // InputAction({if(getCurrentInputInformation().key == GLFW_KEY_ESCAPE)glfwSetWindowShouldClose(window, 1);});  // if the key is escape then close
     if(isPressedSingle(GLFW_KEY_ESCAPE))
         glfwSetWindowShouldClose(window, 1);
     
@@ -158,10 +137,6 @@ while(!glfwWindowShouldClose(window))
         MovePointer(&posi, ip.key);
         SetEntityPosition(es, pent, posi);
         }
-    /*
-    InputAction(
-        MovePointer(&es.positions[FindEntityInEntities(es, pent)], getCurrentInputInformation().key)
-    );*/
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
@@ -178,14 +153,7 @@ while(!glfwWindowShouldClose(window))
         SetEntityScale(es, nent, (vec2){25.0f, 25.0f});
         SetEntityColour(es, nent, (vec4){1.0f, 0.0f, 0.0f, 1.0f});
         }
-    /*
-    if(getCurrentInputInformation().key == GLFW_KEY_Z && getCurrentInputInformation().key & GLFW_MOD_CONTROL)
-        {
-        es.size = es.size - 1;
-        ckey = 0;
-        }
 
-    */
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
