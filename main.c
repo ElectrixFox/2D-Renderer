@@ -144,7 +144,6 @@ SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f});
 
 UpdateEntities(es);
 
-// glfwSetKeyCallback(window, key_callback);
 while(!glfwWindowShouldClose(window))
     {
     // loop
@@ -171,6 +170,14 @@ while(!glfwWindowShouldClose(window))
         {
         OutputEntitiesDetails(es);
         }
+    else if(isPressedSingle(GLFW_KEY_ENTER))
+        {
+        vec2 posi = GetEntityPosition(es, pent);
+        vec2 scali = GetEntityScale(es, pent);
+        unsigned int nent = CreateEntity(&es, 0, posi, "res/vertex.shader", "res/fragment.shader", NULL);
+        SetEntityScale(es, nent, (vec2){25.0f, 25.0f});
+        SetEntityColour(es, nent, (vec4){1.0f, 0.0f, 0.0f, 1.0f});
+        }
     /*
     if(getCurrentInputInformation().key == GLFW_KEY_Z && getCurrentInputInformation().key & GLFW_MOD_CONTROL)
         {
@@ -178,6 +185,7 @@ while(!glfwWindowShouldClose(window))
         ckey = 0;
         }
 
+    */
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
@@ -193,7 +201,6 @@ while(!glfwWindowShouldClose(window))
             SetEntityPosition(es, pent, nposi);
             }
         }
-    */
     // float tim = sin(2 * glfwGetTime());
     SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f * 1});
 

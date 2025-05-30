@@ -8,7 +8,6 @@
 typedef struct InputPacket
     {
     int key;
-    int prevact;
     int action;
     int mods;
     } InputPacket;

@@ -2,14 +2,12 @@
 
 static int ckey = 0;    // current key
 static int caction = 0; // current action
-static int paction = GLFW_RELEASE;  // previous action
 static int cmods = 0;   // current mod keys
-static float delay = 0.1f;
-static float time;
-static float previous;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+
+
 ckey = key;
 caction = action;
 cmods = mods;
@@ -17,15 +15,12 @@ cmods = mods;
 
 void InitialiseInput(GLFWwindow *window)
 {
-time = delay;
-previous = glfwGetTime();
-
 glfwSetKeyCallback(window, key_callback);   // setting up the callback
 }
 
 InputPacket getCurrentInputInformation()
 {
-return (InputPacket){ckey, paction, caction, cmods};
+return (InputPacket){ckey, caction, cmods};
 }
 
 void resetInputPacket()
@@ -37,29 +32,24 @@ cmods = -1;
 
 int isPressedSingle(int key)
 {
-float now = glfwGetTime();
-float delta = now - previous;
-previous = now;
-time -= delta;
+static int pkey = 0;
 InputPacket ip = getCurrentInputInformation();
-if(ip.key == key)
+if(ip.key == key && pkey != key)
     {
-    if(time < 0.f)
+    if(ip.action == GLFW_PRESS)
         {
-        time = delay;
-        if(ip.action == GLFW_PRESS)
-            {
-            printf("\nPressed: %d", key);
-            return 1;
-            }
-        else if(ip.action == GLFW_RELEASE)
-            {
-            printf("\nReleased: %d", key);
-            resetInputPacket();
-            return 0;
-            }
+        pkey = key;
+        return 1;
+        }
+    else if(ip.action == GLFW_RELEASE)
+        {
+        resetInputPacket();
+        pkey = 0;
+        return 0;
         }
     }
+else if(ip.action == GLFW_RELEASE)
+    pkey = 0;
 return 0;
 }
 
