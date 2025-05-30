@@ -79,6 +79,13 @@ SetEntityScale(es, nent, (vec2){25.0f, 25.0f});
 SetEntityColour(es, nent, (vec4){1.0f, 0.0f, 0.0f, 1.0f});
 }
 
+/** Outline for sprite selection:
+ * - Set all the object bar as pressable
+ * - Return the eid of the entity pressed when it is pressed
+ * - Use the eid to determine what texture and sprite the entity has
+ * - Return the sheet and the sprite information to be used
+ */
+
 int main()
 {
 unsigned int width = 1020;
@@ -142,9 +149,7 @@ while(!glfwWindowShouldClose(window))
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
     if(isPressedSingle(GLFW_KEY_TAB))
-        {
         OutputEntitiesDetails(es);
-        }
     else if(isPressedSingle(GLFW_KEY_ENTER))
         {
         vec2 posi = GetEntityPosition(es, pent);
