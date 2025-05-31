@@ -92,3 +92,21 @@ tds.scale[index] = newscale;    // setting the new scale
 }
 
 vec2 getScale(TransformationDetails tds, unsigned int trsid) { return tds.scale[getTransformationIDIndex(tds, trsid)]; }
+
+m4 getTransformModelMatrix(TransformationDetails tds, unsigned int tid)
+{
+int index = getTransformationIDIndex(tds, tid); // find the transformation ID
+if(index != -1)
+    return GetModelMatrix(tds.pos[index], tds.scale[index]);    // get the model matrix
+
+return getM4ID();   // return the identity so nothing bad goes on
+}
+
+void getTransformModelMatrices(TransformationDetails tds, m4* models)
+{
+const int n = tds.size; // for ease of use
+models = (m4*)malloc(n * sizeof(m4));   // allocating the memory to be used
+
+for (int i = 0; i < n; i++)
+    models[i] = GetModelMatrix(tds.pos[i], tds.scale[i]);   // doing the calculation and setting the value
+}

@@ -79,4 +79,21 @@ void setScale(TransformationDetails tds, unsigned int trsid, vec2 newscale);
  */
 vec2 getScale(TransformationDetails tds, unsigned int trsid);
 
+/**
+ * Gets the model matrix for the transformation
+ * 
+ * @param tds The details of the transformation object
+ * @param tid The ID of the transform record
+ * 
+ * @returns The model matrix for the relevant transform
+ */
+m4 getTransformModelMatrix(TransformationDetails tds, unsigned int tid);
+
+/**
+ * Gets all of the transformation matrices
+ * 
+ * @param tds The transformation details
+ * @param models An array of m4 matrices (this array will be the size of tds.size)
+ */
+void getTransformModelMatrices(TransformationDetails tds, m4* models);
 
