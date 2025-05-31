@@ -1,0 +1,82 @@
+#include "src/MathsOperations.h"
+
+struct TransformationDetails
+    {
+    unsigned int* trsid;
+    vec2* pos;
+    vec2* scale;
+    unsigned int size;
+    };
+typedef struct TransformationDetails TransformationDetails;
+
+/**
+ * Initialises the transformation details to enable adding and removing easily
+ * 
+ * @returns Newly initialised TransformationDetails object
+ */
+TransformationDetails InitialiseTransformationDetails();
+
+/**
+ * Returns the index of the transformation
+ * 
+ * @param tds The details about the transformation
+ * @param trsid The ID of the transformation to find
+ * 
+ * @returns Index of ID in the details object or -1 if not found
+ */
+int getTransformationIDIndex(TransformationDetails tds, unsigned int trsid);
+
+/**
+ * Adds a transformation to the details
+ * 
+ * @param tds A pointer to the details
+ * @param pos The new position to add
+ * @param scale The new scale to add
+ * 
+ * @returns The ID of the newly added transformation
+ */
+unsigned int AddTransformation(TransformationDetails* tds, vec2 pos, vec2 scale);
+
+/**
+ * Removes a transformation from the details
+ * 
+ * @param tds A pointer to the details
+ * @param tid The ID of the object to remove
+ */
+void RemoveTransformation(TransformationDetails* tds, unsigned int tid);
+
+/**
+ * Sets the position of the transform
+ * 
+ * @param tds The details about the transformation
+ * @param trsid The transformation ID
+ * @param newpos The new position to apply
+ */
+void setPosition(TransformationDetails tds, unsigned int trsid, vec2 newpos);
+
+/**
+ * Gets the position of the transform
+ * 
+ * @param tds The details about the transformation
+ * @param trsid The transformation ID
+ */
+vec2 getPosition(TransformationDetails tds, unsigned int trsid);
+
+/**
+ * Sets the scale of the transform
+ * 
+ * @param tds The details about the transformation
+ * @param trsid The transformation ID
+ * @param newscale The new scale to apply
+ */
+void setScale(TransformationDetails tds, unsigned int trsid, vec2 newscale);
+
+/**
+ * Gets the scale of the transform
+ * 
+ * @param tds The details about the transformation
+ * @param trsid The transformation ID
+ */
+vec2 getScale(TransformationDetails tds, unsigned int trsid);
+
+

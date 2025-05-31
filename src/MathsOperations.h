@@ -22,6 +22,15 @@ typedef struct m4 { vec4 mat[4]; } m4;
 void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize);
 
 /**
+ * Expanda an array by one
+ * 
+ * @param arr The array
+ * @param size The size of the array
+ * @param elesize The size of an element in the array
+ */
+void ExpandByOne(void** arr, const unsigned int size, unsigned int elesize);
+
+/**
  * Appends an element to an array
  * 
  * @param arr The actual array

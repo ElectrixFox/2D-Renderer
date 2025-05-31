@@ -1,0 +1,94 @@
+#include "Transformation.h"
+
+TransformationDetails InitialiseTransformationDetails()
+{
+TransformationDetails tds;  // creating the details
+
+tds.size = 0;  // setting the size to 0
+
+// allocating a small bit of memory
+tds.trsid = (unsigned int*)malloc(sizeof(unsigned int));
+tds.pos = (vec2*)malloc(sizeof(vec2));
+tds.scale = (vec2*)malloc(sizeof(vec2));
+
+return tds;
+}
+
+int getTransformationIDIndex(TransformationDetails tds, unsigned int trsid)
+{
+if(tds.trsid[trsid] == trsid)   // just in case no manipulation of the table has happened
+    return trsid;
+
+for (int i = 0; i < tds.size; i++)  // simple linear search
+    if(tds.trsid[i] == trsid)
+        return i;
+return -1;
+}
+
+unsigned int AddTransformation(TransformationDetails *tds, vec2 pos, vec2 scale)
+{
+static unsigned int id = 0; // a static incrementing counter to set the new ID as
+const unsigned int n = tds->size;
+
+// make all the arrays bigger by one to accomodate for the new element
+ExpandByOne(&tds->trsid, n, sizeof(unsigned int));
+ExpandByOne(&tds->pos, n, sizeof(vec2));
+ExpandByOne(&tds->scale, n, sizeof(vec2));
+
+
+// setting all the new details
+tds->trsid[n] = id++;   // increment the ID counter too
+tds->pos[n] = pos;
+tds->scale[n] = scale;
+
+return tds->trsid[n];
+}
+
+void RemoveTransformation(TransformationDetails *tds, unsigned int tid)
+{
+int index = getTransformationIDIndex(*tds, tid); // finding the ID
+
+if(index == -1)
+    return; // if the index isn't found just quit
+
+if(index == tds->size)
+    goto end;   // hehe the naughty goto
+
+// getting temporary stuff
+unsigned int tmpid = tds->trsid[index];
+vec2 tpos = tds->pos[index];
+vec2 tscale = tds->scale[index];
+
+// setting the to delete to the end values
+tds->trsid[index] = tds->trsid[tds->size];
+tds->pos[index] = tds->pos[tds->size];
+tds->scale[index] = tds->scale[tds->size];
+
+// setting the end to the thing to delete
+tds->trsid[tds->size] = tmpid;
+tds->pos[tds->size] = tpos;
+tds->scale[tds->size] = tscale;
+
+end:
+tds->size--;    // decrease the size so it is effectively not there
+
+// To-Do: Could add in a sort here to sort by ID in order to realign the table
+}
+
+void setPosition(TransformationDetails tds, unsigned int trsid, vec2 newpos)
+{
+int index = getTransformationIDIndex(tds, trsid);   // find the ID
+if(index == -1) return; // if not found return
+tds.pos[index] = newpos;    // setting the new position
+}
+
+vec2 getPosition(TransformationDetails tds, unsigned int trsid) { return tds.pos[getTransformationIDIndex(tds, trsid)]; }
+
+void setScale(TransformationDetails tds, unsigned int trsid, vec2 newscale)
+{
+int index = getTransformationIDIndex(tds, trsid);   // find the ID
+if(index == -1) return; // if not found return
+tds.scale[index] = newscale;    // setting the new scale
+}
+
+vec2 getScale(TransformationDetails tds, unsigned int trsid) { return tds.scale[getTransformationIDIndex(tds, trsid)]; }

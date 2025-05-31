@@ -1,5 +1,14 @@
 #include "RenderObject.h"
 
+struct _Entities
+    {
+    unsigned int* eid;
+    unsigned int* rid;
+    unsigned int* trsid;
+    unsigned int* pid;
+    };
+
+
 struct Entities
     {
     unsigned int* ids;

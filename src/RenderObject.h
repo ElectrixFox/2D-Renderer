@@ -1,6 +1,16 @@
 #include "Shader.h"
 #include "Texture.h"
 
+struct RenderDetails
+    {
+    unsigned int* rid;
+    unsigned int* vao;
+    unsigned int* shader;
+    unsigned int* texture;
+    };
+typedef struct RenderDetails RenderDetails;
+
+
 // optimise to store the data more compactly
 struct viobject // vertex index object
 {

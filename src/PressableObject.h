@@ -1,15 +1,9 @@
 #include "MathsOperations.h"
-/* #include "Entity.h"
 
-typedef struct PressableArray
-    {
-    unsigned int* eids;
-    unsigned int size;
-    } PressableArray;
-
-
-PressableArray InitPressableArray(unsigned int size);
-*/
+typedef struct Pressables {
+    unsigned int* pid;
+    unsigned int* trsid;
+} Pressables;
 
 void AddPressable(unsigned int* presids, unsigned int eid, unsigned int* n);
 void RemovePressable(unsigned int* presids, unsigned int eid, unsigned int* n);
@@ -22,5 +16,3 @@ void RemovePressable(unsigned int* presids, unsigned int eid, unsigned int* n);
  * @param eid The id of the entity to check
  */
 int CheckPressed(vec2* poses, vec2* scales, vec2 cursorpos, unsigned int eid);
-
-// void PressedUpdate(PressableArray pa, EntityQueue eq, GLFWwindow* window);

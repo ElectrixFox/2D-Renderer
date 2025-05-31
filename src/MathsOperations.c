@@ -1,20 +1,8 @@
 #include "MathsOperations.h"
 
-void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize)
-{
-*arr = realloc(*arr, elesize * nsize);
-/*
-void** tarr = (void**)malloc(nsize * elesize);
-memcpy(tarr, arr, osize * elesize);
-arr = tarr;
-free(tarr);
-*/
-/*
-void* nptr = malloc(elesize * osize); // allocating the new memory
-nptr = realloc(arr, elesize * nsize);  // making the array bigger
-arr = nptr;    // setting the old array to the new bigger one
-*/
-}
+void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize) { *arr = realloc(*arr, elesize * nsize); }
+
+void ExpandByOne(void **arr, const unsigned int size, unsigned int elesize) { ExpandArray(arr, size, size + 1, elesize); }
 
 void AppendToArray(void** arr, unsigned int size, void** item, unsigned int elesize)
 {
