@@ -4,9 +4,13 @@
 
 #include <include/GL/glew.h>
 #include <include/GLFW/glfw3.h>
-#include "src/Input.h"
-#include "src/Entity.h"
+
 #include "src/PressableObject.h"
+#include "src/Transformation.h"
+#include "src/RenderObject.h"
+#include "src/Entity.h"
+
+#include "src/Input.h"
 
 void processInput(GLFWwindow* window)
 {
@@ -57,18 +61,21 @@ return point;
 
 void OutputEntitiesDetails(Entities es)
 {
+/*
 printf("\nSize: %d", es.size);
 printf("\n%10s\t%s\t%13s\t\t%13s %10s %8s\t", "ID", "Position", "Scale", "Shader", "Texture", "VAO");
 for (int i = 0; i < es.size; i++)
     {
     printf("\n%10d\t(%.2f, %.2f)\t(%.2f, %.2f)\t%10d %10d %10d\t",
-        es.ids[i],
+        es.eid[i],
         es.positions[i].x, es.positions[i].y,
         es.scales[i].x, es.scales[i].y,
         es.rdets.shaders[i], es.rdets.textures[i], es.rdets.vaos[i]);
     }
+*/
 }
 
+/*
 void PlaceNew(Entities es, unsigned int pid, unsigned int sprite)
 {
 vec2 posi = GetEntityPosition(es, pid);
@@ -78,6 +85,7 @@ unsigned int nent = CreateEntityFromSpriteSheet(&es, SQUARE, posi, "res/sprites/
 SetEntityScale(es, nent, (vec2){25.0f, 25.0f});
 SetEntityColour(es, nent, (vec4){1.0f, 0.0f, 0.0f, 1.0f});
 }
+*/
 
 /** Outline for sprite selection:
  * - Set all the object bar as pressable
@@ -85,6 +93,15 @@ SetEntityColour(es, nent, (vec4){1.0f, 0.0f, 0.0f, 1.0f});
  * - Use the eid to determine what texture and sprite the entity has
  * - Return the sheet and the sprite information to be used
  */
+
+void ApplyModel(RenderDetails rds, TransformationDetails tds, unsigned int rid, unsigned int tid)
+{
+int tindex = getTransformationIDIndex(tds, tid);
+int rindex = getRenderDetailsIDIndex(rds, rid);
+
+m4 matr = getTransformModelMatrix(tds, tid);
+SetUniformM4(rds.shader[rindex], "model", matr);
+}
 
 int main()
 {
@@ -103,8 +120,19 @@ glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 InitialiseInput(window);
 
-Entities es = InitialiseEntities(); // initialising the entities list and allocating memory
+RenderDetails rds = InitialiseRenderDetails();
+TransformationDetails tds = InitialiseTransformationDetails();
+Entities ents = InitialiseEntities(); // initialising the entities list and allocating memory
 
+unsigned int rd1 = CreateSquareRenderable(&rds);
+unsigned int td1 = AddTransformation(&tds, (vec2){0.0f, 0.0f}, (vec2){100.0f, 100.0f});
+
+int rind = getRenderDetailsIDIndex(rds, rd1);
+SetUniform4f(rds.shader[rind], "colour", (vec4){1.0f, 0.0f, 0.0f, 1.0f});
+
+unsigned int ent1 = CreateEntity(&ents, rd1, td1);
+
+/*
 unsigned int ent1 = CreateEntity(&es, SQUARE, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
 SetEntityScale(es, ent1, (vec2){25.0f, 25.0f});
 unsigned int ent2 = CreateEntity(&es, SQUARE, (vec2){485.0f, 430.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
@@ -118,18 +146,13 @@ unsigned int bar2 = CreateEntityFromSpriteSheet(&es, SQUARE, (vec2){(float)(widt
 SetEntityScaleFactor(es, bar1, 25.0f);
 SetEntityScaleFactor(es, bar2, 25.0f);
 
-/*
-unsigned int* pressables = (unsigned int*)malloc(sizeof(unsigned int) * 1);
-unsigned int n = 0;
-
-AddPressable(pressables, es.ids[0], &n);
-*/
 
 unsigned int pent = CreateEntity(&es, SQUARE, (vec2){0.0f, 0.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
 SetEntityScale(es, pent, (vec2){5.0f, 5.0f});
 SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f});
 
 UpdateEntities(es);
+*/
 
 while(!glfwWindowShouldClose(window))
     {
@@ -137,48 +160,9 @@ while(!glfwWindowShouldClose(window))
     if(isPressedSingle(GLFW_KEY_ESCAPE))
         glfwSetWindowShouldClose(window, 1);
     
-    InputPacket ip = getCurrentInputInformation();
-    if(isPressedSingle(GLFW_KEY_W) || isPressedSingle(GLFW_KEY_A) || isPressedSingle(GLFW_KEY_S) || isPressedSingle(GLFW_KEY_D))
-        {
-        vec2 posi = GetEntityPosition(es, pent);
-        MovePointer(&posi, ip.key);
-        SetEntityPosition(es, pent, posi);
-        }
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
-    glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
-
-    if(isPressedSingle(GLFW_KEY_TAB))
-        OutputEntitiesDetails(es);
-    else if(isPressedSingle(GLFW_KEY_ENTER))
-        {
-        vec2 posi = GetEntityPosition(es, pent);
-        vec2 scali = GetEntityScale(es, pent);
-        unsigned int nent = CreateEntity(&es, 0, posi, "res/vertex.shader", "res/fragment.shader", NULL);
-        SetEntityScale(es, nent, (vec2){25.0f, 25.0f});
-        SetEntityColour(es, nent, (vec4){1.0f, 0.0f, 0.0f, 1.0f});
-        }
-
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-        {
-        vec2 cpos = GetCursorPosition(window);
-
-        if(CheckPressed(es.positions, es.scales, cpos, pent))
-            {
-            // printf("\nPressed");
-            }
-
-            {   // moving the pointer
-            vec2 posi = GetEntityPosition(es, pent);
-            vec2 nposi = {50 * round(cpos.x / 50), 50 * round(cpos.y / 50)};
-            SetEntityPosition(es, pent, nposi);
-            }
-        }
-    // float tim = sin(2 * glfwGetTime());
-    SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f * 1});
-
-    UpdateEntities(es);
-    DrawEntities(es);
+    ApplyModel(rds, tds, rd1, td1);
+    DrawRenderable(rds, rd1);
     
     glfwSwapBuffers(window);
     glfwPollEvents();

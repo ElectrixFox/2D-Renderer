@@ -116,3 +116,18 @@ GeneralInitialise(&shape, 1, 1, SQUARE);
 
 return _CreateRenderable(rd, shape, "res/vertex.shader", "res/fragment.shader", NULL);
 }
+
+void DrawRenderable(RenderDetails rds, unsigned int rid)
+{
+int index = getRenderDetailsIDIndex(rds, rid);
+if(index == -1) return; // if it is not found stop
+
+if(rds.texture[index] != 0)
+    {
+    BindTexture(rds.texture[index]);
+    }
+
+BindShader(rds.shader[index]);
+BindVAO(rds.vao[index]);
+glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}

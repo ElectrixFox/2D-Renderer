@@ -1,3 +1,4 @@
+#pragma once
 #include "MathsOperations.h"
 
 typedef struct Pressables {

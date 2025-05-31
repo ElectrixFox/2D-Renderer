@@ -1,3 +1,4 @@
+#pragma once
 #include "Shader.h"
 #include "Texture.h"
 #include "Buffer.h"
@@ -52,3 +53,5 @@ void RemoveRenderDetail(RenderDetails* rd, unsigned int rid);
 
 static unsigned int _CreateRenderable(RenderDetails* rd, unsigned int shape, const char* vsfp, const char* fsfp, const char* texfp);
 unsigned int CreateSquareRenderable(RenderDetails* rd);
+
+void DrawRenderable(RenderDetails rds, unsigned int rid);
