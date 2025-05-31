@@ -154,3 +154,41 @@ void BindIBO(unsigned int ibo)
 {
 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo); // binding the buffer
 }
+
+static unsigned int _CreateRenderable(RenderDetails* rd, unsigned int shape, const char* vsfp, const char* fsfp, const char* texfp)
+{
+unsigned int vao, vbo, ibo, prog, tex = 0;
+
+viBundle vbund = GetShapeVertices(shape);   // the bundle containing the vertices and count
+float* vertices = vbund.vi.vertices;
+
+viBundle ibund = GetShapeIndices(shape);    // the bundle containing the indices and count
+unsigned int* indices = ibund.vi.indices;
+
+vao = CreateVAO();  // creating the vao
+ibo = CreateIBO(indices, ibund.n); // creating the ibo
+vbo = CreateVBO(vertices, vbund.n);  // creating the vbo
+
+unsigned int ilay[1] = {3};
+VAOLayout layout = CreateVertexLayout(ilay, 5, 1);  // setting up the layout to receive
+AddToVertexLayout(&layout, 2);  // adding the texture coords to the layout
+InitialiseVertexLayout(layout); // initialising the layout to be used
+
+prog = CreateShader(vsfp, fsfp);    // creates the shader object
+
+if(texfp != NULL)   // if there is a texture
+    {
+    tex = CreateTexture(texfp);
+    SetUniform1i(prog, "intexture", getActiveTexture(tex)); // set the texture to be used (the 0th active texture)
+    }
+
+return AddRenderDetail(rd, vao, prog, tex);
+}
+
+unsigned int CreateSquareRenderable(RenderDetails* rd)
+{
+unsigned int shape = 0;
+GeneralInitialise(&shape, 1, 1, SQUARE);
+
+return _CreateRenderable(rd, shape, "res/vertex.shader", "res/fragment.shader", NULL);
+}

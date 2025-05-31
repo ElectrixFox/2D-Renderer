@@ -1,5 +1,6 @@
 #include "Shader.h"
 #include "Texture.h"
+#include "SpriteShapes.h"
 
 struct RenderDetails
     {
@@ -92,3 +93,6 @@ void BindIBO(unsigned int ibo);
 VAOLayout CreateVertexLayout(unsigned int sizes[], unsigned int bufflen, unsigned int n);
 void InitialiseVertexLayout(VAOLayout layout);
 void AddToVertexLayout(VAOLayout* layout, unsigned int size);
+
+static unsigned int _CreateRenderable(RenderDetails* rd, unsigned int shape, const char* vsfp, const char* fsfp, const char* texfp);
+unsigned int CreateSquareRenderable(RenderDetails* rd);

@@ -1,4 +1,7 @@
+#pragma once
 #include "RenderObject.h"
+#include "Transformation.h"
+#include "PressableObject.h"
 
 struct _Entities
     {
@@ -6,7 +9,46 @@ struct _Entities
     unsigned int* rid;
     unsigned int* trsid;
     unsigned int* pid;
+    unsigned int size;
     };
+typedef struct _Entities _Entities;
+
+/**
+ * Initialises the Entities
+ * 
+ * @returns Newly initialised Entities object
+ */
+_Entities Initialise_Entities();
+
+/**
+ * Returns the index of the entity record
+ * 
+ * @param ents The details about the entities
+ * @param eid The ID of the entity to find
+ * 
+ * @returns Index of ID in the details object or -1 if not found
+ */
+int getEntitiesIDIndex(_Entities ents, unsigned int eid);
+
+/**
+ * Adds an entity to the details
+ * 
+ * @param ents A pointer to the Entities object
+ * @param rid The ID of the render object for the entity
+ * @param trsid The ID of the transformation object for the entity
+ * @param pid The ID of the pressable object for the entity
+ * 
+ * @returns The ID of the newly added entity
+ */
+unsigned int AddEntity(_Entities* ents, unsigned int rid, unsigned int trsid, unsigned int pid);
+
+/**
+ * Removes an entity from the details
+ * 
+ * @param ents A pointer to the Entities object
+ * @param eid The ID of the entity to remove
+ */
+void RemoveEntity(_Entities* ents, unsigned int eid);
 
 
 struct Entities
@@ -19,31 +61,8 @@ struct Entities
     };
 typedef struct Entities Entities;
 
-struct Entity
-{
-unsigned int id;
-vec2 pos;
-vec2 scale;
-viobject rdets;
-};
-
-typedef enum SHAPE
-    {
-    SQUARE = 0,
-    } SHAPE;
-
 // a renderable needs vertices, a vao and shader
 // an object needs position and scale 
-
-typedef struct Entity Entity;
-
-vec2 PositionToEntitySpace(Entity e);
-
-m4 getEntityModelMatrix4(Entity e);
-
-void SetNumberOfSprites(unsigned int* shape, unsigned int numofspr);
-void SetActiveSprite(unsigned int* shape, unsigned int sprite);
-void SetActiveShape(unsigned int* shape, unsigned int sh);
 
 Entities InitialiseEntities();
 

@@ -15,6 +15,7 @@
         "xstring": "c",
         "xutility": "c",
         "pressableobject.h": "c",
-        "entity.h": "c"
+        "entity.h": "c",
+        "spriteshapes.h": "c"
     }
 }

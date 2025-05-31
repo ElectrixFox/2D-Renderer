@@ -1,119 +1,86 @@
 #include "Entity.h"
 
-typedef struct viBundle
-    {
-    union
-        {
-        unsigned int* indices;
-        float* vertices;
-        } vi;
-    const unsigned int n;
-    } viBundle;
-
-static unsigned int GetNumberOfSprites(unsigned int shape);
-static unsigned int GetActiveSprite(unsigned int shape);
-static unsigned int GetActiveShape(unsigned int shape);
-
-static viBundle GetShapeVertices(unsigned int shape);
-static viBundle GetShapeIndices(unsigned int shape);
-
-vec2 PositionToEntitySpace(Entity e) { return LeftCornerFromCentre(e.pos, e.scale); }
-
-m4 getEntityModelMatrix4(Entity e) { return GetModelMatrix(e.pos, e.scale); }
-
-/*
-The shape variable is of this form
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0| Num S | Sprite| Shape 
-*/
-
-static unsigned int GetNumberOfSprites(unsigned int shape)
+_Entities Initialise_Entities()
 {
-unsigned int mask = 0b0000111100000000U;  // the mask for the number of sprites
-return ((shape & mask) >> 8);
+_Entities ents; // creating the details
+
+ents.size = 0;  // setting the size to 0
+
+// allocating a small bit of memory
+ents.eid = (unsigned int*)malloc(sizeof(unsigned int));
+ents.rid = (unsigned int*)malloc(sizeof(unsigned int));
+ents.trsid = (unsigned int*)malloc(sizeof(unsigned int));
+ents.pid =(unsigned int*)malloc(sizeof(unsigned int));
+
+return ents;
 }
 
-void SetNumberOfSprites(unsigned int* shape, unsigned int numofspr)
+int getEntitiesIDIndex(_Entities ents, unsigned int eid)
 {
-unsigned int mask = 0b0000111100000000U;  // the mask for the number of sprites
-*(shape) = ((*(shape) & (~mask)) | (numofspr << 8));
+if(ents.eid[eid] == eid)    // just in case no manipulation of the table has happened
+    return eid;
+
+for (int i = 0; i < ents.size; i++) // simple linear search
+    if(ents.eid[i] == eid)
+        return i;
+return -1;
 }
 
-static unsigned int GetActiveSprite(unsigned int shape)
+unsigned int AddEntity(_Entities *ents, unsigned int rid, unsigned int trsid, unsigned int pid)
 {
-unsigned int mask = 0b000000011110000U;  // the mask for the active sprite
-return ((shape & mask) >> 4);
+static unsigned int id = 0; // a static incrementing counter to set the new ID as
+const unsigned int n = ents->size;
+
+// make all the arrays bigger by one to accomodate for the new element
+ExpandByOne(&ents->eid, n, sizeof(unsigned int));
+ExpandByOne(&ents->rid, n, sizeof(unsigned int));
+ExpandByOne(&ents->trsid, n, sizeof(unsigned int));
+ExpandByOne(&ents->pid, n, sizeof(unsigned int));
+
+
+// setting all the new details
+ents->eid[n] = id++;    // increment the ID counter too
+ents->rid[n] = rid;
+ents->trsid[n] = trsid;
+ents->pid[n] = pid;
+
+return ents->eid[n];
 }
 
-void SetActiveSprite(unsigned int* shape, unsigned int sprite)
+void RemoveEntity(_Entities *ents, unsigned int eid)
 {
-unsigned int mask = 0b000000011110000U;  // the mask for the active sprite
-*(shape) = ((*(shape) & ~mask) | (sprite << 4));
-}
+int index = getEntitiesIDIndex(*ents, eid); // finding the ID
 
-static unsigned int GetActiveShape(unsigned int shape)
-{
-unsigned int mask = 0b000000000001111U;  // the mask for the active sprite
-return (shape & mask);
-}
+if(index == -1)
+    return; // if the index isn't found just quit
 
-void SetActiveShape(unsigned int* shape, unsigned int sh)
-{
-unsigned int mask = 0b000000000001111U;  // the mask for the active sprite
-*(shape) = (((*shape) & (~mask)) | sh);
-}
+const unsigned int size = ents->size;   // constant just for ease of reading
 
-viBundle GetShapeVertices(unsigned int shape)
-{
-unsigned int sprites = GetNumberOfSprites(shape), sprite = GetActiveSprite(shape);
-if(sprites == 1)    // if there is only one sprite
-    sprite = 1; // default to the first sprite
+if(index == size)
+    goto end;   // hehe the naughty goto
 
-switch (GetActiveShape(shape))  // gets the shape by masking
-    {
-    case SQUARE:
-        const float vertices[] = {
-            1.0f,  1.0f, 1.0f,      1.0f, (float)sprite / (float)sprites,
-            1.0f, -1.0f, 1.0f,      1.0f, (float)(sprite - 1) / (float)sprites,
-            -1.0f, -1.0f, 1.0f,     0.0f, (float)(sprite - 1) / (float)sprites,
-            -1.0f,  1.0f, 1.0f,     0.0f, (float)sprite / (float)sprites
-        };
-        unsigned int n = sizeof(vertices) / sizeof(vertices[0]);
-        float* fl = calloc(n, sizeof(float));
-        for (int i = 0; i < n; i++)
-            {
-            fl[i] = vertices[i];
-            }
+// getting temporary stuff
+unsigned int teid = ents->eid[index];
+unsigned int trid = ents->rid[index];
+unsigned int ttrsid = ents->trsid[index];
+unsigned int tpid = ents->pid[index];
 
-        return (viBundle){fl, n};
-        break;
-    default:
-        break;
-    }
+// setting the to delete to the end values
+ents->eid[index] = ents->eid[size];
+ents->rid[index] = ents->rid[size];
+ents->trsid[index] = ents->trsid[size];
+ents->pid[index] = ents->pid[size];
 
-}
+// setting the end to the thing to delete
+ents->eid[size] = teid;
+ents->rid[size] = trid;
+ents->trsid[size] = ttrsid;
+ents->pid[size] = tpid;
 
-viBundle GetShapeIndices(unsigned int shape)
-{
-switch (GetActiveShape(shape))  // gets the shape by masking
-    {
-    case SQUARE:
-        const unsigned int indices[] = {
-            0, 1, 3,
-            1, 2, 3
-        };
-        unsigned int n = sizeof(indices) / sizeof(indices[0]);
-        unsigned int* ui = calloc(n, sizeof(unsigned int));
-        for (int i = 0; i < n; i++)
-            {
-            ui[i] = indices[i];
-            }
-        return (viBundle){ui, n};
-        break;
-    default:
-        break;
-    }
+end:
+ents->size--;    // decrease the size so it is effectively not there
 
+// To-Do: Could add in a sort here to sort by ID in order to realign the table
 }
 
 Entities InitialiseEntities()
