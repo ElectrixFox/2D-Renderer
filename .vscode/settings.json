@@ -17,6 +17,7 @@
         "pressableobject.h": "c",
         "entity.h": "c",
         "spriteshapes.h": "c",
-        "buffer.h": "c"
+        "buffer.h": "c",
+        "camera.h": "c"
     }
 }
