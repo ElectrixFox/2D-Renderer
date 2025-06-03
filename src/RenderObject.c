@@ -42,6 +42,8 @@ rd->vao[n] = vao;
 rd->shader[n] = shader;
 rd->texture[n] = texture;
 
+rd->size++; // increase the number of renderables
+
 return rd->rid[n];
 }
 

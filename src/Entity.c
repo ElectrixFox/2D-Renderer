@@ -44,6 +44,8 @@ ents->rid[n] = rid;
 ents->trsid[n] = trsid;
 ents->pid[n] = pid;
 
+ents->size++;   // increases the size of the entitys
+
 return ents->eid[n];
 }
 

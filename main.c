@@ -1,4 +1,3 @@
-#include <windef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -127,13 +126,19 @@ RenderDetails rds = InitialiseRenderDetails();
 TransformationDetails tds = InitialiseTransformationDetails();
 Entities ents = InitialiseEntities(); // initialising the entities list and allocating memory
 
+
 unsigned int rd1 = CreateSquareRenderable(&rds);
-unsigned int td1 = AddTransformation(&tds, (vec2){0.0f, 0.0f}, (vec2){100.0f, 100.0f});
+unsigned int td1 = AddTransformation(&tds, (vec2){520.0f, 520.0f}, (vec2){100.0f, 100.0f});
 
 int rind = getRenderDetailsIDIndex(rds, rd1);
 SetUniform4f(rds.shader[rind], "colour", (vec4){1.0f, 0.0f, 0.0f, 1.0f});
 
 unsigned int ent1 = CreateEntity(&ents, rd1, td1);
+
+printf("\n%d", ents.size);
+printf("\n%d", rds.size);
+printf("\n%d", tds.size);
+
 
 /*
 unsigned int ent1 = CreateEntity(&es, SQUARE, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
@@ -163,6 +168,8 @@ while(!glfwWindowShouldClose(window))
     if(isPressedSingle(GLFW_KEY_ESCAPE))
         glfwSetWindowShouldClose(window, 1);
     
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
+    glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
     ApplyModel(rds, tds, rd1, td1);
     DrawRenderable(rds, rd1);

@@ -41,6 +41,8 @@ tds->trsid[n] = id++;   // increment the ID counter too
 tds->pos[n] = pos;
 tds->scale[n] = scale;
 
+tds->size++;    // increase the number of transforms
+
 return tds->trsid[n];
 }
 
