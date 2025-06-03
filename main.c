@@ -61,9 +61,9 @@ vec2 point = GetMousePositionRelative((vec2){x, y}, wid, hig);
 return point;
 }
 
+/*
 void OutputEntitiesDetails(Entities es)
 {
-/*
 printf("\nSize: %d", es.size);
 printf("\n%10s\t%s\t%13s\t\t%13s %10s %8s\t", "ID", "Position", "Scale", "Shader", "Texture", "VAO");
 for (int i = 0; i < es.size; i++)
@@ -74,7 +74,27 @@ for (int i = 0; i < es.size; i++)
         es.scales[i].x, es.scales[i].y,
         es.rdets.shaders[i], es.rdets.textures[i], es.rdets.vaos[i]);
     }
+}
 */
+
+void OutputEntitiesDetails(TransformationDetails tds, RenderDetails rds, Entities ents)
+{
+printf("\nSize: %d", ents.size);
+printf("\n%10s\t%s\t%13s\t\t%13s %10s %8s\t", "ID", "Position", "Scale", "Shader", "Texture", "VAO");
+
+for (int i = 0; i < ents.size; i++)
+    {
+    int trloc = getTransformationIDIndex(tds, ents.trsid[i]);
+    int rdloc = getRenderDetailsIDIndex(rds, ents.trsid[i]);
+    if (trloc == -1 || rdloc == -1) continue; // skip if transformation or render details not found
+
+    // print the entity details
+    printf("\n%10d\t(%.2f, %.2f)\t(%.2f, %.2f)\t%10d %10d %10d\t",
+        ents.eid[i],
+        tds.pos[trloc].x, tds.pos[trloc].y,
+        tds.scale[trloc].x, tds.scale[trloc].y,
+        rds.shader[rdloc], rds.texture[rdloc], rds.vao[rdloc]);
+    }
 }
 
 /*
@@ -127,18 +147,14 @@ TransformationDetails tds = InitialiseTransformationDetails();
 Entities ents = InitialiseEntities(); // initialising the entities list and allocating memory
 
 
-unsigned int rd1 = CreateSquareRenderable(&rds);
+unsigned int rd1 = CreatePlainSquareRenderable(&rds);
+// unsigned int rd1 = CreateSquareRenderable(&rds);
 unsigned int td1 = AddTransformation(&tds, (vec2){520.0f, 520.0f}, (vec2){100.0f, 100.0f});
 
 int rind = getRenderDetailsIDIndex(rds, rd1);
 SetUniform4f(rds.shader[rind], "colour", (vec4){1.0f, 0.0f, 0.0f, 1.0f});
 
 unsigned int ent1 = CreateEntity(&ents, rd1, td1);
-
-printf("\n%d", ents.size);
-printf("\n%d", rds.size);
-printf("\n%d", tds.size);
-
 
 /*
 unsigned int ent1 = CreateEntity(&es, SQUARE, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
@@ -167,6 +183,9 @@ while(!glfwWindowShouldClose(window))
     // loop
     if(isPressedSingle(GLFW_KEY_ESCAPE))
         glfwSetWindowShouldClose(window, 1);
+
+    if(isPressedSingle(GLFW_KEY_TAB))
+        OutputEntitiesDetails(tds, rds, ents);
     
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer

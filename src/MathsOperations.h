@@ -66,6 +66,15 @@ void ScaleObject(vec3 vertices[], vec2 scale, unsigned int n);
 
 m4 mat3Tomat4(mat3 matr);
 
+/**
+ * Gets the projection matrix
+ * 
+ * @param wid The width of the window
+ * @param hig The height of the window
+ * @param transformed Should the origin be transformed so that it is in the bottom left
+ * 
+ * @returns 4x4 projection matrix to be passed to the shader
+ */
 m4 getProjection(unsigned int wid, unsigned int hig, unsigned int transformed);
 
 /**

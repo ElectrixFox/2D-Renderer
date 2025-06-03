@@ -54,4 +54,13 @@ void RemoveRenderDetail(RenderDetails* rd, unsigned int rid);
 static unsigned int _CreateRenderable(RenderDetails* rd, unsigned int shape, const char* vsfp, const char* fsfp, const char* texfp);
 unsigned int CreateSquareRenderable(RenderDetails* rd);
 
+/**
+ * Just creates a standard coloured square
+ * 
+ * @param rd Pointer the the render details
+ * 
+ * @returns The ID of the render object
+ */
+unsigned int CreatePlainSquareRenderable(RenderDetails* rd);
+
 void DrawRenderable(RenderDetails rds, unsigned int rid);

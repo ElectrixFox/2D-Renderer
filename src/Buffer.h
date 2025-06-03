@@ -33,6 +33,15 @@ typedef struct VAOLayout
 
 void BindIBO(unsigned int ibo);
 
+/**
+ * Creates the vertex array layout
+ * 
+ * @param sizes The sizes of each of the sections in the layout
+ * @param bufflen The size of a whole line of the buffer
+ * @param n The number of layout sections (so for a vec3 vertpos and vec2 texpos it would be 2)
+ * 
+ * @returns The vertex array layout object
+ */
 VAOLayout CreateVertexLayout(unsigned int sizes[], unsigned int bufflen, unsigned int n);
 void InitialiseVertexLayout(VAOLayout layout);
 void AddToVertexLayout(VAOLayout* layout, unsigned int size);

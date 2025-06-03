@@ -85,6 +85,4 @@ ents->size--;    // decrease the size so it is effectively not there
 // To-Do: Could add in a sort here to sort by ID in order to realign the table
 }
 
-
 unsigned int CreateEntity(Entities* ent, unsigned int rid, unsigned int tid) { return AddEntity(ent, rid, tid, 0); }
-

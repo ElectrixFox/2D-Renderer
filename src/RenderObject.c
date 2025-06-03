@@ -101,6 +101,7 @@ AddToVertexLayout(&layout, 2);  // adding the texture coords to the layout
 InitialiseVertexLayout(layout); // initialising the layout to be used
 
 prog = CreateShader(vsfp, fsfp);    // creates the shader object
+SetUniformM4(prog, "projection", getProjection(1020, 960, 1));  // setting up the projection
 
 if(texfp != NULL)   // if there is a texture
     {
@@ -114,6 +115,14 @@ return AddRenderDetail(rd, vao, prog, tex);
 unsigned int CreateSquareRenderable(RenderDetails* rd)
 {
 unsigned int shape = 0;
+GeneralInitialise(&shape, 1, 1, SQUARE);
+
+return _CreateRenderable(rd, shape, "res/vertex.shader", "res/fragment.shader", NULL);
+}
+
+unsigned int CreatePlainSquareRenderable(RenderDetails* rd)
+{
+unsigned int shape = SQUARE;
 GeneralInitialise(&shape, 1, 1, SQUARE);
 
 return _CreateRenderable(rd, shape, "res/vertex.shader", "res/fragment.shader", NULL);
