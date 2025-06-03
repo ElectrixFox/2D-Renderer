@@ -112,6 +112,14 @@ if(texfp != NULL)   // if there is a texture
 return AddRenderDetail(rd, vao, prog, tex);
 }
 
+unsigned int CreateSpriteRenderable(RenderDetails* rd, const char* spfp, unsigned int sprites, unsigned int sprite)
+{
+unsigned int shape = SQUARE;
+GeneralInitialise(&shape, sprites, sprite, SQUARE);
+
+return _CreateRenderable(rd, shape, "res/texvert.shader", "res/texfrag.shader", spfp);
+}
+
 unsigned int CreateSquareRenderable(RenderDetails* rd)
 {
 unsigned int shape = 0;

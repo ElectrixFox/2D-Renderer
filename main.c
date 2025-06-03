@@ -148,13 +148,19 @@ Entities ents = InitialiseEntities(); // initialising the entities list and allo
 
 
 unsigned int rd1 = CreatePlainSquareRenderable(&rds);
-// unsigned int rd1 = CreateSquareRenderable(&rds);
-unsigned int td1 = AddTransformation(&tds, (vec2){520.0f, 520.0f}, (vec2){100.0f, 100.0f});
+unsigned int td1 = AddTransformation(&tds, (vec2){485.0f, 480.0f}, (vec2){25.0f, 25.0f});
 
-int rind = getRenderDetailsIDIndex(rds, rd1);
-SetUniform4f(rds.shader[rind], "colour", (vec4){1.0f, 0.0f, 0.0f, 1.0f});
+    {
+    int rind = getRenderDetailsIDIndex(rds, rd1);
+    SetUniform4f(rds.shader[rind], "colour", (vec4){1.0f, 0.0f, 0.0f, 1.0f});
+    }
 
 unsigned int ent1 = CreateEntity(&ents, rd1, td1);
+
+unsigned int rd2 = CreateSpriteRenderable(&rds, "res/sprites/movable_spritesheet.png", 2, 1);
+unsigned int td2 = AddTransformation(&tds, (vec2){535.0f, 480.0f}, (vec2){25.0f, 25.0f});
+
+unsigned int ent2 = CreateEntity(&ents, rd2, td2);
 
 /*
 unsigned int ent1 = CreateEntity(&es, SQUARE, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
@@ -192,6 +198,8 @@ while(!glfwWindowShouldClose(window))
 
     ApplyModel(rds, tds, rd1, td1);
     DrawRenderable(rds, rd1);
+    ApplyModel(rds, tds, rd2, td2);
+    DrawRenderable(rds, rd2);
     
     glfwSwapBuffers(window);
     glfwPollEvents();
