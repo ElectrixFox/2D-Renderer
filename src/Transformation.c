@@ -1,6 +1,6 @@
 #include "Transformation.h"
 
-TransformationDetails InitialiseTransformationDetails()
+TransformationDetails InitialiseTransformationDetails(unsigned int* width, unsigned int* height)
 {
 TransformationDetails tds;  // creating the details
 
@@ -10,6 +10,10 @@ tds.size = 0;  // setting the size to 0
 tds.trsid = (unsigned int*)malloc(sizeof(unsigned int));
 tds.pos = (vec2*)malloc(sizeof(vec2));
 tds.scale = (vec2*)malloc(sizeof(vec2));
+
+// setting up the width height pointers
+tds.width = width;
+tds.height = height;
 
 return tds;
 }
@@ -112,3 +116,7 @@ models = (m4*)malloc(n * sizeof(m4));   // allocating the memory to be used
 for (int i = 0; i < n; i++)
     models[i] = GetModelMatrix(tds.pos[i], tds.scale[i]);   // doing the calculation and setting the value
 }
+
+m4 getTransformProjectionMatrix(TransformationDetails tds) { return getProjection(*tds.width, *tds.height, 1); }
+
+

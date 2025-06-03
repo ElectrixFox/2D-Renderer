@@ -51,7 +51,11 @@ unsigned int AddRenderDetail(RenderDetails* rd, unsigned int vao, unsigned int s
  */
 void RemoveRenderDetail(RenderDetails* rd, unsigned int rid);
 
+#pragma region Functions
+
 static unsigned int _CreateRenderable(RenderDetails* rd, unsigned int shape, const char* vsfp, const char* fsfp, const char* texfp);
+
+
 unsigned int CreateSquareRenderable(RenderDetails* rd);
 
 /**
@@ -78,3 +82,5 @@ unsigned int CreateSpriteRenderable(RenderDetails* rd, const char* spfp, unsigne
 unsigned int CreatePlainSquareRenderable(RenderDetails* rd);
 
 void DrawRenderable(RenderDetails rds, unsigned int rid);
+
+#pragma endregion
