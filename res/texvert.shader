@@ -9,6 +9,6 @@ out vec2 TexCoord;
 
 void main()
 {
-gl_Position = transpose(model * projection) * vec4(pos, 1.0);
+gl_Position = projection * model * vec4(pos, 1.0);
 TexCoord = texcoord;
 }
