@@ -102,8 +102,15 @@ vec2 getScale(TransformationDetails tds, unsigned int trsid) { return tds.scale[
 m4 getTransformModelMatrix(TransformationDetails tds, unsigned int tid)
 {
 int index = getTransformationIDIndex(tds, tid); // find the transformation ID
+vec2 lscale = tds.scale[index];
+vec2 lpos = tds.pos[index];
+lscale.x = lscale.x * ((float)*tds.width) / 1280.0f;
+lscale.y = lscale.y * ((float)*tds.height) / 720.0f;
+// lpos.x = lpos.x * ((float)*tds.width) / 1280.0f;
+// lpos.y = lpos.y * ((float)*tds.height) / 720.0f;
+printf("\n%.2f, %.2f", lpos.x, lpos.y);
 if(index != -1)
-    return GetModelMatrix(tds.pos[index], tds.scale[index]);    // get the model matrix
+    return GetModelMatrix(lpos, lscale);    // get the model matrix
 
 return getM4ID();   // return the identity so nothing bad goes on
 }

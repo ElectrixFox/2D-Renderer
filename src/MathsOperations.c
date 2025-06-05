@@ -144,10 +144,10 @@ m4 getProjection(unsigned int wid, unsigned int hig, unsigned int transformed)
 {
 return 
     (m4){
-         2 / (float)wid, 0.0f, 0.0f, 0.0f,
-         0.0f, 2 / (float)hig, 0.0f, 0.0f,
+         2 / (float)wid, 0.0f, 0.0f, -(float)(transformed),
+         0.0f, 2 / (float)hig, 0.0f, -(float)(transformed),
          0.0f, 0.0f, 1.0f, 0.0f,
-         -(float)(transformed), -(float)(transformed), 0.0f, 1.0f
+         0.0f, 0.0f, 0.0f, 1.0f
     };
 }
 
@@ -155,10 +155,10 @@ m4 GetModelMatrix(vec2 pos, vec2 scale)
 {
 vec2 transformed = LeftCornerFromCentre(pos, scale);
 return (m4){
-        scale.x, 0.0f, 0.0f, 0.0f,
-        0.0f, scale.y, 0.0f, 0.0f,
+        scale.x, 0.0f, 0.0f, scale.x * transformed.x,
+        0.0f, scale.y, 0.0f, scale.y * transformed.y,
         0.0f, 0.0f, 1.0f, 0.0f,
-        transformed.x, transformed.y, 0.0f, 1.0f
+        0.0f, 0.0f, 0.0f, 1.0f
 };
 }
 

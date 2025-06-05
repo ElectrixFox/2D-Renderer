@@ -53,9 +53,6 @@ void RemoveRenderDetail(RenderDetails* rd, unsigned int rid);
 
 #pragma region Functions
 
-static unsigned int _CreateRenderable(RenderDetails* rd, unsigned int shape, const char* vsfp, const char* fsfp, const char* texfp);
-
-
 unsigned int CreateSquareRenderable(RenderDetails* rd);
 
 /**

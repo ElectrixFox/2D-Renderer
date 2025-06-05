@@ -143,7 +143,7 @@ void _ApplyProjection(Entities ents, RenderDetails rds, TransformationDetails td
 ApplyProjection(rds, tds, ents.rid[getEntitiesIDIndex(ents, eid)]);
 }
 
-int gwid = 1920, ghig = 1080;
+int gwid = 1280, ghig = 720;
 
 void on_window_resize(GLFWwindow* window, int width, int height)
 {
@@ -160,6 +160,7 @@ unsigned int height = ghig;
 glfwInit();
 GLFWwindow* window = glfwCreateWindow(width, height, "Title", 0, 0); // creates the window of size width x height
 glfwSetWindowAspectRatio(window, 16, 9);
+glViewport(0, 0, gwid, ghig);
 
 glfwMakeContextCurrent(window); // sets the context of the window
 // glViewport(0, 0, width, height);
@@ -179,18 +180,19 @@ Entities ents = InitialiseEntities(); // initialising the entities list and allo
 
 unsigned int rd1 = CreatePlainSquareRenderable(&rds);
 unsigned int td1 = AddTransformation(&tds, (vec2){gwid / 2 - 25.0f, ghig / 2}, (vec2){25.0f, 25.0f});
-
+setPosition(tds, td1, (vec2){50.0f, 50.0f});
     {
     int rind = getRenderDetailsIDIndex(rds, rd1);
     SetUniform4f(rds.shader[rind], "colour", (vec4){1.0f, 0.0f, 0.0f, 1.0f});
     }
 
 unsigned int ent1 = CreateEntity(&ents, rd1, td1);
-
+/*
 unsigned int rd2 = CreateSpriteRenderable(&rds, "res/sprites/movable_spritesheet.png", 2, 1);
 unsigned int td2 = AddTransformation(&tds, (vec2){gwid / 2 + 25.0f, ghig / 2}, (vec2){25.0f, 25.0f});
 
 unsigned int ent2 = CreateEntity(&ents, rd2, td2);
+*/
 
 /*
 unsigned int ent1 = CreateEntity(&es, SQUARE, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
@@ -223,17 +225,18 @@ while(!glfwWindowShouldClose(window))
     if(isPressedSingle(GLFW_KEY_TAB))
         OutputEntitiesDetails(tds, rds, ents);
 
-    // printf("\n%d, %d", *(int*)tds.width, *(int*)tds.height);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
     ApplyModel(rds, tds, rd1, td1);
-    ApplyCamera(cam, rds, rd1);
+    // ApplyCamera(cam, rds, rd1);
     ApplyProjection(rds, tds, rd1);
     DrawRenderable(rds, rd1);
+    /*
     ApplyModel(rds, tds, rd2, td2);
     ApplyProjection(rds, tds, rd2);
     DrawRenderable(rds, rd2);
+    */
     
     // printf("\n%d, %d", *tds.width, *tds.height);
     glfwSwapBuffers(window);
