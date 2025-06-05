@@ -175,7 +175,7 @@ InitialiseInput(window);
 Camera cam = CreateCamera((vec2){0, 0}, (vec2){gwid, ghig}, &gwid, &ghig);
 
 RenderDetails rds = InitialiseRenderDetails();
-TransformationDetails tds = InitialiseTransformationDetails(&gwid, &ghig);
+TransformationDetails tds = InitialiseTransformationDetails(gwid, ghig);
 Entities ents = InitialiseEntities(); // initialising the entities list and allocating memory
 
 unsigned int rd1 = CreatePlainSquareRenderable(&rds);

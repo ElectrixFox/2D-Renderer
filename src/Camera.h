@@ -7,8 +7,8 @@
 struct Camera
     {
     unsigned int camid; // i.e. entity ID
-    vec2 zoomcomponent; // i.e. scale
     vec2 poscomponent;  // i.e. pos
+    vec2 zoomcomponent; // i.e. scale
     int* scrspx;    // screen dimension y
     int* scrspy;    // screen dimension x
     };

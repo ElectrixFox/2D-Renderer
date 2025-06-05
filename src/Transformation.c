@@ -1,6 +1,6 @@
 #include "Transformation.h"
 
-TransformationDetails InitialiseTransformationDetails(unsigned int* width, unsigned int* height)
+TransformationDetails InitialiseTransformationDetails(unsigned int width, unsigned int height)
 {
 TransformationDetails tds;  // creating the details
 
@@ -117,6 +117,6 @@ for (int i = 0; i < n; i++)
     models[i] = GetModelMatrix(tds.pos[i], tds.scale[i]);   // doing the calculation and setting the value
 }
 
-m4 getTransformProjectionMatrix(TransformationDetails tds) { return getProjection(*tds.width, *tds.height, 1); }
+m4 getTransformProjectionMatrix(TransformationDetails tds) { return getProjection(tds.width, tds.height, 1); }
 
 
