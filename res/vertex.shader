@@ -7,5 +7,5 @@ uniform mat4 projection;
 
 void main()
 {
-gl_Position = model * view * projection * vec4(pos, 1.0);
+gl_Position = transpose(model * view * projection) * vec4(pos, 1.0);
 }

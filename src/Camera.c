@@ -10,10 +10,10 @@ m4 getCameraMatrix(Camera cam)
 //  the camera matrix is effectively a projection matrix with a position component
 return 
     (m4){
-         1.0f, 0.0f, 0.0f, 0.0f,
-         0.0f, 1.0f, 0.0f, 0.0f,
-         0.0f, 0.0f, 1.0f, 0.0f,
-         cam.poscomponent.x, cam.poscomponent.y, 0.0f, 1.0f
+        1.0f, 0.0f, 0.0f, (float)cam.poscomponent.x,
+        0.0f, 1.0f, 0.0f, (float)cam.poscomponent.y,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
     };
 /*return 
     (m4){

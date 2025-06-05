@@ -229,7 +229,7 @@ while(!glfwWindowShouldClose(window))
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
     ApplyModel(rds, tds, rd1, td1);
-    // ApplyCamera(cam, rds, rd1);
+    ApplyCamera(cam, rds, rd1);
     ApplyProjection(rds, tds, rd1);
     DrawRenderable(rds, rd1);
     /*

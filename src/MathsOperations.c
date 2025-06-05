@@ -155,8 +155,8 @@ m4 GetModelMatrix(vec2 pos, vec2 scale)
 {
 vec2 transformed = LeftCornerFromCentre(pos, scale);
 return (m4){
-        scale.x, 0.0f, 0.0f, scale.x * transformed.x,
-        0.0f, scale.y, 0.0f, scale.y * transformed.y,
+        scale.x, 0.0f, 0.0f, transformed.x,
+        0.0f, scale.y, 0.0f, transformed.y,
         0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
 };
