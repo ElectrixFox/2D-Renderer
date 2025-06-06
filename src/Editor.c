@@ -9,8 +9,7 @@ unsigned int rd = CreateSpriteRenderable(rds, "res/sprites/movable_spritesheet.p
 unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});
 
 AddDrawable(drabs, td, rd);
-
-unsigned int ent = AddEntity(ents, td, 1);
+AddEntity(ents, td, 1);
 }
 
 void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, Entities* ents, unsigned int eid)
@@ -21,4 +20,32 @@ if(index == -1)
 
 RemoveDrawable(drabs, rds, tds, ents->trsid[index]); // remove the drawable
 RemoveEntity(ents, eid);
+}
+
+void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, Entities* ents)
+{
+vec2 topright = {995.0f, 935.0f};
+const unsigned int nsheets = 2;
+const unsigned int nsprites[] = {2, 1};
+const char* spritesheets[] = {
+    "res/sprites/movable_spritesheet.png",
+    "res/sprites/movable_barrier_tilesheet.png"
+};
+
+int spacer = 0;
+for (int i = 0; i < nsheets; i++)
+    {
+    for (int sprite = 1; sprite < nsprites[i] + 1; sprite++)
+        {
+        vec2 position = {topright.x, topright.y - spacer * 25.0f}; // placing the items in a vertical line on the right side of the screen
+        
+        unsigned int rd = CreateSpriteRenderable(rds, spritesheets[i], nsprites[i], sprite);
+        unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});
+
+        AddDrawable(drabs, td, rd);
+
+        AddEntity(ents, td, 0);
+        spacer++; // increase the spacer for the next item
+        }
+    }
 }

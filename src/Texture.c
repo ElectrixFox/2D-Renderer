@@ -74,6 +74,6 @@ return texture;
 void BindTexture(unsigned int texture)
 {
 // GL_TEXTURE0 is the first of many consecutive numbers referring to active textures so if we just add the active we get the correct thing
-glActiveTexture(GL_TEXTURE0 + getActiveTexture(texture));
+glActiveTexture(GL_TEXTURE0);
 glBindTexture(GL_TEXTURE_2D, getTexture(texture));  // binds the texture
 }

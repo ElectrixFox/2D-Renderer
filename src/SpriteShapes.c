@@ -71,6 +71,7 @@ switch (GetActiveShape(shape))  // gets the shape by masking
         break;
     }
 
+return (viBundle){NULL, 0}; // return an empty bundle if no shape matches
 }
 
 viBundle GetShapeIndices(unsigned int shape)
@@ -94,4 +95,5 @@ switch (GetActiveShape(shape))  // gets the shape by masking
         break;
     }
 
+return (viBundle){NULL, 0}; // return an empty bundle if no shape matches
 }

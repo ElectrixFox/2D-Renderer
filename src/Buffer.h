@@ -33,6 +33,8 @@ typedef struct VAOLayout
 
 void BindIBO(unsigned int ibo);
 
+void BindVBO(unsigned int vbo);
+
 /**
  * Creates the vertex array layout
  * 

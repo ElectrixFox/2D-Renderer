@@ -6,20 +6,8 @@ void ExpandByOne(void **arr, const unsigned int size, unsigned int elesize) { Ex
 
 void AppendToArray(void** arr, unsigned int size, void** item, unsigned int elesize)
 {
-void** nptr = realloc(arr, elesize * (size + 1));
-printf("\n%p: %d", item, *item);
-nptr[size] = *item;
-printf("\n%d, %d", nptr[size], *item);
-arr[size] = nptr[size];
-// arr[size] = (void*)item;
-/*
-void** nptr = malloc(elesize * size);
-nptr = realloc(arr, elesize * (size + 1));
-nptr[size] = item;
-arr = nptr;
-// arr[size] = item;
-printf("\n%d, %d", arr[size], item);
-*/
+ExpandByOne(arr, size, elesize);  // expand the array by one
+arr[size] = *item;  // set the last element to the item
 }
 
 vec2 LeftCornerFromCentre(vec2 centre, vec2 scale)

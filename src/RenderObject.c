@@ -100,7 +100,9 @@ unsigned int* indices = ibund.vi.indices;
 
 vao = CreateVAO();  // creating the vao
 ibo = CreateIBO(indices, ibund.n); // creating the ibo
+BindIBO(ibo);  // binding the ibo to the vao
 vbo = CreateVBO(vertices, vbund.n);  // creating the vbo
+BindVBO(vbo);  // binding the vbo to the vao
 
 unsigned int ilay[1] = {3};
 VAOLayout layout = CreateVertexLayout(ilay, 5, 1);  // setting up the layout to receive
@@ -113,7 +115,7 @@ SetUniformM4(prog, "projection", getProjection(1020, 960, 1));  // setting up th
 if(texfp != NULL)   // if there is a texture
     {
     tex = CreateTexture(texfp);
-    SetUniform1i(prog, "intexture", getActiveTexture(tex)); // set the texture to be used (the 0th active texture)
+    SetUniform1i(prog, "intexture", 0); // set the texture to be used (the 0th active texture)
     }
 
 return AddRenderDetail(rd, vao, prog, tex);

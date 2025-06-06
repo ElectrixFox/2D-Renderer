@@ -38,4 +38,4 @@ void ReadLevel(const char* levelfp);
 
 void RenderLevel();
 
-void BuildSelectBar();
+void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, Entities* ents);

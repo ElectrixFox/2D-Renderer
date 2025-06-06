@@ -75,3 +75,8 @@ void BindIBO(unsigned int ibo)
 {
 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo); // binding the buffer
 }
+
+void BindVBO(unsigned int vbo)
+{
+glBindBuffer(GL_ARRAY_BUFFER, vbo); // binding the buffer to the array buffer
+}

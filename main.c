@@ -136,11 +136,42 @@ setPosition(tds, td1, (vec2){50.0f, 50.0f});
 }
 AddDrawable(&drabs, td1, rd1);
 
+/*
 unsigned int rd2 = CreateSpriteRenderable(&rds, "res/sprites/movable_spritesheet.png", 2, 1);
 unsigned int td2 = AddTransformation(&tds, (vec2){gwid / 2 + 25.0f, ghig / 2}, (vec2){25.0f, 25.0f});
 
 AddDrawable(&drabs, td2, rd2);
 unsigned int ent2 = AddEntity(&ents, td2, 1);
+*/
+
+// BuildSelectBar(&rds, &tds, &drabs, &ents); // build the item select bar
+    {
+    vec2 topright = {995.0f, 935.0f};
+    const unsigned int nsheets = 2;
+    const unsigned int nsprites[] = {2, 1};
+    const char* spritesheets[] = {
+        "res/sprites/movable_spritesheet.png",
+        "res/sprites/movable_barrier_tilesheet.png"
+    };
+
+    int spacer = 0;
+    for (int i = 0; i < nsheets; i++)
+        {
+        for (int sprite = 1; sprite < nsprites[i] + 1; sprite++)
+            {
+            vec2 position = {topright.x, topright.y - spacer * 25.0f}; // placing the items in a vertical line on the right side of the screen
+            
+            unsigned int rd = CreateSpriteRenderable(&rds, spritesheets[i], nsprites[i], sprite);
+            unsigned int td = AddTransformation(&tds, position, (vec2){25.0f, 25.0f});
+
+            AddDrawable(&drabs, td, rd);
+
+            AddEntity(&ents, td, 0);
+            spacer++; // increase the spacer for the next item
+            }
+        }
+    }
+printf("Size of entities: %d\nSize of render details: %d\nSize of transformations: %d\nSize of drabs: %d", ents.size, rds.size, tds.size, drabs.size);
 
 while(!glfwWindowShouldClose(window))
     {
