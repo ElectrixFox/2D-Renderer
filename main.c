@@ -14,6 +14,7 @@
 
 #include "src/Camera.h"
 #include "src/Input.h"
+#include "src/Editor.h"
 
 void processInput(GLFWwindow* window)
 {
@@ -61,22 +62,6 @@ vec2 point = GetMousePositionRelative((vec2){x, y}, wid, hig);
 
 return point;
 }
-
-/*
-void OutputEntitiesDetails(Entities es)
-{
-printf("\nSize: %d", es.size);
-printf("\n%10s\t%s\t%13s\t\t%13s %10s %8s\t", "ID", "Position", "Scale", "Shader", "Texture", "VAO");
-for (int i = 0; i < es.size; i++)
-    {
-    printf("\n%10d\t(%.2f, %.2f)\t(%.2f, %.2f)\t%10d %10d %10d\t",
-        es.eid[i],
-        es.positions[i].x, es.positions[i].y,
-        es.scales[i].x, es.scales[i].y,
-        es.rdets.shaders[i], es.rdets.textures[i], es.rdets.vaos[i]);
-    }
-}
-*/
 
 void OutputEntitiesDetails(TransformationDetails tds, RenderDetails rds, Entities ents)
 {
@@ -152,6 +137,63 @@ ghig = height;
 printf("\n%dx%d", gwid, ghig);
 }
 
+struct Drawables {
+    unsigned int* trsids;
+    unsigned int* rids;
+    unsigned int size;
+};
+typedef struct Drawables Drawables;
+
+Drawables InitialiseDrawables()
+{
+Drawables drabs;
+drabs.size = 0;
+
+drabs.trsids = (unsigned int*)malloc(sizeof(unsigned int));
+drabs.rids = (unsigned int*)malloc(sizeof(unsigned int));
+
+return drabs;
+}
+
+void AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid)
+{
+static unsigned int id = 0; // a static incrementing counter to set the new ID as
+const unsigned int n = drabs->size;
+
+// make all the arrays bigger by one to accomodate for the new element
+ExpandByOne(&drabs->rids, n, sizeof(unsigned int));
+ExpandByOne(&drabs->trsids, n, sizeof(unsigned int));
+
+// setting all the new details
+drabs->rids[n] = rid;
+drabs->trsids[n] = trid;
+
+drabs->size++;    // increase the number of drawables
+}
+
+void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs, Camera cam)
+{
+// getting all we will need from the transformation objects first
+m4 view = getCameraMatrix(cam);
+m4 projection = getTransformProjectionMatrix(tds);
+m4* models = (m4*)malloc(drabs.size * sizeof(m4));  // getting all of the transformation matrices
+
+for (int i = 0; i < drabs.size; i++)    // setting the model matrices
+    models[i] = getTransformModelMatrix(tds, drabs.trsids[i]);
+
+// now do the rendering
+for (int i = 0; i < drabs.size; i++)    // setting all the uniforms
+    {
+    const unsigned int prog = rds.shader[getRenderDetailsIDIndex(rds, drabs.rids[i])];  // may as well make this a constant here for efficiency
+    SetUniformM4(prog, "model", models[i]);
+    SetUniformM4(prog, "view", view);
+    SetUniformM4(prog, "projection", projection);
+    }
+
+for (int i = 0; i < drabs.size; i++)
+    DrawRenderable(rds, drabs.rids[i]); // finally do the actual drawing
+}
+
 int main()
 {
 unsigned int width = gwid;
@@ -177,6 +219,7 @@ Camera cam = CreateCamera((vec2){0, 0}, (vec2){gwid, ghig}, &gwid, &ghig);
 RenderDetails rds = InitialiseRenderDetails();
 TransformationDetails tds = InitialiseTransformationDetails(gwid, ghig);
 Entities ents = InitialiseEntities(); // initialising the entities list and allocating memory
+Drawables drabs = InitialiseDrawables();
 
 unsigned int rd1 = CreatePlainSquareRenderable(&rds);
 unsigned int td1 = AddTransformation(&tds, (vec2){gwid / 2 - 25.0f, ghig / 2}, (vec2){25.0f, 25.0f});
@@ -184,37 +227,15 @@ setPosition(tds, td1, (vec2){50.0f, 50.0f});
     {
     int rind = getRenderDetailsIDIndex(rds, rd1);
     SetUniform4f(rds.shader[rind], "colour", (vec4){1.0f, 0.0f, 0.0f, 1.0f});
-    }
+}
+AddDrawable(&drabs, td1, rd1);
 
 unsigned int ent1 = CreateEntity(&ents, rd1, td1);
-/*
 unsigned int rd2 = CreateSpriteRenderable(&rds, "res/sprites/movable_spritesheet.png", 2, 1);
 unsigned int td2 = AddTransformation(&tds, (vec2){gwid / 2 + 25.0f, ghig / 2}, (vec2){25.0f, 25.0f});
 
+AddDrawable(&drabs, td2, rd2);
 unsigned int ent2 = CreateEntity(&ents, rd2, td2);
-*/
-
-/*
-unsigned int ent1 = CreateEntity(&es, SQUARE, (vec2){535.0f, 430.0f}, "res/texvert.shader", "res/texfrag.shader", "res/wood.png");
-SetEntityScale(es, ent1, (vec2){25.0f, 25.0f});
-unsigned int ent2 = CreateEntity(&es, SQUARE, (vec2){485.0f, 430.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
-SetEntityScale(es, ent2, (vec2){25.0f, 25.0f});
-SetEntityColour(es, ent2, (vec4){0.75f, 0.0f, 0.0f, 1.0f});
-
-// setting up the block bar
-unsigned int bar1 = CreateEntityFromSpriteSheet(&es, SQUARE, (vec2){(float)(width - 25), (float)(height - 50)}, "res/sprites/movable_spritesheet.png", 1, 2);
-unsigned int bar2 = CreateEntityFromSpriteSheet(&es, SQUARE, (vec2){(float)(width - 25), (float)(height - 100)}, "res/sprites/movable_spritesheet.png", 2, 2);
-
-SetEntityScaleFactor(es, bar1, 25.0f);
-SetEntityScaleFactor(es, bar2, 25.0f);
-
-
-unsigned int pent = CreateEntity(&es, SQUARE, (vec2){0.0f, 0.0f}, "res/vertex.shader", "res/fragment.shader", NULL);
-SetEntityScale(es, pent, (vec2){5.0f, 5.0f});
-SetEntityColour(es, pent, (vec4){0.0f, 0.0f, 0.0f, 1.0f});
-
-UpdateEntities(es);
-*/
 
 while(!glfwWindowShouldClose(window))
     {
@@ -224,21 +245,17 @@ while(!glfwWindowShouldClose(window))
 
     if(isPressedSingle(GLFW_KEY_TAB))
         OutputEntitiesDetails(tds, rds, ents);
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+        {
+        vec2 cpos = GetCursorPosition(window);
+        PlaceBlock(&rds, &tds, &ents, 0, cpos);
+        }
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
-    ApplyModel(rds, tds, rd1, td1);
-    ApplyCamera(cam, rds, rd1);
-    ApplyProjection(rds, tds, rd1);
-    DrawRenderable(rds, rd1);
-    /*
-    ApplyModel(rds, tds, rd2, td2);
-    ApplyProjection(rds, tds, rd2);
-    DrawRenderable(rds, rd2);
-    */
+    DrawDrawables(rds, tds, drabs, cam);
     
-    // printf("\n%d, %d", *tds.width, *tds.height);
     glfwSwapBuffers(window);
     glfwPollEvents();
     }

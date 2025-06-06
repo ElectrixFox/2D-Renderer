@@ -8,9 +8,8 @@ ents.size = 0;  // setting the size to 0
 
 // allocating a small bit of memory
 ents.eid = (unsigned int*)malloc(sizeof(unsigned int));
-ents.rid = (unsigned int*)malloc(sizeof(unsigned int));
 ents.trsid = (unsigned int*)malloc(sizeof(unsigned int));
-ents.pid =(unsigned int*)malloc(sizeof(unsigned int));
+ents.pressable =(int*)malloc(sizeof(int));
 
 return ents;
 }
@@ -26,25 +25,22 @@ for (int i = 0; i < ents.size; i++) // simple linear search
 return -1;
 }
 
-unsigned int AddEntity(Entities *ents, unsigned int rid, unsigned int trsid, unsigned int pid)
+unsigned int AddEntity(Entities *ents, unsigned int trsid, int pressable)
 {
 static unsigned int id = 0; // a static incrementing counter to set the new ID as
 const unsigned int n = ents->size;
 
 // make all the arrays bigger by one to accomodate for the new element
 ExpandByOne(&ents->eid, n, sizeof(unsigned int));
-ExpandByOne(&ents->rid, n, sizeof(unsigned int));
 ExpandByOne(&ents->trsid, n, sizeof(unsigned int));
-ExpandByOne(&ents->pid, n, sizeof(unsigned int));
-
+ExpandByOne(&ents->pressable, n, sizeof(int));
 
 // setting all the new details
 ents->eid[n] = id++;    // increment the ID counter too
-ents->rid[n] = rid;
 ents->trsid[n] = trsid;
-ents->pid[n] = pid;
+ents->pressable[n] = pressable;
 
-ents->size++;   // increases the size of the entitys
+ents->size++;   // increases the size of the entities
 
 return ents->eid[n];
 }
@@ -63,26 +59,21 @@ if(index == size)
 
 // getting temporary stuff
 unsigned int teid = ents->eid[index];
-unsigned int trid = ents->rid[index];
 unsigned int ttrsid = ents->trsid[index];
-unsigned int tpid = ents->pid[index];
+unsigned int tpres = ents->pressable[index];
 
 // setting the to delete to the end values
 ents->eid[index] = ents->eid[size];
-ents->rid[index] = ents->rid[size];
 ents->trsid[index] = ents->trsid[size];
-ents->pid[index] = ents->pid[size];
+ents->pressable[index] = ents->pressable[size];
 
 // setting the end to the thing to delete
 ents->eid[size] = teid;
-ents->rid[size] = trid;
 ents->trsid[size] = ttrsid;
-ents->pid[size] = tpid;
+ents->pressable[size] = tpres;
 
 end:
 ents->size--;    // decrease the size so it is effectively not there
 
 // To-Do: Could add in a sort here to sort by ID in order to realign the table
 }
-
-unsigned int CreateEntity(Entities* ent, unsigned int rid, unsigned int tid) { return AddEntity(ent, rid, tid, 0); }

@@ -32,6 +32,7 @@ static unsigned int id = 0; // a static incrementing counter to set the new ID a
 const unsigned int n = rd->size;
 
 // make all the arrays bigger by one to accomodate for the new element
+ExpandByOne(&rd->rid, n, sizeof(unsigned int));
 ExpandByOne(&rd->vao, n, sizeof(unsigned int));
 ExpandByOne(&rd->shader, n, sizeof(unsigned int));
 ExpandByOne(&rd->texture, n, sizeof(unsigned int));

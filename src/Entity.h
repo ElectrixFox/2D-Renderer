@@ -6,9 +6,8 @@
 struct Entities
     {
     unsigned int* eid;
-    unsigned int* rid;
     unsigned int* trsid;
-    unsigned int* pid;
+    int* pressable;
     unsigned int size;
     };
 typedef struct Entities Entities;
@@ -34,13 +33,12 @@ int getEntitiesIDIndex(Entities ents, unsigned int eid);
  * Adds an entity to the details
  * 
  * @param ents A pointer to the Entities object
- * @param rid The ID of the render object for the entity
  * @param trsid The ID of the transformation object for the entity
- * @param pid The ID of the pressable object for the entity
+ * @param pressable If the entity is pressable
  * 
  * @returns The ID of the newly added entity
  */
-unsigned int AddEntity(Entities* ents, unsigned int rid, unsigned int trsid, unsigned int pid);
+unsigned int AddEntity(Entities *ents, unsigned int trsid, int pressable);
 
 /**
  * Removes an entity from the details
@@ -49,14 +47,3 @@ unsigned int AddEntity(Entities* ents, unsigned int rid, unsigned int trsid, uns
  * @param eid The ID of the entity to remove
  */
 void RemoveEntity(Entities* ents, unsigned int eid);
-
-/**
- * Creates an entity from its components
- * 
- * @param ent Pointer to Entities object
- * @param rid The associated render ID of the entity
- * @param tid The associated transformation ID of the entity
- * 
- * @returns The ID of the newly created entity
- */
-unsigned int CreateEntity(Entities* ent, unsigned int rid, unsigned int tid);
