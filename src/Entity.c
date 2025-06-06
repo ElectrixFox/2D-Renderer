@@ -16,8 +16,9 @@ return ents;
 
 int getEntitiesIDIndex(Entities ents, unsigned int eid)
 {
-if(ents.eid[eid] == eid)    // just in case no manipulation of the table has happened
-    return eid;
+if(ents.size > eid) // if the size is bigger than the ID then it is a valid ID
+    if(ents.eid[eid] == eid)    // just in case no manipulation of the table has happened
+        return eid;
 
 for (int i = 0; i < ents.size; i++) // simple linear search
     if(ents.eid[i] == eid)
@@ -29,6 +30,12 @@ unsigned int AddEntity(Entities* ents, unsigned int trsid, int pressable)
 {
 static unsigned int id = 0; // a static incrementing counter to set the new ID as
 const unsigned int n = ents->size;
+
+if(n == 0) // if the size is 0 then just set the ID to 0
+    {
+    id = 0;
+    *ents = InitialiseEntities(); // reinitialise the entities
+    }
 
 // make all the arrays bigger by one to accomodate for the new element
 ExpandByOne(&ents->eid, n, sizeof(unsigned int));
@@ -54,8 +61,7 @@ if(index == -1)
 
 const unsigned int size = ents->size;   // constant just for ease of reading
 
-if(index == size)
-    goto end;   // hehe the naughty goto
+if(index == size - 1) goto end;   // hehe the naughty goto
 
 // getting temporary stuff
 unsigned int teid = ents->eid[index];
@@ -63,14 +69,14 @@ unsigned int ttrsid = ents->trsid[index];
 unsigned int tpres = ents->pressable[index];
 
 // setting the to delete to the end values
-ents->eid[index] = ents->eid[size];
-ents->trsid[index] = ents->trsid[size];
-ents->pressable[index] = ents->pressable[size];
+ents->eid[index] = ents->eid[size - 1];
+ents->trsid[index] = ents->trsid[size - 1];
+ents->pressable[index] = ents->pressable[size - 1];
 
 // setting the end to the thing to delete
-ents->eid[size] = teid;
-ents->trsid[size] = ttrsid;
-ents->pressable[size] = tpres;
+ents->eid[size - 1] = teid;
+ents->trsid[size - 1] = ttrsid;
+ents->pressable[size - 1] = tpres;
 
 end:
 ents->size--;    // decrease the size so it is effectively not there

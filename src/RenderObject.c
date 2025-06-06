@@ -17,8 +17,9 @@ return rd;
 
 int getRenderDetailsIDIndex(RenderDetails rd, unsigned int rid)
 {
-if(rd.rid[rid] == rid)  // just in case no manipulation of the table has happened
-    return rid;
+if(rd.size > rid)  // if the size is bigger than the ID then it is a valid ID
+    if(rd.rid[rid] == rid)  // just in case no manipulation of the table has happened
+        return rid;
 
 for (int i = 0; i < rd.size; i++)   // simple linear search
     if(rd.rid[i] == rid)
@@ -30,6 +31,12 @@ unsigned int AddRenderDetail(RenderDetails *rd, unsigned int vao, unsigned int s
 {
 static unsigned int id = 0; // a static incrementing counter to set the new ID as
 const unsigned int n = rd->size;
+
+if(n == 0)   // if the size is 0 then just set the ID to 0
+    {
+    id = 0;
+    *rd = InitialiseRenderDetails(); // reinitialise the render details
+    }
 
 // make all the arrays bigger by one to accomodate for the new element
 ExpandByOne(&rd->rid, n, sizeof(unsigned int));
@@ -55,8 +62,7 @@ int index = getRenderDetailsIDIndex(*rd, rid);  // finding the ID
 if(index == -1)
     return; // if the index isn't found just quit
 
-if(index == rd->size)
-    goto end;   // hehe the naughty goto
+if(index == rd->size - 1) goto end;   // hehe the naughty goto
 
 // getting temporary stuff
 unsigned int tid = rd->rid[index];
@@ -65,16 +71,16 @@ unsigned int tshader = rd->shader[index];
 unsigned int ttexture = rd->texture[index];
 
 // setting the to delete to the end values
-rd->rid[index] = rd->rid[rd->size];
-rd->vao[index] = rd->vao[rd->size];
-rd->shader[index] = rd->shader[rd->size];
-rd->texture[index] = rd->texture[rd->size];
+rd->rid[index] = rd->rid[rd->size - 1];
+rd->vao[index] = rd->vao[rd->size - 1];
+rd->shader[index] = rd->shader[rd->size - 1];
+rd->texture[index] = rd->texture[rd->size - 1];
 
 // setting the end to the thing to delete
-rd->rid[rd->size] = tid;
-rd->vao[rd->size] = tvao;
-rd->shader[rd->size] = tshader;
-rd->texture[rd->size] = ttexture;
+rd->rid[rd->size - 1] = tid;
+rd->vao[rd->size - 1] = tvao;
+rd->shader[rd->size - 1] = tshader;
+rd->texture[rd->size - 1] = ttexture;
 
 end:
 rd->size--; // decrease the size so it is effectively not there

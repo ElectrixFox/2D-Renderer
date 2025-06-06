@@ -20,8 +20,9 @@ return tds;
 
 int getTransformationIDIndex(TransformationDetails tds, unsigned int trsid)
 {
-if(tds.trsid[trsid] == trsid)   // just in case no manipulation of the table has happened
-    return trsid;
+if(tds.size > trsid)    // if the size is bigger than the ID then it is a valid ID
+    if(tds.trsid[trsid] == trsid)   // just in case no manipulation of the table has happened
+        return trsid;
 
 for (int i = 0; i < tds.size; i++)  // simple linear search
     if(tds.trsid[i] == trsid)
@@ -57,8 +58,7 @@ int index = getTransformationIDIndex(*tds, tid); // finding the ID
 if(index == -1)
     return; // if the index isn't found just quit
 
-if(index == tds->size)
-    goto end;   // hehe the naughty goto
+if(index == tds->size - 1) goto end;   // hehe the naughty goto
 
 // getting temporary stuff
 unsigned int tmpid = tds->trsid[index];
@@ -66,14 +66,14 @@ vec2 tpos = tds->pos[index];
 vec2 tscale = tds->scale[index];
 
 // setting the to delete to the end values
-tds->trsid[index] = tds->trsid[tds->size];
-tds->pos[index] = tds->pos[tds->size];
-tds->scale[index] = tds->scale[tds->size];
+tds->trsid[index] = tds->trsid[tds->size - 1];
+tds->pos[index] = tds->pos[tds->size - 1];
+tds->scale[index] = tds->scale[tds->size - 1];
 
 // setting the end to the thing to delete
-tds->trsid[tds->size] = tmpid;
-tds->pos[tds->size] = tpos;
-tds->scale[tds->size] = tscale;
+tds->trsid[tds->size - 1] = tmpid;
+tds->pos[tds->size - 1] = tpos;
+tds->scale[tds->size - 1] = tscale;
 
 end:
 tds->size--;    // decrease the size so it is effectively not there

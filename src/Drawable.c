@@ -13,7 +13,6 @@ return drabs;
 
 void AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid)
 {
-static unsigned int id = 0; // a static incrementing counter to set the new ID as
 const unsigned int n = drabs->size;
 
 // make all the arrays bigger by one to accomodate for the new element
@@ -27,33 +26,40 @@ drabs->trsids[n] = trid;
 drabs->size++;    // increase the number of drawables
 }
 
-void RemoveDrawable(Drawables* drabs, unsigned int trid)
+static int getTransformationIDIndexDrawables(Drawables drabs, unsigned int tid)
 {
-int index = getTransformationIDIndex(*tds, tid); // finding the ID
+for (int i = 0; i < drabs.size; i++)
+    if (drabs.trsids[i] == tid) // if the ID matches
+        return i; // return the index
+return -1; // if the ID isn't found return -1
+}
+
+void RemoveDrawable(Drawables* drabs, RenderDetails* rds, TransformationDetails* tds, unsigned int trid)
+{
+int index = getTransformationIDIndexDrawables(*drabs, trid); // finding the ID
 
 if(index == -1)
     return; // if the index isn't found just quit
 
-if(index == tds->size)
-    goto end;   // hehe the naughty goto
+RemoveRenderDetail(rds, drabs->rids[index]); // remove the render detail from the render details object
+RemoveTransformation(tds, drabs->trsids[index]); // remove the transformation from the transformation details object
+
+if(index == drabs->size - 1) goto end;   // hehe the naughty goto
 
 // getting temporary stuff
-unsigned int tmpid = tds->trsid[index];
-vec2 tpos = tds->pos[index];
-vec2 tscale = tds->scale[index];
+unsigned int tmp_trsid = drabs->trsids[index];
+unsigned int tmp_rid = drabs->rids[index];
 
 // setting the to delete to the end values
-tds->trsid[index] = tds->trsid[tds->size];
-tds->pos[index] = tds->pos[tds->size];
-tds->scale[index] = tds->scale[tds->size];
+drabs->trsids[index] = drabs->trsids[drabs->size - 1];
+drabs->rids[index] = drabs->rids[drabs->size - 1];
 
 // setting the end to the thing to delete
-tds->trsid[tds->size] = tmpid;
-tds->pos[tds->size] = tpos;
-tds->scale[tds->size] = tscale;
+drabs->trsids[drabs->size - 1] = tmp_trsid;
+drabs->rids[drabs->size - 1] = tmp_rid;
 
 end:
-tds->size--;    // decrease the size so it is effectively not there
+drabs->size--;    // decrease the size so it is effectively not there
 }
 
 void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs, Camera cam)

@@ -1,3 +1,4 @@
+#pragma once
 #include "Entity.h"
 #include "Camera.h"
 
@@ -12,6 +13,6 @@ Drawables InitialiseDrawables();
 
 void AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid);
 
-void RemoveDrawable(Drawables* drabs, unsigned int trid);
+void RemoveDrawable(Drawables* drabs, RenderDetails* rds, TransformationDetails* tds, unsigned int trid);
 
 void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs, Camera cam);

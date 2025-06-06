@@ -154,15 +154,21 @@ while(!glfwWindowShouldClose(window))
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
-        PlaceBlock(&rds, &tds, &ents, 0, cpos);
-
+        PlaceBlock(&rds, &tds, &drabs, &ents, 0, cpos);
+        glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
+        }
+    else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+        {
         for (int i = 0; i < ents.size; i++)
             {
             if(CheckPressed(tds, ents.trsid[i], GetCursorPosition(window)) == 1)
                 {
-                printf("\nPressed %d", i);
+                printf("\nRemoving entity with ID %d", ents.trsid[i]);
+                RemoveBlock(&rds, &tds, &drabs, &ents, ents.eid[i]);
+                break; // break after removing the first entity
                 }
             }
+        glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
     
     
