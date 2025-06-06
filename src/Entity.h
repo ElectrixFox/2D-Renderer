@@ -38,7 +38,7 @@ int getEntitiesIDIndex(Entities ents, unsigned int eid);
  * 
  * @returns The ID of the newly added entity
  */
-unsigned int AddEntity(Entities *ents, unsigned int trsid, int pressable);
+unsigned int AddEntity(Entities* ents, unsigned int trsid, int pressable);
 
 /**
  * Removes an entity from the details

@@ -14,6 +14,7 @@
 
 #include "src/Camera.h"
 #include "src/Input.h"
+#include "src/Drawable.h"
 #include "src/Editor.h"
 
 void processInput(GLFWwindow* window)
@@ -99,63 +100,6 @@ ghig = height;
 printf("\n%dx%d", gwid, ghig);
 }
 
-struct Drawables {
-    unsigned int* trsids;
-    unsigned int* rids;
-    unsigned int size;
-};
-typedef struct Drawables Drawables;
-
-Drawables InitialiseDrawables()
-{
-Drawables drabs;
-drabs.size = 0;
-
-drabs.trsids = (unsigned int*)malloc(sizeof(unsigned int));
-drabs.rids = (unsigned int*)malloc(sizeof(unsigned int));
-
-return drabs;
-}
-
-void AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid)
-{
-static unsigned int id = 0; // a static incrementing counter to set the new ID as
-const unsigned int n = drabs->size;
-
-// make all the arrays bigger by one to accomodate for the new element
-ExpandByOne(&drabs->rids, n, sizeof(unsigned int));
-ExpandByOne(&drabs->trsids, n, sizeof(unsigned int));
-
-// setting all the new details
-drabs->rids[n] = rid;
-drabs->trsids[n] = trid;
-
-drabs->size++;    // increase the number of drawables
-}
-
-void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs, Camera cam)
-{
-// getting all we will need from the transformation objects first
-m4 view = getCameraMatrix(cam);
-m4 projection = getTransformProjectionMatrix(tds);
-m4* models = (m4*)malloc(drabs.size * sizeof(m4));  // getting all of the transformation matrices
-
-for (int i = 0; i < drabs.size; i++)    // setting the model matrices
-    models[i] = getTransformModelMatrix(tds, drabs.trsids[i]);
-
-// now do the rendering
-for (int i = 0; i < drabs.size; i++)    // setting all the uniforms
-    {
-    const unsigned int prog = rds.shader[getRenderDetailsIDIndex(rds, drabs.rids[i])];  // may as well make this a constant here for efficiency
-    SetUniformM4(prog, "model", models[i]);
-    SetUniformM4(prog, "view", view);
-    SetUniformM4(prog, "projection", projection);
-    }
-
-for (int i = 0; i < drabs.size; i++)
-    DrawRenderable(rds, drabs.rids[i]); // finally do the actual drawing
-}
-
 int main()
 {
 unsigned int width = gwid;
@@ -192,7 +136,6 @@ setPosition(tds, td1, (vec2){50.0f, 50.0f});
 }
 AddDrawable(&drabs, td1, rd1);
 
-unsigned int ent1 = AddEntity(&ents, td1, 0);
 unsigned int rd2 = CreateSpriteRenderable(&rds, "res/sprites/movable_spritesheet.png", 2, 1);
 unsigned int td2 = AddTransformation(&tds, (vec2){gwid / 2 + 25.0f, ghig / 2}, (vec2){25.0f, 25.0f});
 
@@ -207,11 +150,22 @@ while(!glfwWindowShouldClose(window))
 
     if(isPressedSingle(GLFW_KEY_TAB))
         OutputEntitiesDetails(tds, rds, ents);
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+
+    if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
         PlaceBlock(&rds, &tds, &ents, 0, cpos);
+
+        for (int i = 0; i < ents.size; i++)
+            {
+            if(CheckPressed(tds, ents.trsid[i], GetCursorPosition(window)) == 1)
+                {
+                printf("\nPressed %d", i);
+                }
+            }
         }
+    
+    
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer

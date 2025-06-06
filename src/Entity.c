@@ -9,7 +9,7 @@ ents.size = 0;  // setting the size to 0
 // allocating a small bit of memory
 ents.eid = (unsigned int*)malloc(sizeof(unsigned int));
 ents.trsid = (unsigned int*)malloc(sizeof(unsigned int));
-ents.pressable =(int*)malloc(sizeof(int));
+ents.pressable = (int*)malloc(sizeof(int));
 
 return ents;
 }
@@ -25,7 +25,7 @@ for (int i = 0; i < ents.size; i++) // simple linear search
 return -1;
 }
 
-unsigned int AddEntity(Entities *ents, unsigned int trsid, int pressable)
+unsigned int AddEntity(Entities* ents, unsigned int trsid, int pressable)
 {
 static unsigned int id = 0; // a static incrementing counter to set the new ID as
 const unsigned int n = ents->size;
@@ -45,7 +45,7 @@ ents->size++;   // increases the size of the entities
 return ents->eid[n];
 }
 
-void RemoveEntity(Entities *ents, unsigned int eid)
+void RemoveEntity(Entities* ents, unsigned int eid)
 {
 int index = getEntitiesIDIndex(*ents, eid); // finding the ID
 

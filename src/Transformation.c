@@ -119,4 +119,12 @@ for (int i = 0; i < n; i++)
 
 m4 getTransformProjectionMatrix(TransformationDetails tds) { return getProjection(tds.width, tds.height, 1); }
 
+int CheckPressed(TransformationDetails tds, unsigned int tid, vec2 cursorpos)
+{
+unsigned int index = getTransformationIDIndex(tds, tid); // some hash function to get where the eid is in the big array
+
+if(PointInSquare(cursorpos, tds.pos[index], tds.scale[index]))
+    return 1;
+return 0;
+}
 

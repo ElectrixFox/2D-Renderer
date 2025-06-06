@@ -47,4 +47,4 @@ void RemovePressable(Pressables* prds, unsigned int prid);
  * @param scales Array of entity scales
  * @param eid The id of the entity to check
  */
-int CheckPressed(vec2* poses, vec2* scales, vec2 cursorpos, unsigned int eid);
+int _CheckPressed(vec2* poses, vec2* scales, vec2 cursorpos, unsigned int eid);

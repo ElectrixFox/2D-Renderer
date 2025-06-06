@@ -114,4 +114,15 @@ void getTransformModelMatrices(TransformationDetails tds, m4* models);
  */
 m4 getTransformProjectionMatrix(TransformationDetails tds);
 
+/**
+ * Checks if a transformation object has been pressed
+ * 
+ * @param tds The details about the transform
+ * @param tid The ID of the transformation
+ * @param cursorpos The position of the cursor
+ * 
+ * @returns 1 if pressed and 0 if not pressed
+ */
+int CheckPressed(TransformationDetails tds, unsigned int tid, vec2 cursorpos);
+
 #pragma endregion

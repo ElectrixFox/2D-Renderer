@@ -1,6 +1,6 @@
 #include "PressableObject.h"
 
-int CheckPressed(vec2* poses, vec2* scales, vec2 cursorpos, unsigned int eid)
+int _CheckPressed(vec2* poses, vec2* scales, vec2 cursorpos, unsigned int eid)
 {
 unsigned int index = eid; // some hash function to get where the eid is in the big array
 
