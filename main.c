@@ -83,50 +83,12 @@ for (int i = 0; i < ents.size; i++)
     }
 }
 
-/*
-void PlaceNew(Entities es, unsigned int pid, unsigned int sprite)
-{
-vec2 posi = GetEntityPosition(es, pid);
-
-//  To-Do: could check here if there is already an entity with the position and then cancel the action if so
-unsigned int nent = CreateEntityFromSpriteSheet(&es, SQUARE, posi, "res/sprites/movable_spritesheet.png", sprite, 2);
-SetEntityScale(es, nent, (vec2){25.0f, 25.0f});
-SetEntityColour(es, nent, (vec4){1.0f, 0.0f, 0.0f, 1.0f});
-}
-*/
-
 /** Outline for sprite selection:
  * - Set all the object bar as pressable
  * - Return the eid of the entity pressed when it is pressed
  * - Use the eid to determine what texture and sprite the entity has
  * - Return the sheet and the sprite information to be used
  */
-
-void ApplyModel(RenderDetails rds, TransformationDetails tds, unsigned int rid, unsigned int tid)
-{
-int tindex = getTransformationIDIndex(tds, tid);
-int rindex = getRenderDetailsIDIndex(rds, rid);
-
-m4 matr = getTransformModelMatrix(tds, tid);
-SetUniformM4(rds.shader[rindex], "model", matr);
-}
-
-void ApplyProjection(RenderDetails rds, TransformationDetails tds, unsigned int rid)
-{
-int rdind = getRenderDetailsIDIndex(rds, rid);  // getting the render detail
-SetUniformM4(rds.shader[rdind], "projection", getTransformProjectionMatrix(tds));   // setting the uniform
-}
-
-void ApplyCamera(Camera cam, RenderDetails rds, unsigned int rid)
-{
-int rdind = getRenderDetailsIDIndex(rds, rid);  // getting the render detail
-SetUniformM4(rds.shader[rdind], "view", getCameraMatrix(cam));   // setting the uniform
-}
-
-void _ApplyProjection(Entities ents, RenderDetails rds, TransformationDetails tds, unsigned int eid)
-{
-ApplyProjection(rds, tds, ents.rid[getEntitiesIDIndex(ents, eid)]);
-}
 
 int gwid = 1280, ghig = 720;
 
@@ -230,12 +192,12 @@ setPosition(tds, td1, (vec2){50.0f, 50.0f});
 }
 AddDrawable(&drabs, td1, rd1);
 
-unsigned int ent1 = CreateEntity(&ents, rd1, td1);
+unsigned int ent1 = AddEntity(&ents, td1, 0);
 unsigned int rd2 = CreateSpriteRenderable(&rds, "res/sprites/movable_spritesheet.png", 2, 1);
 unsigned int td2 = AddTransformation(&tds, (vec2){gwid / 2 + 25.0f, ghig / 2}, (vec2){25.0f, 25.0f});
 
 AddDrawable(&drabs, td2, rd2);
-unsigned int ent2 = CreateEntity(&ents, rd2, td2);
+unsigned int ent2 = AddEntity(&ents, td2, 1);
 
 while(!glfwWindowShouldClose(window))
     {

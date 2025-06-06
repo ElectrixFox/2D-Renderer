@@ -8,5 +8,5 @@ unsigned int nosprites = 2; // To-Do: write some function to find the number of 
 unsigned int rd = CreateSpriteRenderable(rds, "res/sprites/movable_spritesheet.png", nosprites, sprite);
 unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});
 
-unsigned int ent = CreateEntity(ents, rd, td);
+unsigned int ent = AddEntity(ents, td, 1);
 }
