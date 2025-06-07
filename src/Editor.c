@@ -14,7 +14,7 @@ static BlockInfo getBlockInfo(BLOCK block)
 switch (block)
     {
     case BLOCK_PLAYER:
-        return (BlockInfo){"res/sprites/player_tilesheet.png", 45, 1};
+        return (BlockInfo){"res/sprites/player_tilesheet.png", 1, 1};
         break;
     case BLOCK_MOVABLE_BARRIER:
         return (BlockInfo){"res/sprites/movable_barrier_tilesheet.png", 1, 1};
