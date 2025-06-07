@@ -24,8 +24,9 @@ RemoveEntity(ents, eid);
 
 void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, Entities* ents)
 {
-vec2 topright = {995.0f, 935.0f};
+vec2 topright = {1255.0f, 695.0f};
 const unsigned int nsheets = 2;
+const float padding = 10.0f;
 const unsigned int nsprites[] = {2, 1};
 const char* spritesheets[] = {
     "res/sprites/movable_spritesheet.png",
@@ -37,7 +38,7 @@ for (int i = 0; i < nsheets; i++)
     {
     for (int sprite = 1; sprite < nsprites[i] + 1; sprite++)
         {
-        vec2 position = {topright.x, topright.y - spacer * 25.0f}; // placing the items in a vertical line on the right side of the screen
+        vec2 position = {topright.x, topright.y - (spacer * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
         
         unsigned int rd = CreateSpriteRenderable(rds, spritesheets[i], nsprites[i], sprite);
         unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});

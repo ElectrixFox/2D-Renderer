@@ -19,7 +19,7 @@ for (int i = 0; i < 32; i++)
 
 for (int i = 0; i < nfps; i++)
     {
-    if(strcmpi(fps[i], fp) == 0)    // if the file paths is already in the array
+    if(strcmpi(fps[i], fp) == 0)    // if the file path is already in the array
         return ((tex & ~mask) | (i << 12)); // clears the tex variable part then appends the new active number
     }
 
