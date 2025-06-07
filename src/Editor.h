@@ -11,8 +11,9 @@
  */
 
 enum BLOCK {
-    PLAYER = 0,
-    MOVABLE_BLOCK = 1
+    BLOCK_PLAYER = 0,
+    BLOCK_MOVABLE_BARRIER = 1,
+    BLOCK_MOVABLE_BLOCK = 2,
 };
 typedef enum BLOCK BLOCK;
 
@@ -50,3 +51,25 @@ void RenderLevel();
  * @param prds A pointer to the pressable details
  */
 void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds);
+
+/**
+ * Gets the currently selected block (the block to be placed)
+ * 
+ * @returns The block type to be created
+ */
+BLOCK getActiveBlock();
+
+/**
+ * Sets the block to be created
+ * 
+ * @param block The block which should be used when blocks are created
+ */
+void setActiveBlock(BLOCK block);
+
+/**
+ * Selects the block type to be placed
+ * 
+ * @param prds The pressable details table
+ * @param drabs The drawable objects table
+ */
+void SelectBlock(PressableDetails prds, Drawables drabs);

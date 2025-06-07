@@ -198,7 +198,7 @@ while(!glfwWindowShouldClose(window))
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
-        PlaceBlock(&rds, &tds, &drabs, &prds, 0, cpos);
+        PlaceBlock(&rds, &tds, &drabs, &prds, BLOCK_MOVABLE_BLOCK, cpos);
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)

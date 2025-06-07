@@ -1,16 +1,46 @@
 #include "Editor.h"
 
+static BLOCK curblock = BLOCK_PLAYER;
+
+struct BlockInfo
+    {
+    const char* spfp;
+    unsigned int nosp, spr;
+    };
+typedef struct BlockInfo BlockInfo;
+
+static BlockInfo getBlockInfo(BLOCK block)
+{
+switch (block)
+    {
+    case BLOCK_PLAYER:
+        return (BlockInfo){"res/sprites/player_tilesheet.png", 45, 1};
+        break;
+    case BLOCK_MOVABLE_BARRIER:
+        return (BlockInfo){"res/sprites/movable_barrier_tilesheet.png", 1, 1};
+        break;
+    case BLOCK_MOVABLE_BLOCK:
+        return (BlockInfo){"res/sprites/movable_spritesheet.png", 2, 1};
+        break;
+    default:
+        break;
+    }
+return (BlockInfo){NULL};
+}
+
+
 void PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, BLOCK block, vec2 position)
 {
-unsigned int sprite = 1;    // To-Do: write some function to find the sprite from the enum
-unsigned int nosprites = 2; // To-Do: write some function to find the number of sprites in the sheet
+BlockInfo bi = getBlockInfo(curblock);
+unsigned int sprite = bi.spr;    // To-Do: write some function to find the sprite from the enum
+unsigned int nosprites = bi.nosp; // To-Do: write some function to find the number of sprites in the sheet
 
-unsigned int rd = CreateSpriteRenderable(rds, "res/sprites/movable_spritesheet.png", nosprites, sprite);
+
+unsigned int rd = CreateSpriteRenderable(rds, bi.spfp, nosprites, sprite);
 unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});
 
 AddDrawable(drabs, td, rd);
 AddPressable(prds, td, BACT_DELETE);
-// AddEntity(ents, td, 1);
 }
 
 void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, unsigned int rid)
@@ -23,7 +53,6 @@ unsigned int prid = prds->prid[findPressableTransfom(*prds, drabs->trsids[index]
 
 RemoveDrawable(drabs, rds, tds, drabs->trsids[index]); // remove the drawable
 RemovePressable(prds, prid);
-// RemoveEntity(ents, eid);
 }
 
 void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds)
@@ -50,8 +79,16 @@ for (int i = 0; i < nsheets; i++)
         AddDrawable(drabs, td, rd);
     
         AddPressable(prds, td, BACT_SWITCH);
-        // AddEntity(ents, td, 0);
         spacer++; // increase the spacer for the next item
         }
     }
+}
+
+BLOCK getActiveBlock() { return curblock; }
+
+void setActiveBlock(BLOCK block) { curblock = block; }
+
+void SelectBlock(PressableDetails prds, Drawables drabs)
+{
+
 }
