@@ -3,25 +3,22 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "include/stb/stb_image.h"
 
+static char fps[32][64]; // array of file paths
+
 static unsigned int SetTextureVariable(unsigned int, const char*);
 
 static unsigned int SetTextureVariable(unsigned int tex, const char* fp)
 {
-static char fps[32][64]; // array of file paths
 unsigned int mask = 0b1111000000000000U;  // the mask for the active texture
 
 int nfps = 0;
 for (int i = 0; i < 32; i++)
-    {
     if(strlen(fps[i]) != 0)
         nfps++;
-    }
 
 for (int i = 0; i < nfps; i++)
-    {
     if(strcmpi(fps[i], fp) == 0)    // if the file path is already in the array
         return ((tex & ~mask) | (i << 12)); // clears the tex variable part then appends the new active number
-    }
 
 strcpy(fps[nfps], fp);  // copy the new file path into the filepaths array
 return ((tex & ~mask) | (nfps << 12));
@@ -77,3 +74,5 @@ void BindTexture(unsigned int texture)
 glActiveTexture(GL_TEXTURE0);
 glBindTexture(GL_TEXTURE_2D, getTexture(texture));  // binds the texture
 }
+
+const char* getTextureFilePath(unsigned int texture) { return fps[getTexture(texture)]; }

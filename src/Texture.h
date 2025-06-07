@@ -8,3 +8,5 @@ unsigned int getTexture(unsigned int texture);
 unsigned int CreateTexture(const char* path);
 
 void BindTexture(unsigned int texture);
+
+const char* getTextureFilePath(unsigned int texture);

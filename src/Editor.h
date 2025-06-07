@@ -1,5 +1,6 @@
 #include "Drawable.h"
 #include "PressableObject.h"
+#include "Block.h"
 
 /**
  * A function to read the level
@@ -9,13 +10,6 @@
  * A function to build the item select bar
  * 
  */
-
-enum BLOCK {
-    BLOCK_PLAYER = 0,
-    BLOCK_MOVABLE_BARRIER = 1,
-    BLOCK_MOVABLE_BLOCK = 2,
-};
-typedef enum BLOCK BLOCK;
 
 /**
  * Creates a block at the position with default scale (25x25)
@@ -72,4 +66,4 @@ void setActiveBlock(BLOCK block);
  * @param prds The pressable details table
  * @param drabs The drawable objects table
  */
-void SelectBlock(PressableDetails prds, Drawables drabs);
+void SelectBlock(PressableDetails prds, Drawables drabs, unsigned int prid);

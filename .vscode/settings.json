@@ -19,6 +19,7 @@
         "spriteshapes.h": "c",
         "buffer.h": "c",
         "camera.h": "c",
-        "editor.h": "c"
+        "editor.h": "c",
+        "block.h": "c"
     }
 }

@@ -2,32 +2,6 @@
 
 static BLOCK curblock = BLOCK_PLAYER;
 
-struct BlockInfo
-    {
-    const char* spfp;
-    unsigned int nosp, spr;
-    };
-typedef struct BlockInfo BlockInfo;
-
-static BlockInfo getBlockInfo(BLOCK block)
-{
-switch (block)
-    {
-    case BLOCK_PLAYER:
-        return (BlockInfo){"res/sprites/player_tilesheet.png", 1, 1};
-        break;
-    case BLOCK_MOVABLE_BARRIER:
-        return (BlockInfo){"res/sprites/movable_barrier_tilesheet.png", 1, 1};
-        break;
-    case BLOCK_MOVABLE_BLOCK:
-        return (BlockInfo){"res/sprites/movable_spritesheet.png", 2, 1};
-        break;
-    default:
-        break;
-    }
-return (BlockInfo){NULL};
-}
-
 
 void PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, BLOCK block, vec2 position)
 {
@@ -88,7 +62,14 @@ BLOCK getActiveBlock() { return curblock; }
 
 void setActiveBlock(BLOCK block) { curblock = block; }
 
-void SelectBlock(PressableDetails prds, Drawables drabs)
+void SelectBlock(PressableDetails prds, Drawables drabs, unsigned int prid)
 {
+int index = getPressableIDIndex(prds, prid);
+if(prds.pract[index] != BACT_SWITCH)    // if the pressed object isn't a switchable
+    return;
+
+index = findDrawablesTransform(drabs, prds.trsid[index]);   // find the drawable from the transform
+
+
 
 }
