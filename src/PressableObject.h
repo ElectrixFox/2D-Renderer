@@ -1,17 +1,25 @@
 #pragma once
 #include "MathsOperations.h"
 
-typedef struct Pressables {
-    unsigned int* pid;
+typedef struct PressableDetails {
+    unsigned int* prid;
     unsigned int* trsid;
-} Pressables;
+    unsigned int* pract;
+    unsigned int size;
+} PressableDetails;
+
+enum BACT {
+    BACT_DELETE = 1,
+    BACT_SWITCH = 2
+};
+typedef enum BACT BACT;
 
 /**
  * Initialises the pressable details to enable adding and removing easily
  * 
- * @returns Newly initialised Pressables object
+ * @returns Newly initialised PressableDetails object
  */
-Pressables InitialisePressables();
+PressableDetails InitialisePressableDetails();
 
 /**
  * Returns the index of the pressable
@@ -21,16 +29,28 @@ Pressables InitialisePressables();
  * 
  * @returns Index of ID in the details object or -1 if not found
  */
-int getPressableIDIndex(Pressables prds, unsigned int prid);
+int getPressableIDIndex(PressableDetails prds, unsigned int prid);
+
+/**
+ * Finds the index of the given transform ID in the pressables table
+ * 
+ * @param prds The pressables table
+ * @param trid The transform ID to find
+ * 
+ * @returns -1 if not found and the index otherwise
+ */
+int findPressableTransfom(PressableDetails prds, unsigned int trid);
 
 /**
  * Adds a pressable to the array
  * 
  * @param prds A pointer to the details
+ * @param tid The transformation detail of the object to press
+ * @param pract The action performed when the object/block is pressed (clicked)
  * 
  * @returns The ID of the newly added pressable
  */
-void AddPressable(Pressables* presids);
+unsigned int AddPressable(PressableDetails* prds, unsigned int tid, unsigned int pract);
 
 /**
  * Removes a pressable from the details
@@ -38,7 +58,7 @@ void AddPressable(Pressables* presids);
  * @param prds A pointer to the details
  * @param prid The ID of the object to remove
  */
-void RemovePressable(Pressables* prds, unsigned int prid);
+void RemovePressable(PressableDetails* prds, unsigned int prid);
 
 /**
  * Checks if the entity with eid has been pressed

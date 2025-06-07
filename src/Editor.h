@@ -1,4 +1,5 @@
 #include "Drawable.h"
+#include "PressableObject.h"
 
 /**
  * A function to read the level
@@ -20,22 +21,32 @@ typedef enum BLOCK BLOCK;
  * 
  * @param rds The rendering table
  * @param tds The transform table
- * @param ents The entities table
+ * @param prds The pressables table
+ * @param block The block to create
+ * @param position Where to create the block
  */
-void PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, Entities* ents, BLOCK block, vec2 position);
+void PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, BLOCK block, vec2 position);
 
 /**
  * Removes a block at the position
  * 
  * @param rds The rendering table
  * @param tds The transform table
- * @param ents The entities table
- * @param position The position of the block to remove
+ * @param prds The pressable table
+ * @param prid The render ID of the block to remove
  */
-void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, Entities* ents, unsigned int eid);
+void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, unsigned int rid);
 
 void ReadLevel(const char* levelfp);
 
 void RenderLevel();
 
-void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, Entities* ents);
+/**
+ * Builds the block selection bar
+ * 
+ * @param rds A pointer to the rendering details
+ * @param tds A pointer to the transformation details
+ * @param drabs A pointer to the drawable details
+ * @param prds A pointer to the pressable details
+ */
+void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds);

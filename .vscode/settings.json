@@ -18,6 +18,7 @@
         "entity.h": "c",
         "spriteshapes.h": "c",
         "buffer.h": "c",
-        "camera.h": "c"
+        "camera.h": "c",
+        "editor.h": "c"
     }
 }

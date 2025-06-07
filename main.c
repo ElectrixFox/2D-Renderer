@@ -125,6 +125,7 @@ Camera cam = CreateCamera((vec2){0, 0}, (vec2){gwid, ghig}, &gwid, &ghig);
 RenderDetails rds = InitialiseRenderDetails();
 TransformationDetails tds = InitialiseTransformationDetails(gwid, ghig);
 Entities ents = InitialiseEntities(); // initialising the entities list and allocating memory
+PressableDetails prds = InitialisePressableDetails();
 Drawables drabs = InitialiseDrawables();
 
 unsigned int rd1 = CreatePlainSquareRenderable(&rds);
@@ -142,7 +143,8 @@ unsigned int rd2 = CreateSpriteRenderable(&rds, "res/sprites/movable_spritesheet
 unsigned int td2 = AddTransformation(&tds, (vec2){gwid / 2 + 25.0f, ghig / 2}, (vec2){25.0f, 25.0f});
 
 AddDrawable(&drabs, td2, rd2);
-unsigned int ent2 = AddEntity(&ents, td2, 1);
+// unsigned int ent2 = AddEntity(&ents, td2, 1);
+AddPressable(&prds, td2, BACT_DELETE);
 
 BuildSelectBar(&rds, &tds, &drabs, &ents); // build the item select bar
 /*
@@ -196,17 +198,19 @@ while(!glfwWindowShouldClose(window))
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
-        PlaceBlock(&rds, &tds, &drabs, &ents, 0, cpos);
+        PlaceBlock(&rds, &tds, &drabs, &prds, 0, cpos);
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
         {
-        for (int i = 0; i < ents.size; i++)
+        for (int i = 0; i < prds.size; i++)
             {
-            if(CheckPressed(tds, ents.trsid[i], GetCursorPosition(window)) == 1)
+            if(CheckPressed(tds, prds.trsid[i], GetCursorPosition(window)) == 1)
                 {
-                printf("\nRemoving entity with ID %d", ents.trsid[i]);
-                RemoveBlock(&rds, &tds, &drabs, &ents, ents.eid[i]);
+                unsigned int trid = drabs.rids[findDrawablesTransform(drabs, prds.trsid[i])];
+                printf("\nRemoving pressable with ID %d", prds.trsid[i]);
+                RemoveBlock(&rds, &tds, &drabs, &prds, trid);
+                printf("\nDrabs: %d", drabs.size);
                 break; // break after removing the first entity
                 }
             }

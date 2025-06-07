@@ -1,6 +1,6 @@
 #include "Editor.h"
 
-void PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, Entities* ents, BLOCK block, vec2 position)
+void PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, BLOCK block, vec2 position)
 {
 unsigned int sprite = 1;    // To-Do: write some function to find the sprite from the enum
 unsigned int nosprites = 2; // To-Do: write some function to find the number of sprites in the sheet
@@ -9,20 +9,24 @@ unsigned int rd = CreateSpriteRenderable(rds, "res/sprites/movable_spritesheet.p
 unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});
 
 AddDrawable(drabs, td, rd);
-AddEntity(ents, td, 1);
+AddPressable(prds, td, BACT_DELETE);
+// AddEntity(ents, td, 1);
 }
 
-void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, Entities* ents, unsigned int eid)
+void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, unsigned int rid)
 {
-int index = getEntitiesIDIndex(*ents, eid); // finding the ID
+int index = findDrawablesRenderable(*drabs, rid); // finding the ID
 if(index == -1)
     return; // if the index isn't found just quit
 
-RemoveDrawable(drabs, rds, tds, ents->trsid[index]); // remove the drawable
-RemoveEntity(ents, eid);
+unsigned int prid = prds->prid[findPressableTransfom(*prds, drabs->trsids[index])];
+
+RemoveDrawable(drabs, rds, tds, drabs->trsids[index]); // remove the drawable
+RemovePressable(prds, prid);
+// RemoveEntity(ents, eid);
 }
 
-void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, Entities* ents)
+void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds)
 {
 vec2 topright = {1255.0f, 695.0f};
 const unsigned int nsheets = 2;
@@ -44,8 +48,9 @@ for (int i = 0; i < nsheets; i++)
         unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});
 
         AddDrawable(drabs, td, rd);
-
-        AddEntity(ents, td, 0);
+    
+        AddPressable(prds, td, BACT_SWITCH);
+        // AddEntity(ents, td, 0);
         spacer++; // increase the spacer for the next item
         }
     }

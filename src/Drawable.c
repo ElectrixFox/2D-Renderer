@@ -26,17 +26,25 @@ drabs->trsids[n] = trid;
 drabs->size++;    // increase the number of drawables
 }
 
-static int getTransformationIDIndexDrawables(Drawables drabs, unsigned int tid)
+int findDrawablesTransform(Drawables drabs, unsigned int trid)
 {
 for (int i = 0; i < drabs.size; i++)
-    if (drabs.trsids[i] == tid) // if the ID matches
+    if (drabs.trsids[i] == trid) // if the ID matches
+        return i; // return the index
+return -1; // if the ID isn't found return -1
+}
+
+int findDrawablesRenderable(Drawables drabs, unsigned int rid)
+{
+for (int i = 0; i < drabs.size; i++)
+    if (drabs.rids[i] == rid) // if the ID matches
         return i; // return the index
 return -1; // if the ID isn't found return -1
 }
 
 void RemoveDrawable(Drawables* drabs, RenderDetails* rds, TransformationDetails* tds, unsigned int trid)
 {
-int index = getTransformationIDIndexDrawables(*drabs, trid); // finding the ID
+int index = findDrawablesTransform(*drabs, trid); // finding the ID
 
 if(index == -1)
     return; // if the index isn't found just quit
