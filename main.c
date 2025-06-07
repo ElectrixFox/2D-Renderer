@@ -127,6 +127,7 @@ TransformationDetails tds = InitialiseTransformationDetails(gwid, ghig);
 Entities ents = InitialiseEntities(); // initialising the entities list and allocating memory
 PressableDetails prds = InitialisePressableDetails();
 Drawables drabs = InitialiseDrawables();
+InitialiseBlockDetails();
 
 unsigned int rd1 = CreatePlainSquareRenderable(&rds);
 unsigned int td1 = AddTransformation(&tds, (vec2){gwid / 2 - 25.0f, ghig / 2}, (vec2){25.0f, 25.0f});
@@ -158,8 +159,11 @@ while(!glfwWindowShouldClose(window))
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
-        PlaceBlock(&rds, &tds, &drabs, &prds, BLOCK_MOVABLE_BLOCK, cpos);
-        glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
+        if(!PressedAnother(&prds, &tds, cpos))
+            {
+            PlaceBlock(&rds, &tds, &drabs, &prds, BLOCK_MOVABLE_BLOCK, cpos);
+            glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
+            }
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
         {

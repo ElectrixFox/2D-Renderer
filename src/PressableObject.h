@@ -1,5 +1,6 @@
 #pragma once
 #include "MathsOperations.h"
+#include "Transformation.h"
 
 typedef struct PressableDetails {
     unsigned int* prid;
@@ -68,3 +69,23 @@ void RemovePressable(PressableDetails* prds, unsigned int prid);
  * @param eid The id of the entity to check
  */
 int _CheckPressed(vec2* poses, vec2* scales, vec2 cursorpos, unsigned int eid);
+
+/**
+ * Checks if multiple objects have pressed at once
+ * 
+ * @param prds The pressables table
+ * @param trds The transformations table
+ * @param curpos The position of the cursor
+ * 
+ * @returns 1 if something else is pressed too, 0 if not
+ */
+int PressedAnother(PressableDetails* prds, TransformationDetails* trds, vec2 curpos);
+
+/**
+ * Sets the action for the pressable
+ * 
+ * @param prds A pointer to the details
+ * @param prid The ID of the object to remove
+ * @param pract The action to set
+ */
+void SetPressableAction(PressableDetails* prds, unsigned int prid, unsigned int pract);

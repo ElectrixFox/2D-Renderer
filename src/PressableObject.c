@@ -89,3 +89,19 @@ if(PointInSquare(cursorpos, poses[index], scales[index]))
     return 1;
 return 0;
 }
+
+int PressedAnother(PressableDetails* prds, TransformationDetails* trds, vec2 curpos)
+{
+int total = 0;  // total things pressed
+for (int i = 0; i < trds->size; i++)
+    if(CheckPressed(*trds, trds->trsid[i], curpos)) // checking if anything has been pressed
+        total++;
+
+return (total == 1) ? 0 : 1;    // if the total is one then not pressed another, else it has
+}
+
+void SetPressableAction(PressableDetails* prds, unsigned int prid, unsigned int pract)
+{
+int index = getPressableIDIndex(*prds, prid);   // finding the object
+prds->pract[index] = pract; // setting the action
+}

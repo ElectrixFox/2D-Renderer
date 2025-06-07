@@ -19,9 +19,9 @@ typedef enum BLOCK BLOCK;
 
 struct BlockInfo
     {
-    const char** spfps;
-    unsigned int* nosps;
-    unsigned int* sprs;
+    const char* spfp;
+    unsigned int nosp;
+    unsigned int spr;
     };
 typedef struct BlockInfo BlockInfo;
 
@@ -35,30 +35,26 @@ typedef struct BlockDetails BlockDetails;
 
 /**
  * Initialises the block details to enable assigning of blocks to drawables
- * 
- * @returns Newly initialised BlockDetails object
  */
-BlockDetails InitialiseBlockDetails();
+void InitialiseBlockDetails();
 
 
 /**
  * Returns the index of the renderable
  * 
- * @param blds The information about the blocks
  * @param rid The ID of the renderable to find
  * 
  * @returns Index of ID in the details object or -1 if not found
  */
-int getBlockRenderIndex(BlockDetails blds, unsigned int rid);
+int getBlockRenderIndex(unsigned int rid);
 
 /**
  * Adds a block to the details
  * 
- * @param blds A pointer to the block details
  * @param rid The ID of the renderable
  * @param block The block to assign
  */
-void AssignBlock(BlockDetails* blds, unsigned int rid, BLOCK block);
+void AssignBlock(unsigned int rid, BLOCK block);
 
 /**
  * Unassigns a block from the render object
@@ -66,7 +62,7 @@ void AssignBlock(BlockDetails* blds, unsigned int rid, BLOCK block);
  * @param blds A pointer to the details
  * @param rid The ID of the object to remove
  */
-void UnassignBlock(BlockDetails* blds, unsigned int rid);
+void UnassignBlock(unsigned int rid);
 
 BlockInfo getBlockInfo(BLOCK block);
 

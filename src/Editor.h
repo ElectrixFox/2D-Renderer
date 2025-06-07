@@ -19,8 +19,10 @@
  * @param prds The pressables table
  * @param block The block to create
  * @param position Where to create the block
+ * 
+ * @returns The render ID for the new block
  */
-void PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, BLOCK block, vec2 position);
+unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, BLOCK block, vec2 position);
 
 /**
  * Removes a block at the position
