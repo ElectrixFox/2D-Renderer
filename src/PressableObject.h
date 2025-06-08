@@ -2,18 +2,18 @@
 #include "MathsOperations.h"
 #include "Transformation.h"
 
+enum BACT {
+    BACT_DELETE = 1,
+    BACT_SWITCH = 2
+};
+typedef enum BACT BACT;
+
 typedef struct PressableDetails {
     unsigned int* prid;
     unsigned int* trsid;
     unsigned int* pract;
     unsigned int size;
 } PressableDetails;
-
-enum BACT {
-    BACT_DELETE = 1,
-    BACT_SWITCH = 2
-};
-typedef enum BACT BACT;
 
 /**
  * Initialises the pressable details to enable adding and removing easily
@@ -41,6 +41,16 @@ int getPressableIDIndex(PressableDetails prds, unsigned int prid);
  * @returns -1 if not found and the index otherwise
  */
 int findPressableTransfom(PressableDetails prds, unsigned int trid);
+
+/**
+ * Finds the action of the pressable
+ * 
+ * @param prds The details about the pressable
+ * @param prid The ID of the pressable to find
+ * 
+ * @returns The action of the pressable
+ */
+unsigned int getPressableAction(PressableDetails prds, unsigned int prid);
 
 /**
  * Adds a pressable to the array
@@ -103,6 +113,19 @@ int PressedAnother(PressableDetails prds, TransformationDetails trds, vec2 curpo
  * @returns 1 if the area is not empty, 0 if it is empty
  */
 int PressedArea(PressableDetails prds, TransformationDetails trds, vec2 curpos, float range);
+
+/**
+ * Gets the pressed block
+ * 
+ * @param prds The pressables table
+ * @param trds The transformation table
+ * @param curpos The position of the cursor
+ * 
+ * @returns The pressable ID of the pressed item
+ * 
+ * @warning Does not verify that a block has been pressed and hence should be only used when one has been pressed
+ */
+unsigned int getPressedBlock(PressableDetails prds, TransformationDetails trds, vec2 curpos);
 
 /**
  * Sets the action for the pressable

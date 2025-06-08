@@ -37,6 +37,12 @@ for (int i = 0; i < prds.size; i++)
 return -1;
 }
 
+unsigned int getPressableAction(PressableDetails prds, unsigned int prid)
+{
+printf("\nIndex: %d", getPressableIDIndex(prds, prid));
+return (unsigned int)(prds.pract[getPressableIDIndex(prds, prid)]);
+}
+
 unsigned int AddPressable(PressableDetails* prds, unsigned int tid, unsigned int pract)
 {
 static unsigned int id = 0;
@@ -110,6 +116,14 @@ for (int i = 0; i < trds.size; i++)
     if(abs(trds.pos[i].x - curpos.x) < range && abs(trds.pos[i].y - curpos.y) < range)
         return 1; // if the current transformation has a horizontal and vertical distance is less than the range then it is in the square area
 
+return 0;
+}
+
+unsigned int getPressedBlock(PressableDetails prds, TransformationDetails trds, vec2 curpos)
+{
+for (int i = 0; i < trds.size; i++)
+    if(CheckPressed(trds, trds.trsid[i], curpos)) // checking if anything has been pressed
+        return trds.trsid[i];
 return 0;
 }
 

@@ -4,7 +4,7 @@ static BLOCK curblock = BLOCK_PLAYER;
 
 unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, BLOCK block, vec2 position)
 {
-BlockInfo bi = getBlockInfo(curblock);
+BlockInfo bi = getBlockInfo(block);
 unsigned int sprite = bi.spr;    // To-Do: write some function to find the sprite from the enum
 unsigned int nosprites = bi.nosp; // To-Do: write some function to find the number of sprites in the sheet
 
@@ -58,7 +58,5 @@ if(prds.pract[index] != BACT_SWITCH)    // if the pressed object isn't a switcha
     return;
 
 index = findDrawablesTransform(drabs, prds.trsid[index]);   // find the drawable from the transform
-
-
-
+setActiveBlock(getBlockFromRenderID(drabs.rids[index]));
 }

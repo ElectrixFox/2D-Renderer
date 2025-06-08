@@ -49,6 +49,15 @@ void InitialiseBlockDetails();
 int getBlockRenderIndex(unsigned int rid);
 
 /**
+ * Finds the block of the renderable
+ * 
+ * @param rid The ID of the renderable to find
+ * 
+ * @returns Returns the block of the renderable
+ */
+BLOCK getBlockFromRenderID(unsigned int rid);
+
+/**
  * Adds a block to the details
  * 
  * @param rid The ID of the renderable

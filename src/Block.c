@@ -23,6 +23,8 @@ for (int i = 0; i < blds.size; i++)  // simple linear search
 return -1;
 }
 
+BLOCK getBlockFromRenderID(unsigned int rid) { return blds.blocks[getBlockRenderIndex(rid)]; }
+
 void AssignBlock(unsigned int rid, BLOCK block)
 {
 

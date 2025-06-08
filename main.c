@@ -161,8 +161,19 @@ while(!glfwWindowShouldClose(window))
         vec2 cpos = GetCursorPosition(window);
         if(!PressedArea(prds, tds, cpos, 50.0f))
             {
-            PlaceBlock(&rds, &tds, &drabs, &prds, BLOCK_MOVABLE_BLOCK, cpos);
+            PlaceBlock(&rds, &tds, &drabs, &prds, getActiveBlock(), cpos);
             glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
+            }
+        else if(PressedAnother(prds, tds, cpos))
+            {
+            unsigned int tpid = getPressedBlock(prds, tds, cpos);   // getting the temporary ID
+            printf("\nAction: %d", getPressableAction(prds, tpid));
+
+            if(getPressableAction(prds, tpid) == BACT_SWITCH)  // if should switch to the block then switch
+                {
+                printf("\nStarting Selection");
+                SelectBlock(prds, drabs, tpid);
+                }
             }
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
