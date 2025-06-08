@@ -90,14 +90,27 @@ if(PointInSquare(cursorpos, poses[index], scales[index]))
 return 0;
 }
 
-int PressedAnother(PressableDetails* prds, TransformationDetails* trds, vec2 curpos)
+static int hasPressedN(PressableDetails prds, TransformationDetails trds, vec2 curpos, unsigned int n)
 {
 int total = 0;  // total things pressed
-for (int i = 0; i < trds->size; i++)
-    if(CheckPressed(*trds, trds->trsid[i], curpos)) // checking if anything has been pressed
+for (int i = 0; i < trds.size; i++)
+    if(CheckPressed(trds, trds.trsid[i], curpos)) // checking if anything has been pressed
         total++;
 
-return (total == 1) ? 0 : 1;    // if the total is one then not pressed another, else it has
+return (total == n) ? 1 : 0;
+}
+
+int PressedNothing(PressableDetails prds, TransformationDetails trds, vec2 curpos) { return hasPressedN(prds, trds, curpos, 0); }
+
+int PressedAnother(PressableDetails prds, TransformationDetails trds, vec2 curpos) { return hasPressedN(prds, trds, curpos, 1); }
+
+int PressedArea(PressableDetails prds, TransformationDetails trds, vec2 curpos, float range)
+{
+for (int i = 0; i < trds.size; i++)
+    if(abs(trds.pos[i].x - curpos.x) < range && abs(trds.pos[i].y - curpos.y) < range)
+        return 1; // if the current transformation has a horizontal and vertical distance is less than the range then it is in the square area
+
+return 0;
 }
 
 void SetPressableAction(PressableDetails* prds, unsigned int prid, unsigned int pract)

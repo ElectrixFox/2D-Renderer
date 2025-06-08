@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 typedef struct vec2 { float x, y; } vec2;
 typedef struct vec3 { float x, y, z; } vec3;
@@ -40,7 +41,36 @@ void ExpandByOne(void** arr, const unsigned int size, unsigned int elesize);
  */
 void AppendToArray(void** arr, unsigned int size, void** item, unsigned int elesize);
 
+/**
+ * Multiplies a vec2 by a scalar
+ * 
+ * @param v The vector to multiply
+ * @param a The scalar to multiply
+ * 
+ * @returns The result of the multiplication
+ */
+vec2 ScalarMultVec2(vec2 v, float a);
+
 vec2 LeftCornerFromCentre(vec2 centre, vec2 scale);
+
+/**
+ * Gets the distance between two points
+ * 
+ * @param a The first point
+ * @param b The second point
+ * 
+ * @returns The distance as a float
+ */
+float getDistance(vec2 a, vec2 b);
+
+/**
+ * Gets the length of a vector
+ * 
+ * @param v The vector
+ * 
+ * @returns The magnitude (length) of the vector
+ */
+float getMagnitude(vec2 v);
 
 /**
  * Checks if point is in the square at position pos with scale scale
@@ -48,8 +78,22 @@ vec2 LeftCornerFromCentre(vec2 centre, vec2 scale);
  * @param point The point to check if it is the square
  * @param pos The position of the centre of the square
  * @param scale The scale of the square
+ * 
+ * @returns 1 if the point is in the square, 0 if not
  */
 int PointInSquare(vec2 point, vec2 pos, vec2 scale);
+
+/**
+ * Checks if two squares touch
+ * 
+ * @param p1 The position of the centre of the first square
+ * @param s1 The scale of the first square
+ * @param p2 The position of the centre of the second square
+ * @param s2 The scale of the second square
+ * 
+ * @returns 1 if they touch, 0 if they don't
+ */
+int SquareTouchesSquare(vec2 p1, vec2 s1, vec2 p2, vec2 s2);
 
 float generalisedDot(float u[], float v[], unsigned int n);
 float dotprod(vec3 u, vec3 v);

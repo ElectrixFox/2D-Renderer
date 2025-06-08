@@ -159,7 +159,7 @@ while(!glfwWindowShouldClose(window))
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPosition(window);
-        if(!PressedAnother(&prds, &tds, cpos))
+        if(!PressedArea(prds, tds, cpos, 50.0f))
             {
             PlaceBlock(&rds, &tds, &drabs, &prds, BLOCK_MOVABLE_BLOCK, cpos);
             glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
@@ -169,7 +169,7 @@ while(!glfwWindowShouldClose(window))
         {
         for (int i = 0; i < prds.size; i++)
             {
-            if(CheckPressed(tds, prds.trsid[i], GetCursorPosition(window)) == 1)
+            if(CheckPressed(tds, prds.trsid[i], GetCursorPosition(window)))
                 {
                 unsigned int trid = drabs.rids[findDrawablesTransform(drabs, prds.trsid[i])];
                 printf("\nRemoving pressable with ID %d", prds.trsid[i]);

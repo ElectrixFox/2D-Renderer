@@ -10,6 +10,8 @@ ExpandByOne(arr, size, elesize);  // expand the array by one
 arr[size] = *item;  // set the last element to the item
 }
 
+vec2 ScalarMultVec2(vec2 v, float a) { return (vec2){a * v.x, a * v.y}; }
+
 vec2 LeftCornerFromCentre(vec2 centre, vec2 scale)
 {
 vec2 pos;
@@ -17,6 +19,10 @@ pos.x = centre.x;
 pos.y = centre.y;
 return pos;
 }
+
+float getDistance(vec2 a, vec2 b) { return sqrtf(powf((a.x - b.x), 2.0f) + powf((a.y - b.y), 2.0f)); }
+
+float getMagnitude(vec2 v) { return sqrtf(powf(v.x, 2.0f) + powf(v.y, 2.0f)); }
 
 int PointInSquare(vec2 point, vec2 pos, vec2 scale)
 {
@@ -26,6 +32,8 @@ if (abs(point.x - pos.x) < scale.x)
 
 return 0;
 }
+
+int SquareTouchesSquare(vec2 p1, vec2 s1, vec2 p2, vec2 s2) { return (getDistance(p1, p2) < getMagnitude(s1) + getMagnitude(s2)) ? 0 : 1; }
 
 float generalisedDot(float u[], float v[], unsigned int n)
 {

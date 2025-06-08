@@ -71,6 +71,17 @@ void RemovePressable(PressableDetails* prds, unsigned int prid);
 int _CheckPressed(vec2* poses, vec2* scales, vec2 cursorpos, unsigned int eid);
 
 /**
+ * Checks if no objects have been pressed pressed
+ * 
+ * @param prds The pressables table
+ * @param trds The transformations table
+ * @param curpos The position of the cursor
+ * 
+ * @returns 1 if anything is pressed, 0 if not
+ */
+int PressedNothing(PressableDetails prds, TransformationDetails trds, vec2 curpos);
+
+/**
  * Checks if multiple objects have pressed at once
  * 
  * @param prds The pressables table
@@ -79,7 +90,19 @@ int _CheckPressed(vec2* poses, vec2* scales, vec2 cursorpos, unsigned int eid);
  * 
  * @returns 1 if something else is pressed too, 0 if not
  */
-int PressedAnother(PressableDetails* prds, TransformationDetails* trds, vec2 curpos);
+int PressedAnother(PressableDetails prds, TransformationDetails trds, vec2 curpos);
+
+/**
+ * Checks if there is a block which will overlap the given range
+ * 
+ * @param prds The pressables table
+ * @param trds The transformations table
+ * @param curpos The position of the cursor
+ * @param range The range to check
+ * 
+ * @returns 1 if the area is not empty, 0 if it is empty
+ */
+int PressedArea(PressableDetails prds, TransformationDetails trds, vec2 curpos, float range);
 
 /**
  * Sets the action for the pressable
