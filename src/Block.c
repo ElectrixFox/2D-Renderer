@@ -27,7 +27,6 @@ BLOCK getBlockFromRenderID(unsigned int rid) { return blds.blocks[getBlockRender
 
 void AssignBlock(unsigned int rid, BLOCK block)
 {
-
 const unsigned int n = blds.size;
 
 // make all the arrays bigger by one to accomodate for the new element

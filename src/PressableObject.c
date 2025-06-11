@@ -39,7 +39,6 @@ return -1;
 
 unsigned int getPressableAction(PressableDetails prds, unsigned int prid)
 {
-printf("\nIndex: %d", getPressableIDIndex(prds, prid));
 return (unsigned int)(prds.pract[getPressableIDIndex(prds, prid)]);
 }
 
@@ -131,4 +130,14 @@ void SetPressableAction(PressableDetails* prds, unsigned int prid, unsigned int 
 {
 int index = getPressableIDIndex(*prds, prid);   // finding the object
 prds->pract[index] = pract; // setting the action
+}
+
+void OutputPressables(PressableDetails prds)
+{
+printf("\nSize: %d", prds.size);
+printf("\n%15s%15s%15s", "ID", "Action", "Transform ID");
+for (int i = 0; i < prds.size; i++)
+    {
+    printf("\n%15d%15d%15d", prds.prid[i], prds.pract[i], prds.trsid[i]);
+    }
 }

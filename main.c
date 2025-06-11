@@ -111,7 +111,6 @@ glfwSetWindowAspectRatio(window, 16, 9);
 glViewport(0, 0, gwid, ghig);
 
 glfwMakeContextCurrent(window); // sets the context of the window
-// glViewport(0, 0, width, height);
 
 glfwSetWindowSizeCallback(window, on_window_resize);
 
@@ -144,7 +143,7 @@ unsigned int td2 = AddTransformation(&tds, (vec2){gwid / 2 + 25.0f, ghig / 2}, (
 AddDrawable(&drabs, td2, rd2);
 AddPressable(&prds, td2, BACT_DELETE);
 
-BuildSelectBar(&rds, &tds, &drabs, &ents); // build the item select bar
+BuildSelectBar(&rds, &tds, &drabs, &prds); // build the item select bar
 printf("Size of entities: %d\nSize of render details: %d\nSize of transformations: %d\nSize of drabs: %d", ents.size, rds.size, tds.size, drabs.size);
 
 while(!glfwWindowShouldClose(window))
@@ -167,13 +166,9 @@ while(!glfwWindowShouldClose(window))
         else if(PressedAnother(prds, tds, cpos))
             {
             unsigned int tpid = getPressedBlock(prds, tds, cpos);   // getting the temporary ID
-            printf("\nAction: %d", getPressableAction(prds, tpid));
 
             if(getPressableAction(prds, tpid) == BACT_SWITCH)  // if should switch to the block then switch
-                {
-                printf("\nStarting Selection");
                 SelectBlock(prds, drabs, tpid);
-                }
             }
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)

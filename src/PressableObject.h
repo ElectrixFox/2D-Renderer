@@ -135,3 +135,8 @@ unsigned int getPressedBlock(PressableDetails prds, TransformationDetails trds, 
  * @param pract The action to set
  */
 void SetPressableAction(PressableDetails* prds, unsigned int prid, unsigned int pract);
+
+/**
+ * Output function for debugging
+ */
+void OutputPressables(PressableDetails prds);
