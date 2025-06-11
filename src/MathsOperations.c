@@ -1,5 +1,10 @@
 #include "MathsOperations.h"
 
+void OutputVec2(vec2 v)
+{
+printf("(%.2f, %.2f)", v.x, v.y);
+}
+
 void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize) { *arr = realloc(*arr, elesize * nsize); }
 
 void ExpandByOne(void **arr, const unsigned int size, unsigned int elesize) { ExpandArray(arr, size, size + 1, elesize); }

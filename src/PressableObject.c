@@ -122,7 +122,7 @@ unsigned int getPressedBlock(PressableDetails prds, TransformationDetails trds, 
 {
 for (int i = 0; i < trds.size; i++)
     if(CheckPressed(trds, trds.trsid[i], curpos)) // checking if anything has been pressed
-        return trds.trsid[i];
+        return prds.prid[findPressableTransfom(prds, trds.trsid[i])];
 return 0;
 }
 

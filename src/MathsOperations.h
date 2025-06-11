@@ -13,6 +13,13 @@ typedef float vec4[4];
 typedef struct m4 { vec4 mat[4]; } m4;
 
 /**
+ * Outputs a vec2
+ * 
+ * @param v The vector to output
+ */
+void OutputVec2(vec2 v);
+
+/**
  * Expands an array
  * 
  * @param arr The actual array

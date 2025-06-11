@@ -59,7 +59,7 @@ double x, y;
 int wid, hig;
 glfwGetCursorPos(window, &x, &y);
 glfwGetWindowSize(window, &wid, &hig);
-vec2 point = GetMousePositionRelative((vec2){x, y}, wid, hig);
+vec2 point = GetMousePositionRelative((vec2){(float)x, (float)y}, wid, hig);
 
 return point;
 }
