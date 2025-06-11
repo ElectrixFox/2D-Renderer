@@ -2,11 +2,17 @@
 
 static BLOCK curblock = BLOCK_PLAYER;
 
+const int snap_to_grid = 1;
+const int grid_size = 50;
+
 unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, BLOCK block, vec2 position)
 {
 BlockInfo bi = getBlockInfo(block);
 unsigned int sprite = bi.spr;    // To-Do: write some function to find the sprite from the enum
 unsigned int nosprites = bi.nosp; // To-Do: write some function to find the number of sprites in the sheet
+
+if(snap_to_grid == 1)   // if should snap to grid
+    position = (vec2){roundf(position.x / grid_size) * grid_size, roundf(position.y / grid_size) * grid_size};  // snap it to the nearest grid spot
 
 unsigned int rd = CreateSpriteRenderable(rds, bi.spfp, nosprites, sprite);
 unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});
