@@ -178,9 +178,7 @@ while(!glfwWindowShouldClose(window))
             if(CheckPressed(tds, prds.trsid[i], GetCursorPosition(window)))
                 {
                 unsigned int trid = drabs.rids[findDrawablesTransform(drabs, prds.trsid[i])];
-                printf("\nRemoving pressable with ID %d", prds.trsid[i]);
                 RemoveBlock(&rds, &tds, &drabs, &prds, trid);
-                printf("\nDrabs: %d", drabs.size);
                 break; // break after removing the first entity
                 }
             }

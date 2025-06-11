@@ -14,6 +14,8 @@ enum BLOCK {
     BLOCK_PLAYER = 0,
     BLOCK_MOVABLE_BARRIER = 1,
     BLOCK_MOVABLE_BLOCK = 2,
+    BLOCK_IMMOVABLE_BLOCK_ALONE,
+    BLOCK_COUNT,
 };
 typedef enum BLOCK BLOCK;
 
@@ -37,6 +39,13 @@ typedef struct BlockDetails BlockDetails;
  * Initialises the block details to enable assigning of blocks to drawables
  */
 void InitialiseBlockDetails();
+
+/**
+ * Gets the number of blocks
+ * 
+ * @returns Number of blocks
+ */
+unsigned int getBlockCount();
 
 
 /**

@@ -43,7 +43,7 @@ UnassignBlock(prid);
 void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds)
 {
 vec2 topright = {1255.0f, 695.0f};
-const unsigned int nblocks = 3;
+const unsigned int nblocks = getBlockCount();
 const float padding = 10.0f;
 
 for (int i = 0; i < nblocks; i++)

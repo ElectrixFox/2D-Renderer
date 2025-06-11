@@ -69,3 +69,5 @@ void setActiveBlock(BLOCK block);
  * @param drabs The drawable objects table
  */
 void SelectBlock(PressableDetails prds, Drawables drabs, unsigned int prid);
+
+void SetSprite(RenderDetails* rd, unsigned int rid);

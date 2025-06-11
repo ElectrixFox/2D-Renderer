@@ -11,6 +11,8 @@ blds.rids = (unsigned int*)malloc(sizeof(unsigned int));
 blds.blocks = (BLOCK*)malloc(sizeof(BLOCK));
 }
 
+unsigned int getBlockCount() { return BLOCK_COUNT; }
+
 int getBlockRenderIndex(unsigned int rid)
 {
 if(blds.size > rid)    // if the size is bigger than the ID then it is a valid ID
@@ -79,6 +81,9 @@ switch (block)
         break;
     case BLOCK_MOVABLE_BLOCK:
         return (BlockInfo){"res/sprites/movable_spritesheet.png", 2, 1};
+        break;
+    case BLOCK_IMMOVABLE_BLOCK_ALONE:
+        return (BlockInfo){"res/sprites/immovable_tilesheet.png", 16, 1};
         break;
     default:
         break;
