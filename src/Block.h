@@ -1,12 +1,5 @@
 #pragma once
-#include <stdio.h>
-#include <string.h>
-
 #include "MathsOperations.h"
-#include "Shader.h"
-#include "Texture.h"
-#include "Buffer.h"
-#include "SpriteShapes.h"
 
 #pragma region Block Object
 

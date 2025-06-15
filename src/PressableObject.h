@@ -1,5 +1,4 @@
 #pragma once
-#include "MathsOperations.h"
 #include "Transformation.h"
 
 enum BACT {
