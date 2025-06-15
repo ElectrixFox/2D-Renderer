@@ -2,19 +2,19 @@
 
 void SetNumberOfSprites(unsigned int* shape, unsigned int numofspr)
 {
-unsigned int mask = 0b0000111100000000U;  // the mask for the number of sprites
-*(shape) = ((*(shape) & (~mask)) | (numofspr << 8));
+unsigned int mask = 0b111110000000000U;  // the mask for the number of sprites
+*(shape) = ((*(shape) & (~mask)) | (numofspr << 10));
 }
 
 void SetActiveSprite(unsigned int* shape, unsigned int sprite)
 {
-unsigned int mask = 0b000000011110000U;  // the mask for the active sprite
-*(shape) = ((*(shape) & ~mask) | (sprite << 4));
+unsigned int mask = 0b000001111100000U;  // the mask for the active sprite
+*(shape) = ((*(shape) & ~mask) | (sprite << 5));
 }
 
 void SetActiveShape(unsigned int* shape, unsigned int sh)
 {
-unsigned int mask = 0b000000000001111U;  // the mask for the active sprite
+unsigned int mask = 0b000000000011111U;  // the mask for the active sprite
 *(shape) = (((*shape) & (~mask)) | sh);
 }
 
@@ -27,27 +27,30 @@ SetActiveShape(shape, sh);
 
 unsigned int GetNumberOfSprites(unsigned int shape)
 {
-unsigned int mask = 0b0000111100000000U;  // the mask for the number of sprites
-return ((shape & mask) >> 8);
+unsigned int mask = 0b111110000000000U;  // the mask for the number of sprites
+return ((shape & mask) >> 10);
 }
 
 unsigned int GetActiveSprite(unsigned int shape)
 {
-unsigned int mask = 0b000000011110000U;  // the mask for the active sprite
-return ((shape & mask) >> 4);
+unsigned int mask = 0b000001111100000U;  // the mask for the active sprite
+return ((shape & mask) >> 5);
 }
 
 unsigned int GetActiveShape(unsigned int shape)
 {
-unsigned int mask = 0b000000000001111U;  // the mask for the active sprite
+unsigned int mask = 0b000000000011111U;  // the mask for the active sprite
 return (shape & mask);
 }
 
 viBundle GetShapeVertices(unsigned int shape)
 {
-unsigned int sprites = GetNumberOfSprites(shape), sprite = GetActiveSprite(shape);
+unsigned int sprites = GetNumberOfSprites(shape);
+unsigned int sprite = GetActiveSprite(shape);
 if(sprites == 1)    // if there is only one sprite
     sprite = 1; // default to the first sprite
+
+printf("\n%.2f / %.2f = %.2f", (float)sprite, (float)sprites, (float)sprite / (float)sprites);
 
 switch (GetActiveShape(shape))  // gets the shape by masking
     {
