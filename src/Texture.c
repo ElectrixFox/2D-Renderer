@@ -17,7 +17,7 @@ for (int i = 0; i < 32; i++)
         nfps++;
 
 for (int i = 0; i < nfps; i++)
-    if(strcmpi(fps[i], fp) == 0)    // if the file path is already in the array
+    if(strcmp(fps[i], fp) == 0)    // if the file path is already in the array
         return ((tex & ~mask) | (i << 12)); // clears the tex variable part then appends the new active number
 
 strcpy(fps[nfps], fp);  // copy the new file path into the filepaths array

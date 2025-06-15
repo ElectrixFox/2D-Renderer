@@ -1,5 +1,5 @@
 CXX = gcc
-CXXFLAGS = -g -Wall -I. -Ofast
+CXXFLAGS = -g -Wall -I. -Ofast -mwin32
 CXXIGNORE = -Wno-missing-braces -Wno-incompatible-pointer-types -Wno-format
 CXXFLAGS += $(CXXIGNORE)
 APPNAME = main
