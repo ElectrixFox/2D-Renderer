@@ -35,4 +35,6 @@ int findDrawablesRenderable(Drawables drabs, unsigned int rid);
 
 void RemoveDrawable(Drawables* drabs, RenderDetails* rds, TransformationDetails* tds, unsigned int trid);
 
+void UpdateImmovables(TransformationDetails* tds, Drawables* drabs);
+
 void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs, Camera cam);
