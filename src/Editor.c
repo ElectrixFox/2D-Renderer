@@ -89,9 +89,8 @@ void getLevel(RenderDetails rds, TransformationDetails tds, Drawables drabs, Pre
 float minx = 0, maxx = 0, miny = 0, maxy = 0;
 for (int i = 0; i < tds.size; i++)
     {
-    printf("\nChecking %d/%d", tds.trsid[i], tds.size);
-    if(getPressableAction(pds, findPressableTransfom(pds, tds.trsid[i])) != BACT_DELETE) continue;  // if it isn't a placed block then continue
-    printf("\t%d is good", tds.trsid[i]);
+    unsigned int tpid = pds.prid[findPressableTransfom(pds, tds.trsid[i])];
+    if(getPressableAction(pds, tpid) != BACT_DELETE) continue;  // if it isn't a placed block then continue
 
     // getting the extreme points
     if(tds.pos[i].x < minx)
@@ -116,7 +115,7 @@ int** tgrid = (int**)malloc(sizeof(int*) * gridw * gridh);    // initialising th
 *h = gridh;
 
 {   // creating a new scope as to be able to use i and j
-printf("\nBottom-Left: (%.2f, %.2f)\nTop-Right: (%.2f, %.2f)", minx, miny, maxx, maxy);
+// printf("\nBottom-Left: (%.2f, %.2f)\nTop-Right: (%.2f, %.2f)", minx, miny, maxx, maxy);
 
 for (int i = 0; i < gridh; i++)
     tgrid[i] = (int*)calloc(gridw, sizeof(int));    // allocate the memory for the row
@@ -132,9 +131,9 @@ for (float y = maxy; miny <= y; y -= (float)grid_size)
         int tid = getTransformAt(tds, tpos);    // get the transform at the position to check
         if(tid == -1)   // if nothing is found then go to the next grid coordinate to check
             continue;
-        int btype = (int)getBlockFromRenderID(drabs.rids[findDrawablesTransform(drabs, tid)]) + 1;  // finding the type of block and adding 1
+        unsigned int trid = drabs.rids[findDrawablesTransform(drabs, tid)]; // gets the render ID from the renderables
+        int btype = (int)getBlockFromRenderID(trid) + 1;  // finding the type of block and adding 1
         tgrid[ygrid][xgrid] = btype;    // setting the block
-        printf("\nGType: %d\nBType: %d", tgrid[ygrid][xgrid], btype);
         }
     }
 }

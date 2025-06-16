@@ -139,12 +139,7 @@ setPosition(tds, td1, (vec2){50.0f, 50.0f});
 AddDrawable(&drabs, td1, rd1);
 */
 
-unsigned int rd2 = CreateSpriteRenderable(&rds, "res/sprites/movable_spritesheet.png", 2, 1);
-unsigned int td2 = AddTransformation(&tds, (vec2){0.0f, 0.0f}, (vec2){25.0f, 25.0f});
-
-AddDrawable(&drabs, td2, rd2);
-AddPressable(&prds, td2, BACT_DELETE);
-
+PlaceBlock(&rds, &tds, &drabs, &prds, BLOCK_MOVABLE_BLOCK, (vec2){0.0f, 0.0f});
 BuildSelectBar(&rds, &tds, &drabs, &prds); // build the item select bar
 printf("Size of entities: %d\nSize of render details: %d\nSize of transformations: %d\nSize of drabs: %d", ents.size, rds.size, tds.size, drabs.size);
 
@@ -159,6 +154,7 @@ while(!glfwWindowShouldClose(window))
         // OutputEntitiesDetails(tds, rds, ents);
         OutputTransformations(tds);
         OutputDrawables(drabs);
+        OutputPressables(prds);
         int** grid;
         int w = 0, h = 0;
         getLevel(rds, tds, drabs, prds, &w, &h, &grid);
