@@ -128,17 +128,6 @@ PressableDetails prds = InitialisePressableDetails();
 Drawables drabs = InitialiseDrawables();
 InitialiseBlockDetails();
 
-/*
-unsigned int rd1 = CreatePlainSquareRenderable(&rds);
-unsigned int td1 = AddTransformation(&tds, (vec2){gwid / 2 - 25.0f, ghig / 2}, (vec2){25.0f, 25.0f});
-setPosition(tds, td1, (vec2){50.0f, 50.0f});
-    {
-    int rind = getRenderDetailsIDIndex(rds, rd1);
-    SetUniform4f(rds.shader[rind], "colour", (vec4){1.0f, 0.0f, 0.0f, 1.0f});
-    }
-AddDrawable(&drabs, td1, rd1);
-*/
-
 PlaceBlock(&rds, &tds, &drabs, &prds, BLOCK_MOVABLE_BLOCK, (vec2){0.0f, 0.0f});
 BuildSelectBar(&rds, &tds, &drabs, &prds); // build the item select bar
 printf("Size of entities: %d\nSize of render details: %d\nSize of transformations: %d\nSize of drabs: %d", ents.size, rds.size, tds.size, drabs.size);

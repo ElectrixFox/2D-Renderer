@@ -1,5 +1,6 @@
 #include "Drawable.h"
 #include "Block.h"
+#include "Level.h"
 
 /**
  * A function to read the level
@@ -32,10 +33,6 @@ unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawable
  * @param prid The render ID of the block to remove
  */
 void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, unsigned int rid);
-
-void ReadLevel(const char* levelfp);
-
-void RenderLevel();
 
 /**
  * Builds the block selection bar
@@ -70,7 +67,3 @@ void setActiveBlock(BLOCK block);
 void SelectBlock(PressableDetails prds, Drawables drabs, unsigned int prid);
 
 void SetSprite(RenderDetails* rd, unsigned int rid);
-
-void OutputLevel(const int** grid, int w, int h);
-
-void getLevel(RenderDetails rds, TransformationDetails tds, Drawables drabs, PressableDetails pds, int* w, int* h, int*** grid);
