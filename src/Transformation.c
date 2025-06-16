@@ -138,13 +138,15 @@ return -1;
 
 void OutputTransformations(TransformationDetails tds)
 {
-printf("\n%10s%14s\t%13s\t", "ID", "Position", "Scale");
+printf("\n\n%32s", "Transformations Table");
+printf("\n%-10s%-20s%-13s\t", "ID", "Position", "Scale");
 for (int i = 0; i < tds.size; i++)
     {
-    printf("\n%10d\t(%07.2f, %07.2f)\t(%05.2f, %05.2f)\t",
+    printf("\n%-10d(%07.2f, %07.2f)%-2s(%05.2f, %05.2f)\t",
         tds.trsid[i],
         tds.pos[i].x,
         tds.pos[i].y,
+        "",
         tds.scale[i].x,
         tds.scale[i].y);
     }

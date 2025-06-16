@@ -95,10 +95,11 @@ for (int i = 0; i < drabs.size; i++)
 
 void OutputDrawables(Drawables drabs)
 {
-printf("\n%10s\t%10s", "Transform ID", "Render ID");
+printf("\n\n%20s", "Drawables Table");
+printf("\n%-14s%-14s", "Transform ID", "Render ID");
 for (int i = 0; i < drabs.size; i++)
     {
-    printf("\n%10d\t%10d",
+    printf("\n%-14d%-14d",
         drabs.trsids[i],
         drabs.rids[i]);
     }
