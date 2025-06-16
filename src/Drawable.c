@@ -92,3 +92,14 @@ for (int i = 0; i < drabs.size; i++)    // setting all the uniforms
 for (int i = 0; i < drabs.size; i++)
     DrawRenderable(rds, drabs.rids[i]); // finally do the actual drawing
 }
+
+void OutputDrawables(Drawables drabs)
+{
+printf("\n%10s\t%10s", "Transform ID", "Render ID");
+for (int i = 0; i < drabs.size; i++)
+    {
+    printf("\n%10d\t%10d",
+        drabs.trsids[i],
+        drabs.rids[i]);
+    }
+}

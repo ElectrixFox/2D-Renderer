@@ -38,3 +38,10 @@ void RemoveDrawable(Drawables* drabs, RenderDetails* rds, TransformationDetails*
 void UpdateImmovables(TransformationDetails* tds, Drawables* drabs);
 
 void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs, Camera cam);
+
+/**
+ * Outputs the drawables table
+ * 
+ * @param drabs The table of drawables
+ */
+void OutputDrawables(Drawables drabs);

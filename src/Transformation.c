@@ -128,3 +128,24 @@ if(PointInSquare(cursorpos, tds.pos[index], tds.scale[index]))
 return 0;
 }
 
+int getTransformAt(TransformationDetails tds, vec2 pos)
+{
+for (int i = 0; i < tds.size; i++)  // loop through all of the transforms
+    if(tds.pos[i].x == pos.x && tds.pos[i].y == pos.y)  // if they are the same vector
+        return tds.trsid[i];
+return -1;
+}
+
+void OutputTransformations(TransformationDetails tds)
+{
+printf("\n%10s%14s\t%13s\t", "ID", "Position", "Scale");
+for (int i = 0; i < tds.size; i++)
+    {
+    printf("\n%10d\t(%07.2f, %07.2f)\t(%05.2f, %05.2f)\t",
+        tds.trsid[i],
+        tds.pos[i].x,
+        tds.pos[i].y,
+        tds.scale[i].x,
+        tds.scale[i].y);
+    }
+}

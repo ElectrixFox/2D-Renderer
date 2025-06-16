@@ -125,4 +125,21 @@ m4 getTransformProjectionMatrix(TransformationDetails tds);
  */
 int CheckPressed(TransformationDetails tds, unsigned int tid, vec2 cursorpos);
 
+/**
+ * Gets the transformation ID of the transformation at the position
+ * 
+ * @param tds The transformation details
+ * @param pos The position to find the transformation at
+ * 
+ * @returns The ID of the transformation or -1 if not found
+ */
+int getTransformAt(TransformationDetails tds, vec2 pos);
+
+/**
+ * Outputs the transformations table
+ * 
+ * @param tds The table of transformations
+ */
+void OutputTransformations(TransformationDetails tds);
+
 #pragma endregion

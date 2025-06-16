@@ -77,4 +77,23 @@ void UnassignBlock(unsigned int rid);
 
 BlockInfo getBlockInfo(BLOCK block);
 
+enum BLOCK_IM_STATE {
+    BLOCK_IS_STATE_ALONE,
+    BLOCK_IS_STATE_LINE_END,
+    BLOCK_IS_STATE_LINE_STRAIGHT,
+    BLOCK_IS_STATE_THREE_INTERSECT,
+    BLOCK_IS_STATE_FOUR_INTERSECT,
+    BLOCK_IS_STATE_CORNER
+};
+typedef enum BLOCK_IM_STATE BLOCK_IM_STATE;
+
+/**
+ * Gets the block information for the immovable block
+ * 
+ * @param dir The direction that the block is facing
+ * 
+ * @returns The block information
+ */
+BlockInfo getImmovableBlock(BLOCK_IM_STATE state);
+
 #pragma endregion

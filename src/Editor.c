@@ -68,3 +68,74 @@ if(prds.pract[index] != BACT_SWITCH)    // if the pressed object isn't a switcha
 index = findDrawablesTransform(drabs, prds.trsid[index]);   // find the drawable from the transform
 setActiveBlock(getBlockFromRenderID(drabs.rids[index]));
 }
+
+void OutputLevel(const int** grid, int w, int h)
+{
+printf("\nLevel\n");
+for (int x = 0; x <= w; x++)
+    {
+    for (int y = 0; y <= h; y++)
+        {
+        printf("%d ", grid[x][y]);
+        }
+    printf("\n");
+    }
+
+}
+
+void getLevel(RenderDetails rds, TransformationDetails tds, Drawables drabs, PressableDetails pds, int* w, int* h, int*** grid)
+{
+// find the bottom left and top right blocks (the extremes)
+float minx = 0, maxx = 0, miny = 0, maxy = 0;
+for (int i = 0; i < tds.size; i++)
+    {
+    if(getPressableAction(pds, findPressableTransfom(pds, tds.trsid[i])) != BACT_DELETE) continue;  // if it isn't a placed block then continue
+
+    // getting the extreme points
+    if(tds.pos[i].x < minx)
+        minx = tds.pos[i].x;
+
+    if(maxx < tds.pos[i].x)
+        maxx = tds.pos[i].x;
+    
+    if(tds.pos[i].y < miny)
+        miny = tds.pos[i].y;
+    
+    if(maxy < tds.pos[i].y)
+        maxy = tds.pos[i].y;
+    }
+
+int gridw = (maxx - minx) / grid_size;
+int gridh = (maxy - miny) / grid_size;
+
+int** tgrid = (int**)malloc(sizeof(int*) * gridw * gridh);    // initialising the grid
+
+*w = gridw + 1; // one longer as we include the final position too
+*h = gridh + 1;
+
+{   // creating a new scope as to be able to use i and j
+printf("\nBottom-Left: (%.2f, %.2f)\nTop-Right: (%.2f, %.2f)", minx, miny, maxx, maxy);
+
+for (int i = 0; i < gridh; i++)
+    tgrid[i] = (int*)calloc(gridw, sizeof(int));    // allocate the memory for the row
+
+for (float y = miny; y <= maxy; y += (float)grid_size)
+    {
+    int ygrid = (int)((y - miny) / grid_size);
+
+    for (float x = minx; x <= maxx; x += (float)grid_size)  // go along the row
+        {
+        int xgrid = (int)((x - minx) / grid_size);
+        vec2 tpos = (vec2){x, y};   // the temporary position
+        int tid = getTransformAt(tds, tpos);    // get the transform at the position to check
+        if(tid == -1)   // if nothing is found then go to the next grid coordinate to check
+            continue;
+        int btype = (int)getBlockFromRenderID(drabs.rids[findDrawablesTransform(drabs, tid)]) + 1;  // finding the type of block and adding 1
+        tgrid[ygrid][xgrid] = btype;    // setting the block
+        printf("\nGType: %d\nBType: %d", tgrid[ygrid][xgrid], btype);
+        }
+    }
+}
+
+*grid = tgrid;
+}

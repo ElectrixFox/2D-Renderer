@@ -83,10 +83,39 @@ switch (block)
         return (BlockInfo){"res/sprites/movable_spritesheet.png", 2, 1};
         break;
     case BLOCK_IMMOVABLE_BLOCK_ALONE:
-        return (BlockInfo){"res/sprites/immovable_tilesheet.png", 16, 1};
+        return (BlockInfo){"res/sprites/immovable_tilesheet_short.png", 6, 1};
         break;
     default:
         break;
     }
 return (BlockInfo){NULL};
+}
+
+BlockInfo getImmovableBlock(BLOCK_IM_STATE state)
+{
+// To-Do: This could be changed to just use the state as the parameter as it counts from 1 to 6
+switch (state)
+    {
+    case BLOCK_IS_STATE_ALONE:
+        return (BlockInfo){"res/sprites/immovable_tilesheet_short.png", 6, 1};
+        break;
+    case BLOCK_IS_STATE_LINE_END:
+        return (BlockInfo){"res/sprites/immovable_tilesheet_short.png", 6, 2};
+        break;
+    case BLOCK_IS_STATE_LINE_STRAIGHT:
+        return (BlockInfo){"res/sprites/immovable_tilesheet_short.png", 6, 3};
+        break;
+    case BLOCK_IS_STATE_THREE_INTERSECT:
+        return (BlockInfo){"res/sprites/immovable_tilesheet_short.png", 6, 4};
+        break;
+    case BLOCK_IS_STATE_FOUR_INTERSECT:
+        return (BlockInfo){"res/sprites/immovable_tilesheet_short.png", 6, 5};
+        break;
+    case BLOCK_IS_STATE_CORNER:
+        return (BlockInfo){"res/sprites/immovable_tilesheet_short.png", 6, 6};
+        break;
+    default:
+        return (BlockInfo){NULL};
+        break;
+    }
 }

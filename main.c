@@ -128,6 +128,7 @@ PressableDetails prds = InitialisePressableDetails();
 Drawables drabs = InitialiseDrawables();
 InitialiseBlockDetails();
 
+/*
 unsigned int rd1 = CreatePlainSquareRenderable(&rds);
 unsigned int td1 = AddTransformation(&tds, (vec2){gwid / 2 - 25.0f, ghig / 2}, (vec2){25.0f, 25.0f});
 setPosition(tds, td1, (vec2){50.0f, 50.0f});
@@ -136,9 +137,10 @@ setPosition(tds, td1, (vec2){50.0f, 50.0f});
     SetUniform4f(rds.shader[rind], "colour", (vec4){1.0f, 0.0f, 0.0f, 1.0f});
     }
 AddDrawable(&drabs, td1, rd1);
+*/
 
 unsigned int rd2 = CreateSpriteRenderable(&rds, "res/sprites/movable_spritesheet.png", 2, 1);
-unsigned int td2 = AddTransformation(&tds, (vec2){gwid / 2 + 25.0f, ghig / 2}, (vec2){25.0f, 25.0f});
+unsigned int td2 = AddTransformation(&tds, (vec2){0.0f, 0.0f}, (vec2){25.0f, 25.0f});
 
 AddDrawable(&drabs, td2, rd2);
 AddPressable(&prds, td2, BACT_DELETE);
@@ -153,7 +155,16 @@ while(!glfwWindowShouldClose(window))
         glfwSetWindowShouldClose(window, 1);
 
     if(isPressedSingle(GLFW_KEY_TAB))
-        OutputEntitiesDetails(tds, rds, ents);
+        {
+        // OutputEntitiesDetails(tds, rds, ents);
+        OutputTransformations(tds);
+        OutputDrawables(drabs);
+        int** grid;
+        int w = 0, h = 0;
+        getLevel(rds, tds, drabs, prds, &w, &h, &grid);
+        OutputLevel(grid, w, h);
+        glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
+        }
 
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
