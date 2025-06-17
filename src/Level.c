@@ -51,14 +51,14 @@ for(int i = 0; fline != NULL; i++)
     fline = strtok(NULL, "\n");
     }
 
-for (int i = 0; i < gridh; i++)
+for (int i = 1; i <= gridh; i++)
     {
-    tgrid[i] = (int*)calloc(gridw, sizeof(int));    // allocate the memory for the row
-    char* tstr = strtok(lines[i], " ");
+    tgrid[gridh - i] = (int*)calloc(gridw, sizeof(int));    // allocate the memory for the row
+    char* tstr = strtok(lines[i - 1], " ");
     int j = 0;
     while(tstr != NULL)
         {
-        tgrid[i][j] = atoi(tstr);
+        tgrid[gridh - i][j] = atoi(tstr);
         tstr = strtok(NULL, " ");
         j++;
         }
