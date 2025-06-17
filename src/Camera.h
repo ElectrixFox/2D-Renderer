@@ -1,5 +1,6 @@
 #pragma once
 #include "MathsOperations.h"
+#include "Input.h"
 
 struct Camera
     {
@@ -14,3 +15,5 @@ typedef struct Camera Camera;
 Camera CreateCamera(vec2 pos, vec2 scale, int* scrwid, int* srchig);
 
 m4 getCameraMatrix(Camera cam);
+
+void MoveCamera(Camera* cam);

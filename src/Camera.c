@@ -24,3 +24,15 @@ return
     };
 */
 }
+
+void MoveCamera(Camera* cam)
+{
+if(isPressedSingle(GLFW_KEY_W)) // move up
+    cam->poscomponent.y -= 5;
+else if(isPressedSingle(GLFW_KEY_A)) // move left
+    cam->poscomponent.x += 5;
+else if(isPressedSingle(GLFW_KEY_S)) // move down
+    cam->poscomponent.y += 5;
+else if(isPressedSingle(GLFW_KEY_D)) // move right
+    cam->poscomponent.x -= 5;
+}

@@ -40,7 +40,7 @@ RemovePressable(prds, prid);
 UnassignBlock(prid);
 }
 
-void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds)
+void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, Camera* cam)
 {
 vec2 topright = {1255.0f, 695.0f};
 const unsigned int nblocks = getBlockCount();

@@ -4,9 +4,11 @@ static int ckey = 0;    // current key
 static int caction = 0; // current action
 static int cmods = 0;   // current mod keys
 
+GLFWwindow* wind;
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-
+wind = window;
 
 ckey = key;
 caction = action;
