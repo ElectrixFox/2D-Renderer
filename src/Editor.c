@@ -72,7 +72,6 @@ setActiveBlock(getBlockFromRenderID(drabs.rids[index]));
 
 void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, int w, int h, const int** grid)
 {
-OutputLevel(grid, w, h);
 for (int y = 0; y < h; y++)
     {
     vec2 pos = {0.0f, y * grid_size};
@@ -81,7 +80,6 @@ for (int y = 0; y < h; y++)
         pos.x = x * grid_size;
 
         int btype = grid[y][x];
-        printf("\nType at (%d, %d) is %d/%d", x, y, btype, grid[y][x]);
 
         if(btype != 0)
             PlaceBlock(rds, tds, drabs, prds, (BLOCK)(btype - 1), pos);

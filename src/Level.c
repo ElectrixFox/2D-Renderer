@@ -73,17 +73,19 @@ void getLevel(RenderDetails rds, TransformationDetails tds, Drawables drabs, Pre
 // find the bottom left and top right blocks (the extremes)
 float minx = 0, maxx = 0, miny = 0, maxy = 0;
 
-if(pds.size != 0)   // if there are transforms
-    {
-    minx = tds.pos[0].x;
-    maxx = tds.pos[0].x;
-    miny = tds.pos[0].y;
-    maxy = tds.pos[0].y;
-    }
+if(pds.size == 0)   // stop if there are no transforms
+    return;
+
+minx = tds.pos[0].x;
+maxx = tds.pos[0].x;
+miny = tds.pos[0].y;
+maxy = tds.pos[0].y;
 
 for (int i = 0; i < tds.size; i++)
     {
     unsigned int tpid = pds.prid[findPressableTransfom(pds, tds.trsid[i])];
+    printf("\nAction: %d", getPressableAction(pds, tpid));
+
     if(getPressableAction(pds, tpid) != BACT_DELETE) continue;  // if it isn't a placed block then continue
 
     // getting the extreme points
