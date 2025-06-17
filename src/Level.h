@@ -13,7 +13,14 @@ extern const int grid_size;
  */
 void OutputLevel(const int** grid, int w, int h);
 
-
+/**
+ * Reads the level from a file
+ * 
+ * @param levelfp The file path to the level
+ * @param w A pointer to the width of the grid (to be set by the function)
+ * @param h A pointer to the height of the grid (to be set by the function)
+ * @param grid A pointer to the 2D array which the grid is (set by the function)
+ */
 void ReadLevel(const char* levelfp, int* w, int* h, int*** grid);
 
 void RenderLevel();
