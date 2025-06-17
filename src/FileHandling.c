@@ -46,9 +46,30 @@ return res;
 
 const char* readFile(const char* filePath)
 {
-// To-Do
+FILE* file = fopen(filePath, "r");  // open the file to read
+if (file == NULL)   // error handling
+    {
+    printf("ERROR: File %s is not found\n", filePath);
+    return NULL;
+    }
 
-return "";
+const int size = sizeof(char) * (1024);    // num of chars expected
+char* output = (char*)malloc(size);  // setting allocating some memory
+output[0] = '\0'; // setting the start as the end
+
+char* line = NULL;
+int i = 0;
+unsigned int bufsize = 0;
+while(getlne(&line, &bufsize, file) != -1)  // while not at the end of the file
+   {
+   strcat(output, line);  // add the line to the pointer
+   i++;
+   }
+const char* res = output;
+
+fclose(file);
+
+return res;
 }
 
 void writeFile(const char* filePath)

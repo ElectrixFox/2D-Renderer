@@ -2,6 +2,8 @@
 #include "Block.h"
 #include "Level.h"
 
+#pragma region Main
+
 /**
  * A function to read the level
  * 
@@ -67,3 +69,26 @@ void setActiveBlock(BLOCK block);
 void SelectBlock(PressableDetails prds, Drawables drabs, unsigned int prid);
 
 void SetSprite(RenderDetails* rd, unsigned int rid);
+
+#pragma endregion
+
+#pragma region Levels
+
+#ifndef LEVELS
+
+/**
+ * Draws the level to the screen
+ * 
+ * @param rds The rendering table
+ * @param tds The transform table
+ * @param drabs The drawables table
+ * @param prds The pressables table
+ * @param w The width of the grid
+ * @param h The height of the grid
+ * @param grid The actual grid (a 2D array of integers)
+ */
+void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, int w, int h, int grid[h][w]);
+
+#endif
+
+#pragma endregion

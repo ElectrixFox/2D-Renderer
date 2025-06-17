@@ -68,3 +68,23 @@ if(prds.pract[index] != BACT_SWITCH)    // if the pressed object isn't a switcha
 index = findDrawablesTransform(drabs, prds.trsid[index]);   // find the drawable from the transform
 setActiveBlock(getBlockFromRenderID(drabs.rids[index]));
 }
+
+
+void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, int w, int h, int grid[h][w])
+{
+for (int y = 0; y < h; y++)
+    {
+    vec2 pos = {0.0f, y * grid_size};
+    for (int x = 0; x < w; x++)
+        {
+        pos.x = x * grid_size;
+
+        int btype = grid[y][x];
+
+        if(btype != 0)
+            PlaceBlock(rds, tds, drabs, prds, btype - 1, pos);
+        }
+    }
+
+
+}

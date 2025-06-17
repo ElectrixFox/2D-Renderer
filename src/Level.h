@@ -4,10 +4,6 @@
 extern const int snap_to_grid;
 extern const int grid_size;
 
-void ReadLevel(const char* levelfp);
-
-void RenderLevel();
-
 /**
  * Outputs the level in matrix form
  * 
@@ -16,6 +12,11 @@ void RenderLevel();
  * @param h The height of the grid
  */
 void OutputLevel(const int** grid, int w, int h);
+
+
+void ReadLevel(const char* levelfp, int* w, int* h, int*** grid);
+
+void RenderLevel();
 
 /**
  * Gets the information of where the blocks are

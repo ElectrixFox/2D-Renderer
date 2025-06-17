@@ -21,6 +21,7 @@
         "camera.h": "c",
         "editor.h": "c",
         "block.h": "c",
-        "transformation.h": "c"
+        "transformation.h": "c",
+        "drawable.h": "c"
     }
 }

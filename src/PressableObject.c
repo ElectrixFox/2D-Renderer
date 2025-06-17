@@ -135,9 +135,10 @@ prds->pract[index] = pract; // setting the action
 void OutputPressables(PressableDetails prds)
 {
 printf("\nSize: %d", prds.size);
-printf("\n%15s%15s%15s", "ID", "Action", "Transform ID");
+printf("\n\n%30s", "Pressables Table");
+printf("\n%-15s%-15s%-15s", "ID", "Action", "Transform ID");
 for (int i = 0; i < prds.size; i++)
     {
-    printf("\n%15d%15d%15d", prds.prid[i], prds.pract[i], prds.trsid[i]);
+    printf("\n%-15d%-15d%-15d", prds.prid[i], prds.pract[i], prds.trsid[i]);
     }
 }
