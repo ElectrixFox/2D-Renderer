@@ -87,7 +87,7 @@ void SetSprite(RenderDetails* rd, unsigned int rid);
  * @param h The height of the grid
  * @param grid The actual grid (a 2D array of integers)
  */
-void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, int w, int h, int grid[h][w]);
+void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, int w, int h, const int** grid);
 
 #endif
 

@@ -128,18 +128,22 @@ PressableDetails prds = InitialisePressableDetails();
 Drawables drabs = InitialiseDrawables();
 InitialiseBlockDetails();
 
-PlaceBlock(&rds, &tds, &drabs, &prds, BLOCK_MOVABLE_BLOCK, (vec2){0.0f, 0.0f});
+// PlaceBlock(&rds, &tds, &drabs, &prds, BLOCK_MOVABLE_BLOCK, (vec2){0.0f, 0.0f});
 BuildSelectBar(&rds, &tds, &drabs, &prds); // build the item select bar
 printf("Size of entities: %d\nSize of render details: %d\nSize of transformations: %d\nSize of drabs: %d", ents.size, rds.size, tds.size, drabs.size);
 
-int grid[4][4] = {
+/* int grid[4][4] = {
     { 0, 1, 1, 1 },
     { 0, 0, 1, 0 },
     { 0, 1, 1, 0 },
     { 0, 1, 0, 0 }
-};
+}; */
 
-DrawLevel(&rds, &tds, &drabs, &prds, 4, 4, grid);
+int** grid;
+int w, h;
+ReadLevel("res/levels/level1.txt", &w, &h, &grid);
+OutputLevel(grid, w, h);
+DrawLevel(&rds, &tds, &drabs, &prds, w, h, grid);
 
 while(!glfwWindowShouldClose(window))
     {
