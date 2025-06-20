@@ -188,8 +188,6 @@ while(!glfwWindowShouldClose(window))
 
     MoveCamera(&cam);
     
-    
-
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
