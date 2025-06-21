@@ -85,6 +85,41 @@ end:
 prds->size--;
 }
 
+unsigned int* getPressablesWithAction(PressableDetails prds, unsigned int pract)
+{
+unsigned int* prids = (unsigned int*)malloc(2 * sizeof(unsigned int));
+int top = 1;
+
+for (int i = 0; i < prds.size; i++)
+    {
+    if(prds.pract[i] == pract)
+        {
+        prids[top] = prds.prid[i];
+        ExpandByOne(prids, top++, sizeof(unsigned int));  // increase the size of the array by one to be able to use it
+        }
+    }
+
+prids[0] = top - 1; // assigning the first element to contain the size
+return prids;
+}
+
+unsigned int* getPressablesTransformWithAction(PressableDetails prds, unsigned int pract)
+{
+unsigned int* trids = (unsigned int*)malloc(2 * sizeof(unsigned int));
+int top = 1;
+
+for (int i = 0; i < prds.size; i++)
+    {
+    if(prds.pract[i] == pract)
+        {
+        trids[top] = prds.trsid[i];
+        ExpandByOne(trids, top++, sizeof(unsigned int));  // increase the size of the array by one to be able to use it
+        }
+    }
+
+trids[0] = top - 1; // assigning the first element to contain the size
+return trids;
+}
 
 int _CheckPressed(vec2* poses, vec2* scales, vec2 cursorpos, unsigned int eid)
 {

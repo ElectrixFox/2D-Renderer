@@ -71,6 +71,28 @@ unsigned int AddPressable(PressableDetails* prds, unsigned int tid, unsigned int
 void RemovePressable(PressableDetails* prds, unsigned int prid);
 
 /**
+ * Gets the pressable IDs of the entries for the given action
+ * 
+ * @param prds The pressable details table
+ * @param pract The action of the entities to get 
+ * 
+ * @returns The pressable IDs of the entities
+ * @warning The first element contains the size of the array (so it will need to be accounted for)
+ */
+unsigned int* getPressablesWithAction(PressableDetails prds, unsigned int pract);
+
+/**
+ * Gets the transformation IDs of the entries for the given action
+ * 
+ * @param prds The pressable details table
+ * @param pract The action of the entities to get 
+ * 
+ * @returns The transformaton IDs of the entities
+ * @warning The first element contains the size of the array (so it will need to be accounted for)
+ */
+unsigned int* getPressablesTransformWithAction(PressableDetails prds, unsigned int pract);
+
+/**
  * Checks if the entity with eid has been pressed
  * 
  * @param poses The array of entity positions

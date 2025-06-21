@@ -33,6 +33,17 @@ int findDrawablesTransform(Drawables drabs, unsigned int trid);
  */
 int findDrawablesRenderable(Drawables drabs, unsigned int rid);
 
+/**
+ * Gets the render IDs from an array of transform IDs
+ * 
+ * @param drabs The drawables table
+ * @param trids The transformation IDs to find in the drawables
+ * @param size The number of IDs
+ * 
+ * @returns An array of renderable IDs
+ */
+unsigned int* getRenderIDsFromTransformIDs(Drawables drabs, unsigned int* trids, unsigned int size);
+
 void RemoveDrawable(Drawables* drabs, RenderDetails* rds, TransformationDetails* tds, unsigned int trid);
 
 void UpdateImmovables(TransformationDetails* tds, Drawables* drabs);

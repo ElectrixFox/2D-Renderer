@@ -77,4 +77,15 @@ unsigned int CreatePlainSquareRenderable(RenderDetails* rd);
 
 void DrawRenderable(RenderDetails rds, unsigned int rid);
 
+/**
+ * Gets the programs of the given render IDs
+ * 
+ * @param rds The render details table
+ * @param rids The IDs of the renderables to get the programs for
+ * @param size The number of render IDs
+ * 
+ * @returns The programs of the render IDs
+ */
+unsigned int* getRenderablePrograms(RenderDetails rds, unsigned int* rids, int size);
+
 #pragma endregion

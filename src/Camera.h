@@ -17,3 +17,13 @@ Camera CreateCamera(vec2 pos, vec2 scale, int* scrwid, int* srchig);
 m4 getCameraMatrix(Camera cam);
 
 void MoveCamera(Camera* cam);
+
+/**
+ * Applies the view matrix to the program
+ * 
+ * @param cam The camera in the scene
+ * @param progs The shader programs
+ * @param size The number of programs
+ */
+void _ApplyCamera(Camera cam, unsigned int* progs, unsigned int size);
+

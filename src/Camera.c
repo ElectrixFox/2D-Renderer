@@ -36,3 +36,13 @@ else if(isPressedSingle(GLFW_KEY_S)) // move down
 else if(isPressedSingle(GLFW_KEY_D)) // move right
     cam->poscomponent.x -= 5;
 }
+
+void _ApplyCamera(Camera cam, unsigned int* progs, unsigned int size)
+{
+m4 view = getCameraMatrix(cam);
+
+for (int i = 0; i < size; i++)
+    {
+    SetUniformM4(progs[i], "view", view);
+    }
+}

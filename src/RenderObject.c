@@ -159,3 +159,13 @@ BindShader(rds.shader[index]);
 BindVAO(rds.vao[index]);
 glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
+
+unsigned int* getRenderablePrograms(RenderDetails rds, unsigned int* rids, int size)
+{
+unsigned int* progs = (unsigned int*)malloc(size * sizeof(unsigned int));
+
+for (int i = 0; i < size; i++)
+    progs[i] = rds.rid[getRenderDetailsIDIndex(rds, rids[i])];  // getting and setting the programs
+
+return progs;
+}
