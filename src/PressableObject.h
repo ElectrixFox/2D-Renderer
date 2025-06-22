@@ -71,6 +71,16 @@ unsigned int AddPressable(PressableDetails* prds, unsigned int tid, unsigned int
 void RemovePressable(PressableDetails* prds, unsigned int prid);
 
 /**
+ * Gets the number of pressables with the given action
+ * 
+ * @param prds The pressables table
+ * @param pract The action to find
+ * 
+ * @returns The number of that action in the pressable table
+ */
+unsigned int getActionCount(PressableDetails prds, unsigned int pract);
+
+/**
  * Gets the pressable IDs of the entries for the given action
  * 
  * @param prds The pressable details table

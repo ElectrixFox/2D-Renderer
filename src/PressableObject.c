@@ -85,6 +85,15 @@ end:
 prds->size--;
 }
 
+unsigned int getActionCount(PressableDetails prds, unsigned int pract)
+{
+unsigned int count = 0;
+for (int i = 0; i < prds.size; i++)
+    if(prds.pract[i] == pract)
+        count++;
+return count;
+}
+
 unsigned int* getPressablesWithAction(PressableDetails prds, unsigned int pract)
 {
 unsigned int* prids = (unsigned int*)malloc(2 * sizeof(unsigned int));
@@ -95,7 +104,8 @@ for (int i = 0; i < prds.size; i++)
     if(prds.pract[i] == pract)
         {
         prids[top] = prds.prid[i];
-        ExpandByOne(prids, top++, sizeof(unsigned int));  // increase the size of the array by one to be able to use it
+        ExpandByOne(&prids, top, sizeof(unsigned int));  // increase the size of the array by one to be able to use it
+        top++;
         }
     }
 
@@ -105,7 +115,8 @@ return prids;
 
 unsigned int* getPressablesTransformWithAction(PressableDetails prds, unsigned int pract)
 {
-unsigned int* trids = (unsigned int*)malloc(2 * sizeof(unsigned int));
+// unsigned int* trids = (unsigned int*)malloc(prds.size * sizeof(unsigned int));
+unsigned int* trids = (unsigned int*)malloc((1 + getActionCount(prds, pract)) * sizeof(unsigned int));
 int top = 1;
 
 for (int i = 0; i < prds.size; i++)
@@ -113,7 +124,7 @@ for (int i = 0; i < prds.size; i++)
     if(prds.pract[i] == pract)
         {
         trids[top] = prds.trsid[i];
-        ExpandByOne(trids, top++, sizeof(unsigned int));  // increase the size of the array by one to be able to use it
+        top++;
         }
     }
 

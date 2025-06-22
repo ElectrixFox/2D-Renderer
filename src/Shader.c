@@ -119,28 +119,28 @@ glUseProgram(program);  // binds the shader program
 
 void SetUniform1f(unsigned int program, const char* varname, float value)
 {
-int uniloc = glGetUniformLocation(program, varname);
 BindShader(program);
+int uniloc = glGetUniformLocation(program, varname);
 glUniform1f(uniloc, value);
 }
 
 void SetUniform4f(unsigned int program, const char* varname, vec4 value)
 {
-int uniloc = glGetUniformLocation(program, varname);
 BindShader(program);
+int uniloc = glGetUniformLocation(program, varname);
 glUniform4f(uniloc, value[0], value[1], value[2], value[3]);
 }
 
 void SetUniformM4(unsigned int program, const char* varname, m4 matr)
 {
-int uniloc = glGetUniformLocation(program, varname);
 BindShader(program);
+int uniloc = glGetUniformLocation(program, varname);
 glUniformMatrix4fv(uniloc, 1, GL_FALSE, &matr.mat[0][0]);
 }
 
 void SetUniform1i(unsigned int program, const char* varname, unsigned int value)
 {
-int uniloc = glGetUniformLocation(program, varname);
 BindShader(program);
+int uniloc = glGetUniformLocation(program, varname);
 glUniform1i(uniloc, value);
 }

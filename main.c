@@ -131,11 +131,14 @@ InitialiseBlockDetails();
 BuildSelectBar(&rds, &tds, &drabs, &prds, &cam); // build the item select bar
 printf("Size of entities: %d\nSize of render details: %d\nSize of transformations: %d\nSize of drabs: %d", ents.size, rds.size, tds.size, drabs.size);
 
+/*
 int** grid;
 int w, h;
 ReadLevel("res/levels/level1.txt", &w, &h, &grid);
 OutputLevel(grid, w, h);
 DrawLevel(&rds, &tds, &drabs, &prds, w, h, grid);
+
+*/
 
 while(!glfwWindowShouldClose(window))
     {
@@ -185,11 +188,60 @@ while(!glfwWindowShouldClose(window))
             }
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
+    if(isPressedSingle(GLFW_KEY_LEFT_CONTROL))
+        {
+        printf("\n\n\nTrying to find");
+        unsigned int* ttrsids = getPressablesTransformWithAction(prds, BACT_DELETE);
+        unsigned int count = ttrsids[0];
+        // ttrsids = &ttrsids[1];
+        memmove(ttrsids, &ttrsids[1], count);
+        unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);
+        unsigned int* progs = getRenderablePrograms(rds, trids, count);
+        for (int i = 0; i < count; i++)
+            printf("\n%d\t%d\t%d", ttrsids[i], trids[i], progs[i]);
+        glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
+        }
 
     MoveCamera(&cam);
-    
+    glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
+    /*
+    unsigned int* progs = getRenderablePrograms(rds, rds.rid, rds.size);
+    for (int i = 0; i < rds.size; i++)
+        {
+        SetUniformM4(progs[i], "view", getM4ID());
+        }
+    */
+    {
+    unsigned int* ttrsids = getPressablesTransformWithAction(prds, BACT_DELETE);
+    unsigned int count = ttrsids[0];
+    ttrsids = &ttrsids[1];
+    unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);
+    unsigned int* progs = getRenderablePrograms(rds, trids, count);
+    m4 view = getCameraMatrix(cam);
+    for (int i = 0; i < count; i++)
+        {
+        // unsigned int tprog = rds.shader[getRenderDetailsIDIndex(rds, drabs.rids[findDrawablesTransform(drabs, ttrsids[i])])];
+        // unsigned int tprog = rds.shader[getRenderDetailsIDIndex(rds, trids[i])];
+        unsigned int tprog = progs[i];
+        SetUniformM4(tprog, "view", view);
+        }
+    
+    /*
+    unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);
+    unsigned int* progs = getRenderablePrograms(rds, trids, count);
+    m4 view = getCameraMatrix(cam);
+    
+    for (int i = 0; i < count; i++)
+        {
+        printf("\n%d", progs[i]);
+        SetUniformM4(progs[i], "view", view);
+        }
+    */
+    }
+    
 
     DrawDrawables(rds, tds, drabs, cam);
     

@@ -38,6 +38,8 @@ if(n == 0)   // if the size is 0 then just set the ID to 0
     *rd = InitialiseRenderDetails(); // reinitialise the render details
     }
 
+SetUniformM4(shader, "view", getM4ID());
+
 // make all the arrays bigger by one to accomodate for the new element
 ExpandByOne(&rd->rid, n, sizeof(unsigned int));
 ExpandByOne(&rd->vao, n, sizeof(unsigned int));
