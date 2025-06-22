@@ -167,7 +167,7 @@ unsigned int* getRenderablePrograms(RenderDetails rds, unsigned int* rids, int s
 unsigned int* progs = (unsigned int*)malloc(size * sizeof(unsigned int));
 
 for (int i = 0; i < size; i++)
-    progs[i] = rds.rid[getRenderDetailsIDIndex(rds, rids[i])];  // getting and setting the programs
+    progs[i] = rds.shader[getRenderDetailsIDIndex(rds, rids[i])];  // getting and setting the programs
 
 return progs;
 }
