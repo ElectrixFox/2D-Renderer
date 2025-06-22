@@ -17,6 +17,8 @@ arr[size] = *item;  // set the last element to the item
 
 vec2 ScalarMultVec2(vec2 v, float a) { return (vec2){a * v.x, a * v.y}; }
 
+vec2 addVec2(vec2 u, vec2 v) { return (vec2){u.x + v.x, u.y + v.y}; }
+
 vec2 LeftCornerFromCentre(vec2 centre, vec2 scale)
 {
 vec2 pos;

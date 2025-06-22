@@ -67,8 +67,19 @@ void setPosition(TransformationDetails tds, unsigned int trsid, vec2 newpos);
  * 
  * @param tds The details about the transformation
  * @param trsid The transformation ID
+ * 
+ * @returns The position of the transform
  */
 vec2 getPosition(TransformationDetails tds, unsigned int trsid);
+
+/**
+ * Translates the transform
+ * 
+ * @param tds The transformations table
+ * @param trsid The ID of the transformation
+ * @param trans The translation to apply 
+ */
+void applyTranslation(TransformationDetails tds, unsigned int trsid, vec2 trans);
 
 /**
  * Sets the scale of the transform
@@ -84,6 +95,8 @@ void setScale(TransformationDetails tds, unsigned int trsid, vec2 newscale);
  * 
  * @param tds The details about the transformation
  * @param trsid The transformation ID
+ * 
+ * @returns The scale of the transform
  */
 vec2 getScale(TransformationDetails tds, unsigned int trsid);
 

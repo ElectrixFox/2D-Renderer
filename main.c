@@ -201,21 +201,19 @@ while(!glfwWindowShouldClose(window))
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
 
-    MoveCamera(&cam);
-    glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
+    if(MoveCamera(&cam))
+        {
+        unsigned int* ttrsids = getPressablesTransformWithAction(prds, BACT_SWITCH);
+        unsigned int count = ttrsids[0];
+        ttrsids = &ttrsids[1];
+        for (int i = 0; i < count; i++)
+            {
+            applyTranslation(tds, ttrsids[i], ScalarMultVec2(cam.poscomponent, -1));
+            }
+        }
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
-
-    {
-    unsigned int* ttrsids = getPressablesTransformWithAction(prds, BACT_DELETE);
-    unsigned int count = ttrsids[0];
-    ttrsids = &ttrsids[1];
-    unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);
-    unsigned int* progs = getRenderablePrograms(rds, trids, count);
-    _ApplyCamera(cam, progs, count);
-    }
-    
 
     DrawDrawables(rds, tds, drabs, cam);
     

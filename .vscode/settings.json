@@ -22,6 +22,7 @@
         "editor.h": "c",
         "block.h": "c",
         "transformation.h": "c",
-        "drawable.h": "c"
+        "drawable.h": "c",
+        "input.h": "c"
     }
 }

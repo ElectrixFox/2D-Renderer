@@ -58,6 +58,16 @@ void AppendToArray(void** arr, unsigned int size, void** item, unsigned int eles
  */
 vec2 ScalarMultVec2(vec2 v, float a);
 
+/**
+ * Adds the first vector to the second
+ * 
+ * @param u The first vector
+ * @param v The second vector
+ * 
+ * @returns The sum of both vectors
+ */
+vec2 addVec2(vec2 u, vec2 v);
+
 vec2 LeftCornerFromCentre(vec2 centre, vec2 scale);
 
 /**

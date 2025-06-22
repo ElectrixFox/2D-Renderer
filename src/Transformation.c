@@ -90,6 +90,8 @@ tds.pos[index] = newpos;    // setting the new position
 
 vec2 getPosition(TransformationDetails tds, unsigned int trsid) { return tds.pos[getTransformationIDIndex(tds, trsid)]; }
 
+void applyTranslation(TransformationDetails tds, unsigned int trsid, vec2 trans) { setPosition(tds, trsid, addVec2(getPosition(tds, trsid), trans)); }
+
 void setScale(TransformationDetails tds, unsigned int trsid, vec2 newscale)
 {
 int index = getTransformationIDIndex(tds, trsid);   // find the ID

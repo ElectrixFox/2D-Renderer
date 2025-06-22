@@ -17,7 +17,14 @@ Camera CreateCamera(vec2 pos, vec2 scale, int* scrwid, int* srchig);
 
 m4 getCameraMatrix(Camera cam);
 
-void MoveCamera(Camera* cam);
+/**
+ * Moves the camera using the keys pressed
+ * 
+ * @param cam A pointer to the camera
+ * 
+ * @returns 1 if the camera has been moved otherwise 0
+ */
+int MoveCamera(Camera* cam);
 
 /**
  * Applies the view matrix to the program
