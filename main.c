@@ -53,13 +53,13 @@ switch (key)
     }
 }
 
-vec2 GetCursorPosition(GLFWwindow* window)
+vec2 GetCursorPosition(GLFWwindow* window, Camera cam)
 {
 double x, y;
 int wid, hig;
 glfwGetCursorPos(window, &x, &y);
 glfwGetWindowSize(window, &wid, &hig);
-vec2 point = GetMousePositionRelative((vec2){(float)x, (float)y}, wid, hig);
+vec2 point = GetMousePositionRelative((vec2){(float)x - cam.poscomponent.x, (float)y + cam.poscomponent.y}, wid, hig);
 
 return point;
 }
@@ -137,7 +137,6 @@ int w, h;
 ReadLevel("res/levels/level1.txt", &w, &h, &grid);
 OutputLevel(grid, w, h);
 DrawLevel(&rds, &tds, &drabs, &prds, w, h, grid);
-
 */
 
 while(!glfwWindowShouldClose(window))
@@ -161,7 +160,7 @@ while(!glfwWindowShouldClose(window))
 
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
-        vec2 cpos = GetCursorPosition(window);
+        vec2 cpos = GetCursorPosition(window, cam);
         if(!PressedArea(prds, tds, cpos, 50.0f))
             {
             PlaceBlock(&rds, &tds, &drabs, &prds, getActiveBlock(), cpos);
@@ -179,7 +178,7 @@ while(!glfwWindowShouldClose(window))
         {
         for (int i = 0; i < prds.size; i++)
             {
-            if(CheckPressed(tds, prds.trsid[i], GetCursorPosition(window)))
+            if(CheckPressed(tds, prds.trsid[i], GetCursorPosition(window, cam)))
                 {
                 unsigned int trid = drabs.rids[findDrawablesTransform(drabs, prds.trsid[i])];
                 RemoveBlock(&rds, &tds, &drabs, &prds, trid);
@@ -207,39 +206,14 @@ while(!glfwWindowShouldClose(window))
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
-    /*
-    unsigned int* progs = getRenderablePrograms(rds, rds.rid, rds.size);
-    for (int i = 0; i < rds.size; i++)
-        {
-        SetUniformM4(progs[i], "view", getM4ID());
-        }
-    */
+
     {
     unsigned int* ttrsids = getPressablesTransformWithAction(prds, BACT_DELETE);
     unsigned int count = ttrsids[0];
     ttrsids = &ttrsids[1];
     unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);
     unsigned int* progs = getRenderablePrograms(rds, trids, count);
-    m4 view = getCameraMatrix(cam);
-    for (int i = 0; i < count; i++)
-        {
-        // unsigned int tprog = rds.shader[getRenderDetailsIDIndex(rds, drabs.rids[findDrawablesTransform(drabs, ttrsids[i])])];
-        // unsigned int tprog = rds.shader[getRenderDetailsIDIndex(rds, trids[i])];
-        unsigned int tprog = progs[i];
-        SetUniformM4(tprog, "view", view);
-        }
-    
-    /*
-    unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);
-    unsigned int* progs = getRenderablePrograms(rds, trids, count);
-    m4 view = getCameraMatrix(cam);
-    
-    for (int i = 0; i < count; i++)
-        {
-        printf("\n%d", progs[i]);
-        SetUniformM4(progs[i], "view", view);
-        }
-    */
+    _ApplyCamera(cam, progs, count);
     }
     
 
