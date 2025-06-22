@@ -146,6 +146,19 @@ int PressedAnother(PressableDetails prds, TransformationDetails trds, vec2 curpo
 int PressedArea(PressableDetails prds, TransformationDetails trds, vec2 curpos, float range);
 
 /**
+ * Checks if there is a block (with a given action) which will overlap the given range
+ * 
+ * @param prds The pressables table
+ * @param trds The transformations table
+ * @param curpos The position of the cursor
+ * @param range The range to check
+ * @param pract The action of the blocks to check
+ * 
+ * @returns 1 if the area is not empty, 0 if it is empty
+ */
+int PressedAreaAction(PressableDetails prds, TransformationDetails trds, vec2 curpos, float range, unsigned int pract);
+
+/**
  * Gets the pressed block
  * 
  * @param prds The pressables table
@@ -157,6 +170,17 @@ int PressedArea(PressableDetails prds, TransformationDetails trds, vec2 curpos, 
  * @warning Does not verify that a block has been pressed and hence should be only used when one has been pressed
  */
 unsigned int getPressedBlock(PressableDetails prds, TransformationDetails trds, vec2 curpos);
+
+/**
+ * Gets the action of the pressed block
+ * 
+ * @param prds The pressable table
+ * @param trds The transformations table
+ * @param curpos The position of the cursor
+ * 
+ * @returns The action of the pressed block
+ */
+unsigned int getPressedBlockAction(PressableDetails prds, TransformationDetails trds, vec2 curpos);
 
 /**
  * Sets the action for the pressable

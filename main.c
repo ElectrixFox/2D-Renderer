@@ -53,13 +53,24 @@ switch (key)
     }
 }
 
-vec2 GetCursorPosition(GLFWwindow* window, Camera cam)
+vec2 GetCursorPositionRelative(GLFWwindow* window, Camera cam)
 {
 double x, y;
 int wid, hig;
 glfwGetCursorPos(window, &x, &y);
 glfwGetWindowSize(window, &wid, &hig);
 vec2 point = GetMousePositionRelative((vec2){(float)x - cam.poscomponent.x, (float)y + cam.poscomponent.y}, wid, hig);
+
+return point;
+}
+
+vec2 GetCursorPosition(GLFWwindow* window)
+{
+double x, y;
+int wid, hig;
+glfwGetCursorPos(window, &x, &y);
+glfwGetWindowSize(window, &wid, &hig);
+vec2 point = GetMousePositionRelative((vec2){(float)x, (float)y}, wid, hig);
 
 return point;
 }
@@ -160,13 +171,15 @@ while(!glfwWindowShouldClose(window))
 
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
-        vec2 cpos = GetCursorPosition(window, cam);
-        if(!PressedArea(prds, tds, cpos, 50.0f))
+        vec2 cpos = GetCursorPositionRelative(window, cam);
+        vec2 ncpos = GetCursorPosition(window);
+
+        if(!PressedArea(prds, tds, cpos, 50.0f) && !PressedAreaAction(prds, tds, ncpos, 50.0f, BACT_SWITCH))
             {
             PlaceBlock(&rds, &tds, &drabs, &prds, getActiveBlock(), cpos);
             glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
             }
-        else if(PressedAnother(prds, tds, cpos))
+        else if(PressedAnother(prds, tds, cpos) || PressedAnother(prds, tds, ncpos))
             {
             unsigned int tpid = getPressedBlock(prds, tds, cpos);   // getting the temporary ID
 
@@ -178,7 +191,7 @@ while(!glfwWindowShouldClose(window))
         {
         for (int i = 0; i < prds.size; i++)
             {
-            if(CheckPressed(tds, prds.trsid[i], GetCursorPosition(window, cam)))
+            if(CheckPressed(tds, prds.trsid[i], GetCursorPositionRelative(window, cam)))
                 {
                 unsigned int trid = drabs.rids[findDrawablesTransform(drabs, prds.trsid[i])];
                 RemoveBlock(&rds, &tds, &drabs, &prds, trid);
@@ -201,16 +214,16 @@ while(!glfwWindowShouldClose(window))
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
 
-    if(MoveCamera(&cam))
-        {
-        unsigned int* ttrsids = getPressablesTransformWithAction(prds, BACT_SWITCH);
-        unsigned int count = ttrsids[0];
-        ttrsids = &ttrsids[1];
-        for (int i = 0; i < count; i++)
-            {
-            applyTranslation(tds, ttrsids[i], ScalarMultVec2(cam.poscomponent, -1));
-            }
-        }
+    MoveCamera(&cam);
+
+    {
+    unsigned int* ttrsids = getPressablesTransformWithAction(prds, BACT_DELETE);
+    unsigned int count = ttrsids[0];
+    ttrsids = &ttrsids[1];
+    unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);
+    unsigned int* progs = getRenderablePrograms(rds, trids, count);
+    _ApplyCamera(cam, progs, count);
+    }
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
