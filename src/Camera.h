@@ -35,3 +35,11 @@ int MoveCamera(Camera* cam);
  */
 void _ApplyCamera(Camera cam, unsigned int* progs, unsigned int size);
 
+/**
+ * Applies a matrix to keep the given programs static on the screen with relation to the camera
+ * 
+ * @param cam The camera
+ * @param progs The shader programs
+ * @param size The number of programs
+ */
+void _ApplyStaticCamera(Camera cam, unsigned int* progs, unsigned int size);

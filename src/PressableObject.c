@@ -132,6 +132,24 @@ trids[0] = top - 1; // assigning the first element to contain the size
 return trids;
 }
 
+unsigned int* getPressablesTransformWithoutAction(PressableDetails prds, unsigned int pract)
+{
+unsigned int* trids = (unsigned int*)malloc((1 + (prds.size - getActionCount(prds, pract))) * sizeof(unsigned int));
+int top = 1;
+
+for (int i = 0; i < prds.size; i++)
+    {
+    if(prds.pract[i] != pract)
+        {
+        trids[top] = prds.trsid[i];
+        top++;
+        }
+    }
+
+trids[0] = top - 1; // assigning the first element to contain the size
+return trids;
+}
+
 int _CheckPressed(vec2* poses, vec2* scales, vec2 cursorpos, unsigned int eid)
 {
 unsigned int index = eid; // some hash function to get where the eid is in the big array
@@ -180,6 +198,24 @@ for (int i = 0; i < trds.size; i++)
     if(CheckPressed(trds, trds.trsid[i], curpos)) // checking if anything has been pressed
         return prds.prid[findPressableTransfom(prds, trds.trsid[i])];
 return 0;
+}
+
+unsigned int* getPressedBlocksArea(PressableDetails prds, TransformationDetails trds, vec2 curpos, float range)
+{
+unsigned int* pids = malloc(2 * sizeof(unsigned int));
+int top = 1;
+
+for (int i = 0; i < trds.size; i++)
+    if(abs(trds.pos[i].x - curpos.x) < range && abs(trds.pos[i].y - curpos.y) < range)
+        {
+        pids[top] = prds.prid[findPressableTransfom(prds, trds.trsid[i])];  // setting the ID
+        ExpandByOne(&pids, top, sizeof(unsigned int));  // increasing the size of the array
+        top++;
+        }
+
+pids[0] = top - 1;
+
+return pids;
 }
 
 unsigned int getPressedBlockAction(PressableDetails prds, TransformationDetails trds, vec2 curpos)

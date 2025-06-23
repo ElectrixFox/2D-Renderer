@@ -68,6 +68,11 @@ void setActiveBlock(BLOCK block);
  */
 void SelectBlock(PressableDetails prds, Drawables drabs, unsigned int prid);
 
+
+void ApplyCamera(Camera cam, PressableDetails prds, Drawables drabs, TransformationDetails trds, RenderDetails rds);
+
+void ApplyStaticCamera(Camera cam, PressableDetails prds, Drawables drabs, TransformationDetails trds, RenderDetails rds);
+
 void SetSprite(RenderDetails* rd, unsigned int rid);
 
 #pragma endregion

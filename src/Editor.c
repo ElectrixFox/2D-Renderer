@@ -69,6 +69,27 @@ index = findDrawablesTransform(drabs, prds.trsid[index]);   // find the drawable
 setActiveBlock(getBlockFromRenderID(drabs.rids[index]));
 }
 
+void ApplyCamera(Camera cam, PressableDetails prds, Drawables drabs, TransformationDetails trds, RenderDetails rds)
+{
+unsigned int* ttrsids = getPressablesTransformWithoutAction(prds, BACT_SWITCH);    // gets all of the transforms with the delete action
+unsigned int count = ttrsids[0];    // gets the count
+ttrsids = &ttrsids[1];  // moves the first item to be the second (shuffles the array back by one)
+unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);  // gets the transformation IDs
+unsigned int* progs = getRenderablePrograms(rds, trids, count); // gets the programs
+_ApplyCamera(cam, progs, count);    // setting the camera matrix
+}
+
+void ApplyStaticCamera(Camera cam, PressableDetails prds, Drawables drabs, TransformationDetails trds, RenderDetails rds)
+{
+unsigned int* sttrsids = getPressablesTransformWithAction(prds, BACT_SWITCH);    // gets all of the transforms with the delete action
+unsigned int count = sttrsids[0];    // gets the count
+sttrsids = &sttrsids[1];  // moves the first item to be the second (shuffles the array back by one)
+for (int i = 0; i < count; i++)
+    {
+    
+    applyTranslation(trds, sttrsids[i], ScalarMultVec2(cam.poscomponent, -1));
+    }
+}
 
 void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, int w, int h, const int** grid)
 {

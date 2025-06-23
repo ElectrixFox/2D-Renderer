@@ -103,6 +103,17 @@ unsigned int* getPressablesWithAction(PressableDetails prds, unsigned int pract)
 unsigned int* getPressablesTransformWithAction(PressableDetails prds, unsigned int pract);
 
 /**
+ * Gets the transformation IDs of the entries without the given action
+ * 
+ * @param prds The pressable details table
+ * @param pract The action of the blocks to ignore
+ * 
+ * @returns The transformaton IDs of the entities
+ * @warning The first element contains the size of the array (so it will need to be accounted for)
+ */
+unsigned int* getPressablesTransformWithoutAction(PressableDetails prds, unsigned int pract);
+
+/**
  * Checks if the entity with eid has been pressed
  * 
  * @param poses The array of entity positions
@@ -170,6 +181,19 @@ int PressedAreaAction(PressableDetails prds, TransformationDetails trds, vec2 cu
  * @warning Does not verify that a block has been pressed and hence should be only used when one has been pressed
  */
 unsigned int getPressedBlock(PressableDetails prds, TransformationDetails trds, vec2 curpos);
+
+/**
+ * Gets all of the pressed blocks in a given area
+ * 
+ * @param prds The pressables table
+ * @param trds The transformation table
+ * @param curpos The position of the cursor
+ * 
+ * @returns An array of pressable IDs for the pressed objects
+ * 
+ * @warning The first element is the size of the array and should be accounted for
+ */
+unsigned int* getPressedBlocksArea(PressableDetails prds, TransformationDetails trds, vec2 curpos, float range);
 
 /**
  * Gets the action of the pressed block

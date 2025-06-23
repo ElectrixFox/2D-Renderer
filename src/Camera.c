@@ -49,3 +49,13 @@ for (int i = 0; i < size; i++)
     SetUniformM4(progs[i], "view", view);
     }
 }
+
+void _ApplyStaticCamera(Camera cam, unsigned int* progs, unsigned int size)
+{
+m4 view = getCameraMatrix(cam);
+
+for (int i = 0; i < size; i++)
+    {
+    SetUniformM4(progs[i], "view", view);
+    }
+}
