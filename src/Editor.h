@@ -86,6 +86,4 @@ void ApplyCamera(Camera cam, RenderDetails rds);
  */
 void ApplyProjection(Camera cam, RenderDetails rds);
 
-void SetSprite(RenderDetails* rd, unsigned int rid);
-
 #pragma endregion
