@@ -18,6 +18,7 @@ cmods = mods;
 void InitialiseInput(GLFWwindow *window)
 {
 glfwSetKeyCallback(window, key_callback);   // setting up the callback
+wind = window;
 }
 
 InputPacket getCurrentInputInformation()
