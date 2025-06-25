@@ -33,8 +33,6 @@ void ReadLevel(const char* levelfp, int* w, int* h, int*** grid);
  */
 void WriteLevel(const char* levelfp, const int w, const int h, const int grid[h][w]);
 
-void RenderLevel();
-
 /**
  * Gets the information of where the blocks are
  * 

@@ -69,7 +69,22 @@ for (int i = 1; i <= gridh; i++)
 
 void WriteLevel(const char* levelfp, const int w, const int h, const int grid[h][w])
 {
+char* output = (char*)malloc(w * h * sizeof(int) * sizeof(char));
+output[0] = '\0';   // setting the string as empty by setting the first character to be the end 
 
+for (int i = 0; i < h; i++)
+    {
+    for (int j = 0; j < w; j++)
+        {
+        char tmp[32];
+        sprintf(tmp, "%d ", grid[i][j]);    // convert the int to a string
+        strcat(output, tmp);    // append the string to the output
+        }
+    output[strlen(output) - 1] = '\n';  // set the last character of the line to be the new line instead of a space
+    }
+output[strlen(output) - 1] = '\0';  // set the last character of the output to be the null character (signalling the end of the string)
+
+writeFile(levelfp, output);
 }
 
 void getLevel(RenderDetails rds, TransformationDetails tds, Drawables drabs, PressableDetails pds, int* w, int* h, int*** grid)
