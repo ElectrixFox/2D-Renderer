@@ -36,7 +36,7 @@ else
 return 1;
 }
 
-void ApplyProjection(Camera cam, unsigned int* progs, unsigned int size)
+void _ApplyProjection(Camera cam, unsigned int* progs, unsigned int size)
 {
 m4 proj = getProjectionMatrix(cam);
 

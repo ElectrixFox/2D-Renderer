@@ -122,11 +122,20 @@ return indices;
 
 int* _getPressedArea(vec2* poses, int size, vec2 curpos, float range)
 {
+int* indices = (int*)malloc(2 * sizeof(int));
+int top = 1;
+
 for (int i = 0; i < size; i++)
     if(abs(poses[i].x - curpos.x) < range && abs(poses[i].y - curpos.y) < range)
-        return 1; // if the current transformation has a horizontal and vertical distance is less than the range then it is in the square area
+        {
+        indices[top] = i;
+        ExpandByOne(&indices, top, sizeof(int));
+        top++;
+        }
 
-return 0;
+indices[0] = top - 1;   // setting the size of the array
+
+return indices;
 }
 
 int* getPressedArea(vec2* poses, int size, float range)

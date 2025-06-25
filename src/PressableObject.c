@@ -159,7 +159,7 @@ if(PointInSquare(cursorpos, poses[index], scales[index]))
 return 0;
 }
 
-static int hasPressedN(PressableDetails prds, TransformationDetails trds, vec2 curpos, unsigned int n)
+static int hasPressedN(TransformationDetails trds, vec2 curpos, unsigned int n)
 {
 int total = 0;  // total things pressed
 for (int i = 0; i < trds.size; i++)
@@ -169,11 +169,11 @@ for (int i = 0; i < trds.size; i++)
 return (total == n) ? 1 : 0;
 }
 
-int PressedNothing(PressableDetails prds, TransformationDetails trds, vec2 curpos) { return hasPressedN(prds, trds, curpos, 0); }
+int PressedNothing(TransformationDetails trds, vec2 curpos) { return hasPressedN(trds, curpos, 0); }
 
-int PressedAnother(PressableDetails prds, TransformationDetails trds, vec2 curpos) { return hasPressedN(prds, trds, curpos, 1); }
+int PressedAnother(TransformationDetails trds, vec2 curpos) { return hasPressedN(trds, curpos, 1); }
 
-int PressedArea(PressableDetails prds, TransformationDetails trds, vec2 curpos, float range)
+int PressedArea(TransformationDetails trds, vec2 curpos, float range)
 {
 for (int i = 0; i < trds.size; i++)
     if(abs(trds.pos[i].x - curpos.x) < range && abs(trds.pos[i].y - curpos.y) < range)
@@ -192,11 +192,11 @@ for (int i = 0; i < trds.size; i++)
 return 0;
 }
 
-unsigned int getPressedBlock(PressableDetails prds, TransformationDetails trds, vec2 curpos)
+unsigned int getPressedBlock(TransformationDetails trds, vec2 curpos)
 {
 for (int i = 0; i < trds.size; i++)
     if(CheckPressed(trds, trds.trsid[i], curpos)) // checking if anything has been pressed
-        return prds.prid[findPressableTransfom(prds, trds.trsid[i])];
+        return trds.trsid[i];
 return 0;
 }
 
@@ -234,7 +234,7 @@ return pids;
 
 unsigned int getPressedBlockAction(PressableDetails prds, TransformationDetails trds, vec2 curpos)
 {
-return prds.pract[getPressableIDIndex(prds, getPressedBlock(prds, trds, curpos))];
+return prds.pract[getPressableIDIndex(prds, getPressedBlock(trds, curpos))];
 }
 
 void SetPressableAction(PressableDetails* prds, unsigned int prid, unsigned int pract)

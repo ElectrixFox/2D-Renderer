@@ -52,7 +52,7 @@ int MoveCamera(Camera* cam);
  * @param progs The array of shader programs
  * @param size The number of programs
  */
-void ApplyProjection(Camera cam, unsigned int* progs, unsigned int size);
+void _ApplyProjection(Camera cam, unsigned int* progs, unsigned int size);
 
 /**
  * Applies the view matrix to the program

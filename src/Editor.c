@@ -5,42 +5,39 @@ static BLOCK curblock = BLOCK_PLAYER;
 const int snap_to_grid = 1;
 const int grid_size = 50;
 
-unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, BLOCK block, vec2 position)
+static vec2 snapOperation(vec2 pos)
+{
+return (vec2){roundf(pos.x / grid_size) * grid_size, roundf(pos.y / grid_size) * grid_size};    // snap it to the nearest grid spot
+}
+
+unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BLOCK block, vec2 position)
 {
 BlockInfo bi = getBlockInfo(block);
 unsigned int sprite = bi.spr;    // To-Do: write some function to find the sprite from the enum
 unsigned int nosprites = bi.nosp; // To-Do: write some function to find the number of sprites in the sheet
 
-if(snap_to_grid == 1)   // if should snap to grid
-    position = (vec2){roundf(position.x / grid_size) * grid_size, roundf(position.y / grid_size) * grid_size};  // snap it to the nearest grid spot
+if(snap_to_grid == 1) position = snapOperation(position);
 
 unsigned int rd = CreateSpriteRenderable(rds, bi.spfp, nosprites, sprite);
 unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});
 
 AddDrawable(drabs, td, rd);
-AddPressable(prds, td, BACT_DELETE);
 AssignBlock(rd, block);
 
 return rd;
 }
 
-void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, unsigned int rid)
+void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid)
 {
 int index = findDrawablesRenderable(*drabs, rid); // finding the ID
 if(index == -1)
     return; // if the index isn't found just quit
 
-unsigned int prid = prds->prid[findPressableTransfom(*prds, drabs->trsids[index])];
-
-if(getPressableAction(*prds, prid) != BACT_DELETE)  // if the block shouldn't be deleted don't delete it
-    return; 
-
 RemoveDrawable(drabs, rds, tds, drabs->trsids[index]); // remove the drawable
-RemovePressable(prds, prid);
-UnassignBlock(prid);
+UnassignBlock(rid);
 }
 
-void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds)
+void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs)
 {
 vec2 topright = {1255.0f, 695.0f};
 const unsigned int nblocks = getBlockCount();
@@ -49,9 +46,7 @@ const float padding = 10.0f;
 for (int i = 0; i < nblocks; i++)
     {
     vec2 position = {topright.x, topright.y - (i * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
-    unsigned int rid = PlaceBlock(rds, tds, drabs, prds, (BLOCK)i, position);
-    int index = findPressableTransfom(*prds, drabs->trsids[findDrawablesRenderable(*drabs, rid)]);
-    SetPressableAction(prds, prds->prid[index], BACT_SWITCH);
+    unsigned int rid = PlaceBlock(rds, tds, drabs, (BLOCK)i, position);
     }
 }
 
@@ -59,54 +54,12 @@ BLOCK getActiveBlock() { return curblock; }
 
 void setActiveBlock(BLOCK block) { curblock = block; }
 
-void SelectBlock(PressableDetails prds, Drawables drabs, unsigned int prid)
+void SelectBlock(Drawables drabs, unsigned int trsid)
 {
-int index = getPressableIDIndex(prds, prid);
-if(prds.pract[index] != BACT_SWITCH)    // if the pressed object isn't a switchable
-    return;
-
-index = findDrawablesTransform(drabs, prds.trsid[index]);   // find the drawable from the transform
-setActiveBlock(getBlockFromRenderID(drabs.rids[index]));
+int index = findDrawablesTransform(drabs, trsid); // find the drawable from the transform
+setActiveBlock(getBlockFromRenderID(drabs.rids[index]));    // sets the active block
 }
 
-void ApplyCamera(Camera cam, PressableDetails prds, Drawables drabs, TransformationDetails trds, RenderDetails rds)
-{
-unsigned int* ttrsids = getPressablesTransformWithoutAction(prds, BACT_SWITCH);    // gets all of the transforms with the delete action
-unsigned int count = ttrsids[0];    // gets the count
-ttrsids = &ttrsids[1];  // moves the first item to be the second (shuffles the array back by one)
-unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);  // gets the transformation IDs
-unsigned int* progs = getRenderablePrograms(rds, trids, count); // gets the programs
-_ApplyCamera(cam, progs, count);    // setting the camera matrix
-ApplyProjection(cam, rds.shader, rds.size);
-}
+void ApplyCamera(Camera cam, RenderDetails rds) { _ApplyCamera(cam, rds.shader, rds.size); }
 
-void ApplyStaticCamera(Camera cam, PressableDetails prds, Drawables drabs, TransformationDetails trds, RenderDetails rds)
-{
-unsigned int* sttrsids = getPressablesTransformWithAction(prds, BACT_SWITCH);    // gets all of the transforms with the delete action
-unsigned int count = sttrsids[0];    // gets the count
-sttrsids = &sttrsids[1];  // moves the first item to be the second (shuffles the array back by one)
-for (int i = 0; i < count; i++)
-    {
-    
-    applyTranslation(trds, sttrsids[i], ScalarMultVec2(cam.poscomponent, -1));
-    }
-}
-
-/*
-void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, int w, int h, const int** grid)
-{
-for (int y = 0; y < h; y++)
-    {
-    vec2 pos = {0.0f, y * grid_size};
-    for (int x = 0; x < w; x++)
-        {
-        pos.x = x * grid_size;
-
-        int btype = grid[y][x];
-
-        if(btype != 0)
-            PlaceBlock(rds, tds, drabs, prds, (BLOCK)(btype - 1), pos);
-        }
-    }
-}
-*/
+void ApplyProjection(Camera cam, RenderDetails rds) { _ApplyProjection(cam, rds.shader, rds.size); }

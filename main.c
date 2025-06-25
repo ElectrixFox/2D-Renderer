@@ -7,7 +7,6 @@
 #include <include/GLFW/glfw3.h>
 #include <GL/glu.h>
 
-#include "src/PressableObject.h"
 #include "src/Transformation.h"
 #include "src/RenderObject.h"
 #include "src/Entity.h"
@@ -130,23 +129,18 @@ RenderDetails ui_rds = InitialiseRenderDetails();
 TransformationDetails block_tds = InitialiseTransformationDetails();
 TransformationDetails ui_tds = InitialiseTransformationDetails();
 
-// Entities ents = InitialiseEntities(); // initialising the entities list and allocating memory
-
-PressableDetails block_prds = InitialisePressableDetails();
-PressableDetails ui_prds = InitialisePressableDetails();
-
 Drawables block_drabs = InitialiseDrawables();
 Drawables ui_drabs = InitialiseDrawables();
 
 InitialiseBlockDetails();
 
-BuildSelectBar(&ui_rds, &ui_tds, &ui_drabs, &ui_prds); // build the item select bar
+BuildSelectBar(&ui_rds, &ui_tds, &ui_drabs); // build the item select bar
 
 int** grid;
 int w, h;
 ReadLevel("res/levels/level1.txt", &w, &h, &grid);
 OutputLevel(grid, w, h);
-DrawLevel(&block_rds, &block_tds, &block_drabs, &block_prds, w, h, grid);
+DrawLevel(&block_rds, &block_tds, &block_drabs, w, h, grid);
 
 while(!glfwWindowShouldClose(window))
     {
@@ -156,13 +150,11 @@ while(!glfwWindowShouldClose(window))
 
     if(isPressedSingle(GLFW_KEY_TAB))
         {
-        // OutputEntitiesDetails(tds, rds, ents);
         OutputTransformations(block_tds);
         OutputDrawables(block_drabs);
-        OutputPressables(block_prds);
         int** grid;
         int w = 0, h = 0;
-        getLevel(block_rds, block_tds, block_drabs, block_prds, &w, &h, &grid);
+        getLevel(block_rds, block_tds, block_drabs, &w, &h, &grid);
         OutputLevel(grid, w, h);
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
@@ -172,49 +164,33 @@ while(!glfwWindowShouldClose(window))
         vec2 cpos = GetCursorPositionRelative(cam);
         vec2 ncpos = getCursorPosition();
 
-        if(!PressedArea(block_prds, block_tds, cpos, 50.0f) && !PressedArea(ui_prds, ui_tds, ncpos, 50.0f))
+        if(!PressedArea(block_tds, cpos, 50.0f) && !PressedArea(ui_tds, ncpos, 50.0f))
             {
-            PlaceBlock(&block_rds, &block_tds, &block_drabs, &block_prds, getActiveBlock(), cpos);
+            PlaceBlock(&block_rds, &block_tds, &block_drabs, getActiveBlock(), cpos);
             glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
             }
-        else if(PressedAnother(ui_prds, ui_tds, ncpos))
+        else if(PressedAnother(ui_tds, ncpos))
             {
-            unsigned int tpid = getPressedBlock(ui_prds, ui_tds, ncpos);   // getting the temporary ID
-
-            if(getPressableAction(ui_prds, tpid) == BACT_SWITCH)  // if should switch to the block then switch
-                SelectBlock(ui_prds, ui_drabs, tpid);
+            unsigned int tpid = getPressedBlock(ui_tds, ncpos);   // getting the temporary ID
+            SelectBlock(ui_drabs, tpid);
             }
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
         {
-        for (int i = 0; i < block_prds.size; i++)
+        vec2 cpos = GetCursorPositionRelative(cam);
+        if(PressedAnother(block_tds, cpos))
             {
-            if(CheckPressed(block_tds, block_prds.trsid[i], GetCursorPositionRelative(cam)))
-                {
-                unsigned int trid = block_drabs.rids[findDrawablesTransform(block_drabs, block_prds.trsid[i])];
-                RemoveBlock(&block_rds, &block_tds, &block_drabs, &block_prds, trid);
-                break; // break after removing the first entity
-                }
+            unsigned int ttrsid = getPressedBlock(block_tds, cpos);
+            unsigned int trid = block_drabs.rids[findDrawablesTransform(block_drabs, ttrsid)];
+            RemoveBlock(&block_rds, &block_tds, &block_drabs, trid);
             }
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
-    /* if(isPressedSingle(GLFW_KEY_LEFT_CONTROL))
-        {
-        printf("\n\n\nTrying to find");
-        unsigned int* ttrsids = getPressablesTransformWithAction(prds, BACT_DELETE);
-        unsigned int count = ttrsids[0];
-        // ttrsids = &ttrsids[1];
-        memmove(ttrsids, &ttrsids[1], count);
-        unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);
-        unsigned int* progs = getRenderablePrograms(rds, trids, count);
-        for (int i = 0; i < count; i++)
-            printf("\n%d\t%d\t%d", ttrsids[i], trids[i], progs[i]);
-        glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
-        } */
 
     MoveCamera(&cam);
-    ApplyCamera(cam, block_prds, block_drabs, block_tds, block_rds);
-    ApplyCamera(cam, ui_prds, ui_drabs, ui_tds, ui_rds);
+    ApplyCamera(cam, block_rds);
+    ApplyProjection(cam, block_rds);
+    ApplyProjection(cam, ui_rds);
 
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
