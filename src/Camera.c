@@ -15,15 +15,9 @@ return
         0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
     };
-/*return 
-    (m4){
-         1920.0f / (float)(*cam.scrspx), 0.0f, 0.0f, 0.0f, // (float)(cam.poscomponent.x),
-         0.0f, 1080.0f / (float)(*cam.scrspy), 0.0f, 0.0f, // (float)(cam.poscomponent.y),
-         0.0f, 0.0f, 1.0f, 0.0f,
-         0.0f, 0.0f, 0.0f, 1.0f
-    };
-*/
 }
+
+m4 getProjectionMatrix(Camera cam) { return getProjection(*cam.scrspx, *cam.scrspy, 1); }
 
 int MoveCamera(Camera* cam)
 {
@@ -38,6 +32,14 @@ else if(isPressedSingle(GLFW_KEY_D)) // move right
 else
     return 0;
 return 1;
+}
+
+void ApplyProjection(Camera cam, unsigned int* progs, unsigned int size)
+{
+m4 proj = getProjectionMatrix(cam);
+
+for (int i = 0; i < size; i++)
+    SetUniformM4(progs[i], "projection", proj); // setting the projection matrix
 }
 
 void _ApplyCamera(Camera cam, unsigned int* progs, unsigned int size)

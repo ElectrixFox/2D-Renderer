@@ -80,11 +80,9 @@ end:
 drabs->size--;    // decrease the size so it is effectively not there
 }
 
-void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs, Camera cam)
+void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs)
 {
 // getting all we will need from the transformation objects first
-// m4 view = getCameraMatrix(cam);
-m4 projection = getTransformProjectionMatrix(tds);
 m4* models = (m4*)malloc(drabs.size * sizeof(m4));  // getting all of the transformation matrices
 
 for (int i = 0; i < drabs.size; i++)    // setting the model matrices
@@ -95,8 +93,6 @@ for (int i = 0; i < drabs.size; i++)    // setting all the uniforms
     {
     const unsigned int prog = rds.shader[getRenderDetailsIDIndex(rds, drabs.rids[i])];  // may as well make this a constant here for efficiency
     SetUniformM4(prog, "model", models[i]);
-    // SetUniformM4(prog, "view", view);
-    SetUniformM4(prog, "projection", projection);
     }
 
 for (int i = 0; i < drabs.size; i++)

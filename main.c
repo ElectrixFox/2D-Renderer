@@ -202,25 +202,14 @@ while(!glfwWindowShouldClose(window))
         }
 
     if(MoveCamera(&cam))
-        {
         ApplyStaticCamera(cam, prds, drabs, tds, rds);
-        }
     ApplyCamera(cam, prds, drabs, tds, rds);
-    /*
-    {
-    unsigned int* ttrsids = getPressablesTransformWithAction(prds, BACT_DELETE);
-    unsigned int count = ttrsids[0];
-    ttrsids = &ttrsids[1];
-    unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);
-    unsigned int* progs = getRenderablePrograms(rds, trids, count);
-    _ApplyCamera(cam, progs, count);
-    }
-    */
+
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
-    DrawDrawables(rds, tds, drabs, cam);
+    DrawDrawables(rds, tds, drabs);
     
     glfwSwapBuffers(window);
     glfwPollEvents();

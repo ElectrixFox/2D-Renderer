@@ -18,6 +18,15 @@ Camera CreateCamera(vec2 pos, vec2 scale, int* scrwid, int* srchig);
 m4 getCameraMatrix(Camera cam);
 
 /**
+ * Gets the projection matrix to be used
+ * 
+ * @param cam The camera
+ * 
+ * @returns A 4x4 matrix with the projection
+ */
+m4 getProjectionMatrix(Camera cam);
+
+/**
  * Moves the camera using the keys pressed
  * 
  * @param cam A pointer to the camera
@@ -25,6 +34,15 @@ m4 getCameraMatrix(Camera cam);
  * @returns 1 if the camera has been moved otherwise 0
  */
 int MoveCamera(Camera* cam);
+
+/**
+ * Sets all of the projection uniforms
+ * 
+ * @param cam The camera
+ * @param progs The array of shader programs
+ * @param size The number of programs
+ */
+void ApplyProjection(Camera cam, unsigned int* progs, unsigned int size);
 
 /**
  * Applies the view matrix to the program

@@ -1,6 +1,5 @@
 #pragma once
 #include "Entity.h"
-#include "Camera.h"
 
 struct Drawables {
     unsigned int* trsids;
@@ -48,7 +47,7 @@ void RemoveDrawable(Drawables* drabs, RenderDetails* rds, TransformationDetails*
 
 void UpdateImmovables(TransformationDetails* tds, Drawables* drabs);
 
-void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs, Camera cam);
+void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs);
 
 /**
  * Outputs the drawables table

@@ -77,6 +77,7 @@ ttrsids = &ttrsids[1];  // moves the first item to be the second (shuffles the a
 unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);  // gets the transformation IDs
 unsigned int* progs = getRenderablePrograms(rds, trids, count); // gets the programs
 _ApplyCamera(cam, progs, count);    // setting the camera matrix
+ApplyProjection(cam, rds.shader, rds.size);
 }
 
 void ApplyStaticCamera(Camera cam, PressableDetails prds, Drawables drabs, TransformationDetails trds, RenderDetails rds)

@@ -119,15 +119,6 @@ m4 getTransformModelMatrix(TransformationDetails tds, unsigned int tid);
 void getTransformModelMatrices(TransformationDetails tds, m4* models);
 
 /**
- * Gets the projection matrix to be used
- * 
- * @param tds The transformation details
- * 
- * @returns A 4x4 matrix with the projection
- */
-m4 getTransformProjectionMatrix(TransformationDetails tds);
-
-/**
  * Checks if a transformation object has been pressed
  * 
  * @param tds The details about the transform
