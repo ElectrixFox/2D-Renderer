@@ -23,6 +23,16 @@ void OutputLevel(const int** grid, int w, int h);
  */
 void ReadLevel(const char* levelfp, int* w, int* h, int*** grid);
 
+/**
+ * Writes the level to the given file
+ * 
+ * @param levelfp The file path to write the level to
+ * @param w The width of the level grid
+ * @param h The height of the level grid
+ * @param grid The actual grid
+ */
+void WriteLevel(const char* levelfp, const int w, const int h, const int grid[h][w]);
+
 void RenderLevel();
 
 /**
@@ -37,3 +47,16 @@ void RenderLevel();
  * @param grid A pointer to a 2D array of integers (again this will be set)
  */
 void getLevel(RenderDetails rds, TransformationDetails tds, Drawables drabs, PressableDetails pds, int* w, int* h, int*** grid);
+
+/**
+ * Draws the level to the screen
+ * 
+ * @param rds The rendering table
+ * @param tds The transform table
+ * @param drabs The drawables table
+ * @param prds The pressables table
+ * @param w The width of the grid
+ * @param h The height of the grid
+ * @param grid The actual grid (a 2D array of integers)
+ */
+void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, int w, int h, const int** grid);

@@ -133,3 +133,5 @@ int* getPressedArea(vec2* poses, int size, float range)
 {
 return _getPressedArea(poses, size, getCursorPosition(), range);
 }
+
+GLFWwindow* getWindow() { return wind; }

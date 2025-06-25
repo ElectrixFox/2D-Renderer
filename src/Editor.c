@@ -92,6 +92,7 @@ for (int i = 0; i < count; i++)
     }
 }
 
+/*
 void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, int w, int h, const int** grid)
 {
 for (int y = 0; y < h; y++)
@@ -107,6 +108,5 @@ for (int y = 0; y < h; y++)
             PlaceBlock(rds, tds, drabs, prds, (BLOCK)(btype - 1), pos);
         }
     }
-
-
 }
+*/

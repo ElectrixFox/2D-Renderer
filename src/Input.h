@@ -96,3 +96,12 @@ int* _getPressedArea(vec2* poses, int size, vec2 curpos, float range);
  * @warning The first element is the size of the array and should be accounted for
  */
 int* getPressedArea(vec2* poses, int size, float range);
+
+/**
+ * Gets the input window
+ * 
+ * @returns A pointer to the input window
+ * 
+ * @warning This should not be used unless there are extreme circumstances
+ */
+GLFWwindow* getWindow();

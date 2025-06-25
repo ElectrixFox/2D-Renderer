@@ -67,6 +67,10 @@ for (int i = 1; i <= gridh; i++)
 *grid = tgrid;
 }
 
+void WriteLevel(const char* levelfp, const int w, const int h, const int grid[h][w])
+{
+
+}
 
 void getLevel(RenderDetails rds, TransformationDetails tds, Drawables drabs, PressableDetails pds, int* w, int* h, int*** grid)
 {
@@ -137,4 +141,23 @@ for (float y = maxy; miny <= y; y -= (float)grid_size)
     }
 
 *grid = tgrid;
+}
+
+void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, int w, int h, const int** grid)
+{
+for (int y = 0; y < h; y++)
+    {
+    vec2 pos = {0.0f, y * grid_size};
+    for (int x = 0; x < w; x++)
+        {
+        pos.x = x * grid_size;
+
+        int btype = grid[y][x];
+
+        if(btype != 0)
+            PlaceBlock(rds, tds, drabs, prds, (BLOCK)(btype - 1), pos);
+        }
+    }
+
+
 }

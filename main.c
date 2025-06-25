@@ -53,6 +53,7 @@ switch (key)
     }
 }
 
+/*
 vec2 GetCursorPositionRelative(GLFWwindow* window, Camera cam)
 {
 double x, y;
@@ -63,6 +64,7 @@ vec2 point = GetMousePositionRelative((vec2){(float)x - cam.poscomponent.x, (flo
 
 return point;
 }
+*/
 
 void OutputEntitiesDetails(TransformationDetails tds, RenderDetails rds, Entities ents)
 {
@@ -167,7 +169,7 @@ while(!glfwWindowShouldClose(window))
 
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
-        vec2 cpos = GetCursorPositionRelative(window, cam);
+        vec2 cpos = GetCursorPositionRelative(cam);
         vec2 ncpos = getCursorPosition();
 
         if(!PressedArea(block_prds, block_tds, cpos, 50.0f) && !PressedArea(ui_prds, ui_tds, ncpos, 50.0f))
@@ -187,7 +189,7 @@ while(!glfwWindowShouldClose(window))
         {
         for (int i = 0; i < block_prds.size; i++)
             {
-            if(CheckPressed(block_tds, block_prds.trsid[i], GetCursorPositionRelative(window, cam)))
+            if(CheckPressed(block_tds, block_prds.trsid[i], GetCursorPositionRelative(cam)))
                 {
                 unsigned int trid = block_drabs.rids[findDrawablesTransform(block_drabs, block_prds.trsid[i])];
                 RemoveBlock(&block_rds, &block_tds, &block_drabs, &block_prds, trid);
