@@ -106,6 +106,7 @@ unsigned int width = gwid;
 unsigned int height = ghig;
 
 glfwInit();
+// glfwWindowHint(GLFW_DECORATED, GLFW_FALSE); // change to borederless
 GLFWwindow* window = glfwCreateWindow(width, height, "Title", 0, 0); // creates the window of size width x height
 glfwSetWindowAspectRatio(window, 16, 9);
 glViewport(0, 0, gwid, ghig);
@@ -121,21 +122,29 @@ glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 InitialiseInput(window);
 Camera cam = CreateCamera((vec2){0, 0}, (vec2){gwid, ghig}, &gwid, &ghig);
 
-RenderDetails rds = InitialiseRenderDetails();
-TransformationDetails tds = InitialiseTransformationDetails(gwid, ghig);
-Entities ents = InitialiseEntities(); // initialising the entities list and allocating memory
-PressableDetails prds = InitialisePressableDetails();
-Drawables drabs = InitialiseDrawables();
+RenderDetails block_rds = InitialiseRenderDetails();
+RenderDetails ui_rds = InitialiseRenderDetails();
+
+TransformationDetails block_tds = InitialiseTransformationDetails();
+TransformationDetails ui_tds = InitialiseTransformationDetails();
+
+// Entities ents = InitialiseEntities(); // initialising the entities list and allocating memory
+
+PressableDetails block_prds = InitialisePressableDetails();
+PressableDetails ui_prds = InitialisePressableDetails();
+
+Drawables block_drabs = InitialiseDrawables();
+Drawables ui_drabs = InitialiseDrawables();
+
 InitialiseBlockDetails();
 
-BuildSelectBar(&rds, &tds, &drabs, &prds, &cam); // build the item select bar
-printf("Size of entities: %d\nSize of render details: %d\nSize of transformations: %d\nSize of drabs: %d", ents.size, rds.size, tds.size, drabs.size);
+BuildSelectBar(&ui_rds, &ui_tds, &ui_drabs, &ui_prds); // build the item select bar
 
 int** grid;
 int w, h;
 ReadLevel("res/levels/level1.txt", &w, &h, &grid);
 OutputLevel(grid, w, h);
-DrawLevel(&rds, &tds, &drabs, &prds, w, h, grid);
+DrawLevel(&block_rds, &block_tds, &block_drabs, &block_prds, w, h, grid);
 
 while(!glfwWindowShouldClose(window))
     {
@@ -146,12 +155,12 @@ while(!glfwWindowShouldClose(window))
     if(isPressedSingle(GLFW_KEY_TAB))
         {
         // OutputEntitiesDetails(tds, rds, ents);
-        OutputTransformations(tds);
-        OutputDrawables(drabs);
-        OutputPressables(prds);
+        OutputTransformations(block_tds);
+        OutputDrawables(block_drabs);
+        OutputPressables(block_prds);
         int** grid;
         int w = 0, h = 0;
-        getLevel(rds, tds, drabs, prds, &w, &h, &grid);
+        getLevel(block_rds, block_tds, block_drabs, block_prds, &w, &h, &grid);
         OutputLevel(grid, w, h);
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
@@ -161,33 +170,33 @@ while(!glfwWindowShouldClose(window))
         vec2 cpos = GetCursorPositionRelative(window, cam);
         vec2 ncpos = getCursorPosition();
 
-        if(!PressedArea(prds, tds, cpos, 50.0f) && !PressedAreaAction(prds, tds, ncpos, 50.0f, BACT_SWITCH))
+        if(!PressedArea(block_prds, block_tds, cpos, 50.0f) && !PressedArea(ui_prds, ui_tds, ncpos, 50.0f))
             {
-            PlaceBlock(&rds, &tds, &drabs, &prds, getActiveBlock(), cpos);
+            PlaceBlock(&block_rds, &block_tds, &block_drabs, &block_prds, getActiveBlock(), cpos);
             glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
             }
-        else if(PressedAnother(prds, tds, cpos) || PressedAnother(prds, tds, ncpos))
+        else if(PressedAnother(ui_prds, ui_tds, ncpos))
             {
-            unsigned int tpid = getPressedBlock(prds, tds, cpos);   // getting the temporary ID
+            unsigned int tpid = getPressedBlock(ui_prds, ui_tds, ncpos);   // getting the temporary ID
 
-            if(getPressableAction(prds, tpid) == BACT_SWITCH)  // if should switch to the block then switch
-                SelectBlock(prds, drabs, tpid);
+            if(getPressableAction(ui_prds, tpid) == BACT_SWITCH)  // if should switch to the block then switch
+                SelectBlock(ui_prds, ui_drabs, tpid);
             }
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
         {
-        for (int i = 0; i < prds.size; i++)
+        for (int i = 0; i < block_prds.size; i++)
             {
-            if(CheckPressed(tds, prds.trsid[i], GetCursorPositionRelative(window, cam)))
+            if(CheckPressed(block_tds, block_prds.trsid[i], GetCursorPositionRelative(window, cam)))
                 {
-                unsigned int trid = drabs.rids[findDrawablesTransform(drabs, prds.trsid[i])];
-                RemoveBlock(&rds, &tds, &drabs, &prds, trid);
+                unsigned int trid = block_drabs.rids[findDrawablesTransform(block_drabs, block_prds.trsid[i])];
+                RemoveBlock(&block_rds, &block_tds, &block_drabs, &block_prds, trid);
                 break; // break after removing the first entity
                 }
             }
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
-    if(isPressedSingle(GLFW_KEY_LEFT_CONTROL))
+    /* if(isPressedSingle(GLFW_KEY_LEFT_CONTROL))
         {
         printf("\n\n\nTrying to find");
         unsigned int* ttrsids = getPressablesTransformWithAction(prds, BACT_DELETE);
@@ -199,17 +208,18 @@ while(!glfwWindowShouldClose(window))
         for (int i = 0; i < count; i++)
             printf("\n%d\t%d\t%d", ttrsids[i], trids[i], progs[i]);
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
-        }
+        } */
 
-    if(MoveCamera(&cam))
-        ApplyStaticCamera(cam, prds, drabs, tds, rds);
-    ApplyCamera(cam, prds, drabs, tds, rds);
+    MoveCamera(&cam);
+    ApplyCamera(cam, block_prds, block_drabs, block_tds, block_rds);
+    ApplyCamera(cam, ui_prds, ui_drabs, ui_tds, ui_rds);
 
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
-    DrawDrawables(rds, tds, drabs);
+    DrawDrawables(block_rds, block_tds, block_drabs);
+    DrawDrawables(ui_rds, ui_tds, ui_drabs);
     
     glfwSwapBuffers(window);
     glfwPollEvents();

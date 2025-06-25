@@ -1,6 +1,6 @@
 #include "Transformation.h"
 
-TransformationDetails InitialiseTransformationDetails(unsigned int width, unsigned int height)
+TransformationDetails InitialiseTransformationDetails()
 {
 TransformationDetails tds;  // creating the details
 
@@ -10,10 +10,6 @@ tds.size = 0;  // setting the size to 0
 tds.trsid = (unsigned int*)malloc(sizeof(unsigned int));
 tds.pos = (vec2*)malloc(sizeof(vec2));
 tds.scale = (vec2*)malloc(sizeof(vec2));
-
-// setting up the width height pointers
-tds.width = width;
-tds.height = height;
 
 return tds;
 }

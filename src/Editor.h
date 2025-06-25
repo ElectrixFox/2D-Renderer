@@ -45,7 +45,7 @@ void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drab
  * @param drabs A pointer to the drawable details
  * @param prds A pointer to the pressable details
  */
-void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, Camera* cam);
+void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds);
 
 /**
  * Gets the currently selected block (the block to be placed)
