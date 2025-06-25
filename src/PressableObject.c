@@ -202,6 +202,19 @@ return 0;
 
 unsigned int* getPressedBlocksArea(PressableDetails prds, TransformationDetails trds, vec2 curpos, float range)
 {
+int* indices = getPressedArea(trds.pos, trds.size, range);
+int size = indices[0];
+indices = &indices[1];  // shuffling along the array
+
+unsigned int* pids = malloc((size + 1) * sizeof(unsigned int));
+pids[0] = size;
+for (int i = 1; i < size; i++)
+    pids[i] = findPressableTransfom(prds, trds.trsid[indices[i]]);
+
+return pids;
+
+
+/*
 unsigned int* pids = malloc(2 * sizeof(unsigned int));
 int top = 1;
 
@@ -216,6 +229,7 @@ for (int i = 0; i < trds.size; i++)
 pids[0] = top - 1;
 
 return pids;
+*/
 }
 
 unsigned int getPressedBlockAction(PressableDetails prds, TransformationDetails trds, vec2 curpos)

@@ -64,17 +64,6 @@ vec2 point = GetMousePositionRelative((vec2){(float)x - cam.poscomponent.x, (flo
 return point;
 }
 
-vec2 GetCursorPosition(GLFWwindow* window)
-{
-double x, y;
-int wid, hig;
-glfwGetCursorPos(window, &x, &y);
-glfwGetWindowSize(window, &wid, &hig);
-vec2 point = GetMousePositionRelative((vec2){(float)x, (float)y}, wid, hig);
-
-return point;
-}
-
 void OutputEntitiesDetails(TransformationDetails tds, RenderDetails rds, Entities ents)
 {
 printf("\nSize: %d", ents.size);
@@ -142,13 +131,11 @@ InitialiseBlockDetails();
 BuildSelectBar(&rds, &tds, &drabs, &prds, &cam); // build the item select bar
 printf("Size of entities: %d\nSize of render details: %d\nSize of transformations: %d\nSize of drabs: %d", ents.size, rds.size, tds.size, drabs.size);
 
-/*
 int** grid;
 int w, h;
 ReadLevel("res/levels/level1.txt", &w, &h, &grid);
 OutputLevel(grid, w, h);
 DrawLevel(&rds, &tds, &drabs, &prds, w, h, grid);
-*/
 
 while(!glfwWindowShouldClose(window))
     {
@@ -172,7 +159,7 @@ while(!glfwWindowShouldClose(window))
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPositionRelative(window, cam);
-        vec2 ncpos = GetCursorPosition(window);
+        vec2 ncpos = getCursorPosition();
 
         if(!PressedArea(prds, tds, cpos, 50.0f) && !PressedAreaAction(prds, tds, ncpos, 50.0f, BACT_SWITCH))
             {

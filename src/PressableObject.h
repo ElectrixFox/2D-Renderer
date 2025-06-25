@@ -1,5 +1,6 @@
 #pragma once
 #include "Transformation.h"
+#include "Input.h"
 
 enum BACT {
     BACT_DELETE = 1,

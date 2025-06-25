@@ -63,3 +63,72 @@ if(ip.key == key)
         return 1;
 return 0;
 }
+
+vec2 _getCursorPosition(GLFWwindow* window)
+{
+double x, y;
+int wid, hig;
+glfwGetCursorPos(window, &x, &y);
+glfwGetWindowSize(window, &wid, &hig);
+vec2 point = GetMousePositionRelative((vec2){(float)x, (float)y}, wid, hig);
+
+return point;
+}
+
+vec2 getCursorPosition() { return _getCursorPosition(wind); } 
+
+int* _getPressedwScale(vec2* poses, vec2* scales, int size, vec2 cpos)
+{
+int* indices = (int*)malloc(2 * sizeof(int));
+int top = 1;
+
+for (int i = 0; i < size; i++)
+    {
+    if(PointInSquare(cpos, poses[i], scales[i]))
+        {
+        indices[top] = i;
+        ExpandByOne(&indices, top, sizeof(int));
+        top++;
+        }
+    }
+
+indices[0] = top - 1;   // setting the size of the array
+
+return indices;
+}
+
+
+int* _getPressed(vec2* poses, int size, vec2 cpos)
+{
+int* indices = (int*)malloc(2 * sizeof(int));
+int top = 1;
+
+for (int i = 0; i < size; i++)
+    {
+    if(PointInSquare(cpos, poses[i], (vec2){25.0f, 25.0f}))
+        {
+        indices[top] = i;
+        ExpandByOne(&indices, top, sizeof(int));
+        top++;
+        }
+    }
+
+indices[0] = top - 1;   // setting the size of the array
+
+return indices;
+}
+
+
+int* _getPressedArea(vec2* poses, int size, vec2 curpos, float range)
+{
+for (int i = 0; i < size; i++)
+    if(abs(poses[i].x - curpos.x) < range && abs(poses[i].y - curpos.y) < range)
+        return 1; // if the current transformation has a horizontal and vertical distance is less than the range then it is in the square area
+
+return 0;
+}
+
+int* getPressedArea(vec2* poses, int size, float range)
+{
+return _getPressedArea(poses, size, getCursorPosition(), range);
+}
