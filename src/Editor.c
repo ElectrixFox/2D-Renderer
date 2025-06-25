@@ -5,6 +5,8 @@ static BLOCK curblock = BLOCK_PLAYER;
 const int snap_to_grid = 1;
 const int grid_size = 50;
 
+#pragma region Main
+
 static vec2 snapOperation(vec2 pos)
 {
 return (vec2){roundf(pos.x / grid_size) * grid_size, roundf(pos.y / grid_size) * grid_size};    // snap it to the nearest grid spot
@@ -37,19 +39,6 @@ RemoveDrawable(drabs, rds, tds, drabs->trsids[index]); // remove the drawable
 UnassignBlock(rid);
 }
 
-void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs)
-{
-vec2 topright = {1255.0f, 695.0f};
-const unsigned int nblocks = getBlockCount();
-const float padding = 10.0f;
-
-for (int i = 0; i < nblocks; i++)
-    {
-    vec2 position = {topright.x, topright.y - (i * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
-    unsigned int rid = PlaceBlock(rds, tds, drabs, (BLOCK)i, position);
-    }
-}
-
 BLOCK getActiveBlock() { return curblock; }
 
 void setActiveBlock(BLOCK block) { curblock = block; }
@@ -63,3 +52,29 @@ setActiveBlock(getBlockFromRenderID(drabs.rids[index]));    // sets the active b
 void ApplyCamera(Camera cam, RenderDetails rds) { _ApplyCamera(cam, rds.shader, rds.size); }
 
 void ApplyProjection(Camera cam, RenderDetails rds) { _ApplyProjection(cam, rds.shader, rds.size); }
+
+#pragma endregion
+
+#pragma region EditorUI
+
+void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs)
+{
+vec2 topright = {1255.0f, 695.0f};
+const unsigned int nblocks = getBlockCount();
+const float padding = 10.0f;
+
+for (int i = 0; i < nblocks; i++)
+    {
+    vec2 position = {topright.x, topright.y - (i * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
+    unsigned int rid = PlaceBlock(rds, tds, drabs, (BLOCK)i, position);
+    }
+}
+
+void UnfoldMoreOptions(RenderDetails rds, TransformationDetails tds, Drawables drabs, unsigned int rid)
+{
+BLOCK block = getBlockFromRenderID(rid);
+
+
+}
+
+#pragma endregion

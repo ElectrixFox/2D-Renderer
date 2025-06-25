@@ -35,14 +35,6 @@ unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawable
  */
 void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
 
-/**
- * Builds the block selection bar
- * 
- * @param rds A pointer to the rendering details
- * @param tds A pointer to the transformation details
- * @param drabs A pointer to the drawable details
- */
-void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs);
 
 /**
  * Gets the currently selected block (the block to be placed)
@@ -85,5 +77,30 @@ void ApplyCamera(Camera cam, RenderDetails rds);
  * @warning Make sure the right render detail table is passed otherwise things can go very wrong very quickly
  */
 void ApplyProjection(Camera cam, RenderDetails rds);
+
+#pragma endregion
+
+#pragma region EditorUI
+/**
+ * Builds the block selection bar
+ * 
+ * @param rds A pointer to the rendering details
+ * @param tds A pointer to the transformation details
+ * @param drabs A pointer to the drawable details
+ */
+void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs);
+
+/**
+ * Unfolds the options for the sprite
+ * 
+ * @param rds The render table
+ * @param tds The transform table
+ * @param drabs The drawables
+ * 
+ * @param rid The render ID of the block to unfold sprites for
+ */
+void UnfoldMoreOptions(RenderDetails rds, TransformationDetails tds, Drawables drabs, unsigned int rid);
+
+
 
 #pragma endregion
