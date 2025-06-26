@@ -26,9 +26,6 @@ void ApplyProjection(Camera cam, RenderDetails rds) { _ApplyProjection(cam, rds.
 
 #pragma region EditorUI
 
-
-
-
 void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs)
 {
 vec2 topright = {1255.0f, 695.0f};
@@ -42,46 +39,55 @@ for (int i = 0; i < nblocks; i++)
     }
 }
 
-void FoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid)
+void FoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int* rids)
+{
+for (int i = 1; i < rids[0]; i++)
+    {
+    int index = findDrawablesRenderable(*drabs, rids[i]);
+
+    if(index == -1)
+        printf("\nNot found");
+
+    RemoveTransformation(tds, drabs->trsids[index]);
+    RemoveRenderDetail(tds, drabs->rids[index]);
+    RemoveDrawable(drabs, rds, tds, rids[i]);
+    }
+
+}
+
+static unsigned int* UnfoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid)
 {
 BLOCK block = getBlockFromRenderID(rid);
 BlockInfo bi = getBlockInfo(block);
 vec2 posi = tds->pos[getTransformationIDIndex(*tds, findDrawablesRenderable(*drabs, rid))];
 vec2 padding = {50.0f, 0.0f};
 
-for (int spr = 1; spr < bi.nosp; spr++)
-    {
-    bi.spr += 1;
-    vec2 tpos = addVec2(posi, ScalarMultVec2(padding, -spr));
-    _PlaceBlockCustom(rds, tds, drabs, bi, tpos);
-    }
-}
-
-void UnfoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid)
-{
-BLOCK block = getBlockFromRenderID(rid);
-BlockInfo bi = getBlockInfo(block);
-vec2 posi = tds->pos[getTransformationIDIndex(*tds, findDrawablesRenderable(*drabs, rid))];
-vec2 padding = {50.0f, 0.0f};
+unsigned int* rids = (unsigned int*)malloc((bi.nosp + 1) * sizeof(unsigned int));
 
 for (int spr = 1; spr < bi.nosp; spr++)
     {
     bi.spr += 1;
     vec2 tpos = addVec2(posi, ScalarMultVec2(padding, -spr));
-    _PlaceBlockCustom(rds, tds, drabs, bi, tpos);
+    unsigned int trid = _PlaceBlockCustom(rds, tds, drabs, bi, tpos);   // setting the rid array to contain the correct details
+    rids[spr] = trid;
     }
+rids[0] = bi.nosp;
+
+return rids;
 }
 
-void ToggleMoreOptions(RenderPacket* rp, unsigned int rid)
+void ToggleMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid)
 {
-static unsigned int prevrid = 0;
+static unsigned int prevrid = 100;
+static unsigned int* prids;
 
 if(prevrid == rid)
-    FoldMoreOptions(&rp->rds, &rp->tds, &rp->drabs, rid);  // fold the same one
+    FoldMoreOptions(rds, tds, drabs, prids);  // fold the same one
 else
     {
-    FoldMoreOptions(&rp->rds, &rp->tds, &rp->drabs, prevrid);  // fold the previous
-    UnfoldMoreOptions(&rp->rds, &rp->tds, &rp->drabs, rid);    // unfold the new
+    if(prevrid != 100)
+        FoldMoreOptions(rds, tds, drabs, prids);  // fold the previous
+    prids = UnfoldMoreOptions(rds, tds, drabs, rid);    // unfold the new
     }
 
 prevrid = rid;

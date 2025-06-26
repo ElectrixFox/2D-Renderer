@@ -1,56 +1,36 @@
-#include "Drawable.h"
-#include "Block.h"
 #include "BlockOperations.h"
-#include "Camera.h"
-#include "Level.h"
+#include "MathsOperations.h"
 #include "Array.h"
 
-/**
- * Builds the block selection bar
- * 
- * @param rds A pointer to the rendering details
- * @param tds A pointer to the transformation details
- * @param drabs A pointer to the drawable details
- */
-void BuildSelectMenu(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs);
+enum UI_TYPES {
+    UI_BUTTON = 1,
+    UI_DROPDOWNMENU
+    };
+typedef enum UI_TYPES UI_TYPES;
 
-#pragma region Folding Sidebar
-
-struct FoldingSidebar
+struct Buttons
     {
-    unsigned int tid;   // the personal transform for this sidebar
-    union {
-        Array rids; // the render IDs of the menu items
-        BLOCK block;
+    
     };
-    int folded; // has it been folded
-    };
-typedef struct FoldingSidebar FoldingSidebar;
 
-// RIDICULOUSLY TEMPORARY
-#define RenderContainer RenderDetails* rds, TransformationDetails* tds, Drawables* drabs
-
-FoldingSidebar CreateFoldingSidebar(RenderContainer, int position, BLOCK icon);
-
-void ToggleFoldingSidebar(RenderContainer, FoldingSidebar* fsb);
-
-#pragma endregion
-
-#pragma region Side Menu
-
-struct SideFoldingMenu
+struct DropDown_Menu
     {
-    unsigned int tid;   // the personal transform for this sidebar
-    union {
-        Array rids; // the render IDs of the menu items
+    void** items;   // the actual items
+    int itsize; // the size of one item
+    int size;   // the number of items
+
+    int dropped;    // has the menu been dropped down
+
+    unsigned int icon;
+
+    vec2 position;  // where is the menu
     };
-    int folded; // has it been folded
-    };
-typedef struct SideFoldingMenu SideFoldingMenu;
+typedef struct DropDown_Menu DropDown_Menu;
 
-// RIDICULOUSLY TEMPORARY
-#define RenderContainer RenderDetails* rds, TransformationDetails* tds, Drawables* drabs
 
-CreateSideFoldingMenu(RenderContainer, vec2 position, FoldingSidebar* sidebars);
 
-#pragma endregion
+DropDown_Menu CreateDropDownMenu(RenderPacket* rp, vec2 position, int icon, int sizeoftype);
+
+void addToMenu(RenderPacket* rp, DropDown_Menu* dmu, void* item);
+
+void toggleDropMenu(RenderPacket* rp, DropDown_Menu* dmu);

@@ -80,7 +80,8 @@ void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* d
  * 
  * @param rid The render ID of the block to unfold sprites for
  */
-void UnfoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
+// void UnfoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
+
 
 
 /**
@@ -89,7 +90,7 @@ void UnfoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables
  * @param rp The render packet with all of the details for rendering
  * @param rid The render ID of the block to unfold sprites for
  */
-void ToggleMoreOptions(RenderPacket* rp, unsigned int rid);
+void ToggleMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
 
 
 #pragma endregion

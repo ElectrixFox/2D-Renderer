@@ -114,7 +114,8 @@ while(!glfwWindowShouldClose(window))
             if(getSpriteCount(getBlockFromRenderID(trid)) > 1)
                 {
                 printf("\nUnfolding");
-                UnfoldMoreOptions(&ui_rds, &ui_tds, &ui_drabs, trid);
+                ToggleMoreOptions(&ui_rds, &ui_tds, &ui_drabs, trid);
+                // UnfoldMoreOptions(&ui_rds, &ui_tds, &ui_drabs, trid);
                 }
             else
                 SelectBlock(ui_drabs, trsid);
