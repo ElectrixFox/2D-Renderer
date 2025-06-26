@@ -1,5 +1,7 @@
+#pragma once
 #include "Drawable.h"
 #include "Block.h"
+#include "BlockOperations.h"
 #include "Camera.h"
 #include "Level.h"
 
@@ -14,6 +16,7 @@
  * 
  */
 
+#ifndef BLOCK_OPERATIONS_H
 /**
  * Creates a block at the position with default scale (25x25)
  * 
@@ -34,6 +37,14 @@ unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawable
  * @param rid The render ID of the block to remove
  */
 void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
+
+#else
+
+unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BLOCK block, vec2 position) { return _PlaceBlock(rds, tds, drabs, block, position); }
+
+void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid) { _RemoveBlock(rds, tds, drabs, rid); };
+
+#endif
 
 
 /**
@@ -99,7 +110,7 @@ void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* d
  * 
  * @param rid The render ID of the block to unfold sprites for
  */
-void UnfoldMoreOptions(RenderDetails rds, TransformationDetails tds, Drawables drabs, unsigned int rid);
+void UnfoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
 
 
 

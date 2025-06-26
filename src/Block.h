@@ -7,7 +7,7 @@ enum BLOCK {
     BLOCK_PLAYER = 0,
     BLOCK_MOVABLE_BARRIER = 1,
     BLOCK_MOVABLE_BLOCK = 2,
-    BLOCK_IMMOVABLE_BLOCK_ALONE,
+    BLOCK_IMMOVABLE_BLOCK,
     BLOCK_COUNT,
 };
 typedef enum BLOCK BLOCK;
@@ -95,5 +95,23 @@ typedef enum BLOCK_IM_STATE BLOCK_IM_STATE;
  * @returns The block information
  */
 BlockInfo getImmovableBlock(BLOCK_IM_STATE state);
+
+/**
+ * Gets the sprite count of the passed block
+ * 
+ * @param block The block to get
+ * 
+ * @returns The block info
+ */
+int getSpriteCount(BLOCK block);
+
+/**
+ * Finds the block from the path to its sprite sheet
+ * 
+ * @param fp The file path to the sprite sheet
+ * 
+ * @returns The block of the sprite
+ */
+BLOCK getBlockFromFilePath(const char* fp);
 
 #pragma endregion

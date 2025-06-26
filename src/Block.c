@@ -74,7 +74,7 @@ BlockInfo getBlockInfo(BLOCK block)
 switch (block)
     {
     case BLOCK_PLAYER:
-        return (BlockInfo){"res/sprites/player_sprite.png", 1, 1};
+        return (BlockInfo){"res/sprites/player_spritesheet.png", 2, 1};
         break;
     case BLOCK_MOVABLE_BARRIER:
         return (BlockInfo){"res/sprites/movable_barrier_tilesheet.png", 1, 1};
@@ -82,7 +82,7 @@ switch (block)
     case BLOCK_MOVABLE_BLOCK:
         return (BlockInfo){"res/sprites/movable_spritesheet.png", 2, 1};
         break;
-    case BLOCK_IMMOVABLE_BLOCK_ALONE:
+    case BLOCK_IMMOVABLE_BLOCK:
         return (BlockInfo){"res/sprites/immovable_tilesheet_short.png", 6, 1};
         break;
     default:
@@ -118,4 +118,37 @@ switch (state)
         return (BlockInfo){NULL};
         break;
     }
+}
+
+int getSpriteCount(BLOCK block)
+{
+switch (block)
+    {
+    case BLOCK_PLAYER:
+        return 2;
+        break;
+    case BLOCK_MOVABLE_BARRIER:
+        return 1;
+        break;
+    case BLOCK_MOVABLE_BLOCK:
+        return 2;
+        break;
+    case BLOCK_IMMOVABLE_BLOCK:
+        return 6;
+        break;
+    default:
+        break;
+    }
+return 0;
+}
+
+BLOCK getBlockFromFilePath(const char* fp)
+{
+for (int i = 0; i < getBlockCount(); i++)
+    {
+    if(strcmp(getBlockInfo(i).spfp, fp) == 0)   // if they are the same file path they have the same base block
+        return (BLOCK)i;
+    }
+
+return -1;
 }

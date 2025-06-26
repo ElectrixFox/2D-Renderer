@@ -109,8 +109,15 @@ while(!glfwWindowShouldClose(window))
             }
         else if(PressedAnother(ui_tds, ncpos))
             {
-            unsigned int tpid = getPressedBlock(ui_tds, ncpos);   // getting the temporary ID
-            SelectBlock(ui_drabs, tpid);
+            unsigned int trsid = getPressedBlock(ui_tds, ncpos);   // getting the temporary ID
+            unsigned int trid = ui_drabs.rids[findDrawablesTransform(ui_drabs, trsid)];
+            if(getSpriteCount(getBlockFromRenderID(trid)) > 1)
+                {
+                printf("\nUnfolding");
+                UnfoldMoreOptions(&ui_rds, &ui_tds, &ui_drabs, trid);
+                }
+            else
+                SelectBlock(ui_drabs, trsid);
             }
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)

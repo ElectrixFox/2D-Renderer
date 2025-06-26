@@ -70,11 +70,18 @@ for (int i = 0; i < nblocks; i++)
     }
 }
 
-void UnfoldMoreOptions(RenderDetails rds, TransformationDetails tds, Drawables drabs, unsigned int rid)
+void UnfoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid)
 {
 BLOCK block = getBlockFromRenderID(rid);
+int num = getSpriteCount(block);
+vec2 posi = tds->pos[getTransformationIDIndex(*tds, findDrawablesRenderable(*drabs, rid))];
+vec2 padding = {50.0f, 0.0f};
 
-
+for (int n = 0; n < num; n++)
+    {
+    vec2 tpos = addVec2(posi, ScalarMultVec2(padding, -n));
+    PlaceBlock(rds, tds, drabs, block, tpos);
+    }
 }
 
 #pragma endregion
