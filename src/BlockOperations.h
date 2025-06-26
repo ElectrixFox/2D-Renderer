@@ -27,7 +27,7 @@ unsigned int _PlaceBlockCustom(RenderDetails* rds, TransformationDetails* tds, D
  * 
  * @returns The render ID for the new block
  */
-unsigned int _PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BLOCK block, vec2 position);
+unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BLOCK block, vec2 position);
 
 /**
  * Removes a block at the position
@@ -36,6 +36,6 @@ unsigned int _PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawabl
  * @param tds The transform table
  * @param rid The render ID of the block to remove
  */
-void _RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
+void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
 
 #endif

@@ -6,8 +6,6 @@
 extern const int snap_to_grid;
 extern const int grid_size;
 
-extern unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BLOCK block, vec2 position);
-
 /**
  * Outputs the level in matrix form
  * 

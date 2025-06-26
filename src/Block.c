@@ -120,27 +120,7 @@ switch (state)
     }
 }
 
-int getSpriteCount(BLOCK block)
-{
-switch (block)
-    {
-    case BLOCK_PLAYER:
-        return 2;
-        break;
-    case BLOCK_MOVABLE_BARRIER:
-        return 1;
-        break;
-    case BLOCK_MOVABLE_BLOCK:
-        return 2;
-        break;
-    case BLOCK_IMMOVABLE_BLOCK:
-        return 6;
-        break;
-    default:
-        break;
-    }
-return 0;
-}
+int getSpriteCount(BLOCK block) { return getBlockInfo(block).nosp; }
 
 BLOCK getBlockFromFilePath(const char* fp)
 {

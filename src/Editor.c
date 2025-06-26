@@ -1,47 +1,12 @@
 #include "Editor.h"
 
 static BLOCK curblock = BLOCK_PLAYER;
+static int selspr = 1;
 
 const int snap_to_grid = 1;
 const int grid_size = 50;
 
 #pragma region Main
-
-static vec2 snapOperation(vec2 pos)
-{
-return (vec2){roundf(pos.x / grid_size) * grid_size, roundf(pos.y / grid_size) * grid_size};    // snap it to the nearest grid spot
-}
-
-#ifndef BLOCK_OPERATIONS_H
-
-unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BLOCK block, vec2 position)
-{
-BlockInfo bi = getBlockInfo(block);
-unsigned int sprite = bi.spr;    // To-Do: write some function to find the sprite from the enum
-unsigned int nosprites = bi.nosp; // To-Do: write some function to find the number of sprites in the sheet
-
-if(snap_to_grid == 1) position = snapOperation(position);
-
-unsigned int rd = CreateSpriteRenderable(rds, bi.spfp, nosprites, sprite);
-unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});
-
-AddDrawable(drabs, td, rd);
-AssignBlock(rd, block);
-
-return rd;
-}
-
-void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid)
-{
-int index = findDrawablesRenderable(*drabs, rid); // finding the ID
-if(index == -1)
-    return; // if the index isn't found just quit
-
-RemoveDrawable(drabs, rds, tds, drabs->trsids[index]); // remove the drawable
-UnassignBlock(rid);
-}
-
-#endif
 
 BLOCK getActiveBlock() { return curblock; }
 
