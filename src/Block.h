@@ -35,6 +35,20 @@ struct BlockDetails
 typedef struct BlockDetails BlockDetails;
 
 /**
+ * Sets the active sprite of the block
+ * 
+ * @param 
+ */
+void setBlockSprite(unsigned int block, unsigned int spr);
+
+unsigned int getBlockSprite(unsigned int block);
+
+void setBlockType(unsigned int block, unsigned int type);
+
+unsigned int getBlockType(unsigned int block);
+
+
+/**
  * Initialises the block details to enable assigning of blocks to drawables
  */
 void InitialiseBlockDetails();
