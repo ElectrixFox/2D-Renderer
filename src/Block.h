@@ -3,6 +3,12 @@
 
 #pragma region Block Object
 
+/**
+ * Could subdivide the block enum into:
+ * 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ * Sprite | Block
+ */
+
 enum BLOCK {
     BLOCK_PLAYER = 0,
     BLOCK_MOVABLE_BARRIER = 1,
