@@ -60,6 +60,7 @@ void ApplyProjection(Camera cam, RenderDetails rds);
 
 #pragma endregion
 
+
 #pragma region EditorUI
 /**
  * Builds the block selection bar
@@ -81,6 +82,14 @@ void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* d
  */
 void UnfoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
 
+
+/**
+ * Toggles the menu for the sprite
+ * 
+ * @param rp The render packet with all of the details for rendering
+ * @param rid The render ID of the block to unfold sprites for
+ */
+void ToggleMoreOptions(RenderPacket* rp, unsigned int rid);
 
 
 #pragma endregion

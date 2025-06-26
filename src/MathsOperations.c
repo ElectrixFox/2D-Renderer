@@ -9,12 +9,6 @@ void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned in
 
 void ExpandByOne(void **arr, const unsigned int size, unsigned int elesize) { ExpandArray(arr, size, size + 1, elesize); }
 
-void AppendToArray(void** arr, unsigned int size, void** item, unsigned int elesize)
-{
-ExpandByOne(arr, size, elesize);  // expand the array by one
-arr[size] = *item;  // set the last element to the item
-}
-
 vec2 ScalarMultVec2(vec2 v, float a) { return (vec2){a * v.x, a * v.y}; }
 
 vec2 addVec2(vec2 u, vec2 v) { return (vec2){u.x + v.x, u.y + v.y}; }

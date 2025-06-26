@@ -55,3 +55,11 @@ void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs
  * @param drabs The table of drawables
  */
 void OutputDrawables(Drawables drabs);
+
+struct RenderPacket
+    {
+    Drawables drabs;
+    RenderDetails rds;
+    TransformationDetails tds;
+    };
+typedef struct RenderPacket RenderPacket;

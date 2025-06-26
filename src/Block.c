@@ -2,6 +2,18 @@
 
 static BlockDetails blds;
 
+void setBlockSprite(unsigned int* block, unsigned int spr) { SetActiveSprite(block, spr); }
+
+unsigned int getBlockSprite(unsigned int block) { return GetActiveSprite(block); }
+
+void setBlockSpriteCount(unsigned int *block, unsigned int nospr) { SetNumberOfSprites(block, nospr); }
+
+unsigned int getBlockSpriteCount(unsigned int block) { return GetNumberOfSprites(block); }
+
+void setBlockType(unsigned int *block, unsigned int type) { SetActiveShape(block, type); }
+
+unsigned int getBlockType(unsigned int block) { return GetActiveShape(block); }
+
 void InitialiseBlockDetails()
 {
 blds.size = 0;

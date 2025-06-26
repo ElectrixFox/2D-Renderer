@@ -26,6 +26,9 @@ void ApplyProjection(Camera cam, RenderDetails rds) { _ApplyProjection(cam, rds.
 
 #pragma region EditorUI
 
+
+
+
 void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs)
 {
 vec2 topright = {1255.0f, 695.0f};
@@ -36,6 +39,21 @@ for (int i = 0; i < nblocks; i++)
     {
     vec2 position = {topright.x, topright.y - (i * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
     unsigned int rid = PlaceBlock(rds, tds, drabs, (BLOCK)i, position);
+    }
+}
+
+void FoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid)
+{
+BLOCK block = getBlockFromRenderID(rid);
+BlockInfo bi = getBlockInfo(block);
+vec2 posi = tds->pos[getTransformationIDIndex(*tds, findDrawablesRenderable(*drabs, rid))];
+vec2 padding = {50.0f, 0.0f};
+
+for (int spr = 1; spr < bi.nosp; spr++)
+    {
+    bi.spr += 1;
+    vec2 tpos = addVec2(posi, ScalarMultVec2(padding, -spr));
+    _PlaceBlockCustom(rds, tds, drabs, bi, tpos);
     }
 }
 
@@ -52,6 +70,21 @@ for (int spr = 1; spr < bi.nosp; spr++)
     vec2 tpos = addVec2(posi, ScalarMultVec2(padding, -spr));
     _PlaceBlockCustom(rds, tds, drabs, bi, tpos);
     }
+}
+
+void ToggleMoreOptions(RenderPacket* rp, unsigned int rid)
+{
+static unsigned int prevrid = 0;
+
+if(prevrid == rid)
+    FoldMoreOptions(&rp->rds, &rp->tds, &rp->drabs, rid);  // fold the same one
+else
+    {
+    FoldMoreOptions(&rp->rds, &rp->tds, &rp->drabs, prevrid);  // fold the previous
+    UnfoldMoreOptions(&rp->rds, &rp->tds, &rp->drabs, rid);    // unfold the new
+    }
+
+prevrid = rid;
 }
 
 #pragma endregion

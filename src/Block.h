@@ -1,5 +1,6 @@
 #pragma once
 #include "MathsOperations.h"
+#include "SpriteShapes.h"
 
 #pragma region Block Object
 
@@ -37,13 +38,18 @@ typedef struct BlockDetails BlockDetails;
 /**
  * Sets the active sprite of the block
  * 
- * @param 
+ * @param block A pointer to the block variable
+ * @param spr The sprite to set the block
  */
-void setBlockSprite(unsigned int block, unsigned int spr);
+void setBlockSprite(unsigned int* block, unsigned int spr);
 
 unsigned int getBlockSprite(unsigned int block);
 
-void setBlockType(unsigned int block, unsigned int type);
+void setBlockSpriteCount(unsigned int* block, unsigned int nospr);
+
+unsigned int getBlockSpriteCount(unsigned int block);
+
+void setBlockType(unsigned int* block, unsigned int type);
 
 unsigned int getBlockType(unsigned int block);
 
