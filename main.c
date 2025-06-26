@@ -119,6 +119,7 @@ while(!glfwWindowShouldClose(window))
             else
                 SelectBlock(ui_drabs, trsid);
             }
+        glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
         {

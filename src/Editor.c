@@ -12,6 +12,8 @@ static vec2 snapOperation(vec2 pos)
 return (vec2){roundf(pos.x / grid_size) * grid_size, roundf(pos.y / grid_size) * grid_size};    // snap it to the nearest grid spot
 }
 
+#ifndef BLOCK_OPERATIONS_H
+
 unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BLOCK block, vec2 position)
 {
 BlockInfo bi = getBlockInfo(block);
@@ -38,6 +40,8 @@ if(index == -1)
 RemoveDrawable(drabs, rds, tds, drabs->trsids[index]); // remove the drawable
 UnassignBlock(rid);
 }
+
+#endif
 
 BLOCK getActiveBlock() { return curblock; }
 
@@ -73,14 +77,15 @@ for (int i = 0; i < nblocks; i++)
 void UnfoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid)
 {
 BLOCK block = getBlockFromRenderID(rid);
-int num = getSpriteCount(block);
+BlockInfo bi = getBlockInfo(block);
 vec2 posi = tds->pos[getTransformationIDIndex(*tds, findDrawablesRenderable(*drabs, rid))];
 vec2 padding = {50.0f, 0.0f};
 
-for (int n = 0; n < num; n++)
+for (int spr = 1; spr < bi.nosp; spr++)
     {
-    vec2 tpos = addVec2(posi, ScalarMultVec2(padding, -n));
-    PlaceBlock(rds, tds, drabs, block, tpos);
+    bi.spr += 1;
+    vec2 tpos = addVec2(posi, ScalarMultVec2(padding, -spr));
+    _PlaceBlockCustom(rds, tds, drabs, bi, tpos);
     }
 }
 

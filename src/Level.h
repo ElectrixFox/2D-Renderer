@@ -1,6 +1,7 @@
 #pragma once
 #include "Drawable.h"
 #include "Block.h"
+#include "BlockOperations.h"
 
 extern const int snap_to_grid;
 extern const int grid_size;
