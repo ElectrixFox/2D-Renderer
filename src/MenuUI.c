@@ -1,5 +1,15 @@
 #include "MenuUI.h"
 
+void ExpandElements(UIElement* eletab)
+{
+}
+
+void CreateButton(UIElement* eletab, RenderPacket* rp, vec2 position, int scale)
+{
+
+}
+
+/*
 DropDown_Menu CreateDropDownMenu(RenderPacket* rp, vec2 position, int icon, int sizeoftype)
 {
 DropDown_Menu dmu;
@@ -40,3 +50,4 @@ if(dmu->dropped == 0)
 else
     foldMenu(dmu);
 }
+*/
