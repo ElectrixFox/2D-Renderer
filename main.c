@@ -43,7 +43,7 @@ printf("\n%dx%d", gwid, ghig);
 
 void output(int l)
 {
-printf("\nI have been pressed");
+printf("\nI have been pressed %d", l);
 }
 
 int main()
@@ -84,7 +84,9 @@ BuildSelectBar(&ui_rds, &ui_tds, &ui_drabs); // build the item select bar
 RenderPacket gui_rp = InitialiseGUI();
 assignGuiRenderPacket(&gui_rp);
 GUI_Button button = CreateButton(&gui_rp, (vec2){500.0f, 500.0f}, (GUI_ACTION_TRIGGER)0, &output);
+GUI_Button bu2 = CreateButton(&gui_rp, (vec2){500.0f, 400.0f}, (GUI_ACTION_TRIGGER)0, &output);
 addGUIButton(button);
+addGUIButton(bu2);
 
 
 

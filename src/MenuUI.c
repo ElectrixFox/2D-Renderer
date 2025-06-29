@@ -1,5 +1,21 @@
 #include "MenuUI.h"
 
+//-----------------------------------------------------------------------
+//------------------------- Private Definitions -------------------------
+//-----------------------------------------------------------------------
+typedef void (*bu_act_fun)(int);
+
+typedef struct 
+    {
+    unsigned int* buid;
+    unsigned int* trsid;
+
+    bu_act_fun* on_click_funcs;  // click actions
+    bu_act_fun* on_hover_funcs;  // click actions
+
+    int size;
+    } GUI_Buttons;
+
 //-----------------------------------------------------------
 //------------------------- Globals -------------------------
 //-----------------------------------------------------------
@@ -71,8 +87,7 @@ if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         int index = getTransformationIDIndex(rp->tds, gui_buttons.trsid[i]);
         if(pressedInRectangle(rp->tds.pos[index], rp->tds.scale[index]))
             {
-            gui_buttons.on_click_funcs[i](i);
-            printf("\nPressed %d", gui_buttons.buid[i]);
+            gui_buttons.on_click_funcs[i](gui_buttons.buid[i]);
             }
         }
 }
@@ -120,8 +135,36 @@ gui_buttons.on_hover_funcs[n] = button.on_hover;
 gui_buttons.size++;
 }
 
-void CreateMenu(vec2 pos)
+GUI_Menu CreateMenu(RenderPacket* gui_rp, vec2 pos, GUI_ACTION_TRIGGER trigger, void (*action)(int))
 {
+static unsigned int menuid = 0;
+GUI_Menu menu;
+unsigned int dind = CreateBasicSquare(gui_rp, pos, 25.0f, NULL);
+menu.head.buid = menuid++;
+menu.head.trsid = gui_rp->drabs.trsids[dind];
+
+switch (trigger)    // assigning the action
+    {
+    case PRESS:
+        menu.head.on_click = action;
+        break;
+    case HOVER:
+        menu.head.on_hover = action;
+    default:
+        break;
+    }
+
+return menu;
+}
+
+void addMenuEntry(GUI_Menu* menu, GUI_Button entry)
+{
+
+}
+
+void addGUIMenu(GUI_Menu menu)
+{
+
 
 }
 
