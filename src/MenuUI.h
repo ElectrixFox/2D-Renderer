@@ -5,6 +5,7 @@
 #pragma once
 #include "Drawable.h"
 #include "MathsOperations.h"
+#include "Input.h"
 #include "Array.h"
 
 //--------------------------------------------------------------------
@@ -25,6 +26,9 @@ typedef struct
     void (*on_hover)(int);  // hover action
     } GUI_Button;
 
+
+void InitialiseCursorPosition(vec2* cpos);
+
 //-----------------------------------------------------------------------
 //------------------------- Rendering Functions -------------------------
 //-----------------------------------------------------------------------
@@ -37,7 +41,9 @@ void drawGUIElements(RenderPacket gui_rp);
 //------------------------- Action Functions -------------------------
 //--------------------------------------------------------------------
 
-void hasBeenPressed();
+void hasBeenPressed(GUI_Button button);
+
+void hoveredOver(GUI_Button button);
 
 
 //----------------------------------------------------------------------------

@@ -4,7 +4,13 @@
 //------------------------- Globals -------------------------
 //-----------------------------------------------------------
 
-static vec2 curpos; // the position of the cursor
+static vec2* curpos; // the position of the cursor
+
+
+void InitialiseCursorPosition(vec2* cpos)
+{
+curpos = cpos;
+}
 
 //-----------------------------------------------------------------------
 //------------------------- Rendering Functions -------------------------
@@ -19,11 +25,21 @@ DrawDrawables(gui_rp.rds, gui_rp.tds, gui_rp.drabs);
 //------------------------- Action Functions -------------------------
 //--------------------------------------------------------------------
 
-void hasBeenPressed()
+static int pressedInRectangle(vec2 pos, vec2 scale)
+{
+
+return PointInSquare(*curpos, pos, scale);
+}
+
+void hasBeenPressed(GUI_Button button)
 {
 
 }
 
+void hoveredOver(GUI_Button button)
+{
+
+}
 
 //----------------------------------------------------------------------------
 //------------------------- Initialisation Functions -------------------------
