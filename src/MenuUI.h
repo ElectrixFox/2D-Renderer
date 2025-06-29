@@ -18,16 +18,35 @@ typedef enum
     HOVER
     } GUI_ACTION_TRIGGER;
 
+typedef void (*bu_act_fun)(int);
+
 typedef struct 
     {
+    unsigned int* buid;
+    unsigned int* trsid;
+
+    bu_act_fun* on_click_funcs;  // click actions
+    bu_act_fun* on_hover_funcs;  // click actions
+
+    int size;
+    } GUI_Buttons;
+
+typedef struct 
+    {
+    unsigned int buid;
     unsigned int trsid;
 
     void (*on_click)(int);  // click action
     void (*on_hover)(int);  // hover action
     } GUI_Button;
 
+//----------------------------------------------------------------------------
+//------------------------- Initialisation Functions -------------------------
+//----------------------------------------------------------------------------
 
-void InitialiseCursorPosition(vec2* cpos);
+void assignGuiRenderPacket(RenderPacket* gui_rp);
+
+RenderPacket InitialiseGUI();
 
 //-----------------------------------------------------------------------
 //------------------------- Rendering Functions -------------------------
@@ -41,10 +60,11 @@ void drawGUIElements(RenderPacket gui_rp);
 //------------------------- Action Functions -------------------------
 //--------------------------------------------------------------------
 
-void hasBeenPressed(GUI_Button button);
+int hasBeenPressed(GUI_Button button);
 
-void hoveredOver(GUI_Button button);
+int hoveredOver(GUI_Button button);
 
+void checkButtons();
 
 //----------------------------------------------------------------------------
 //------------------------- Initialisation Functions -------------------------
@@ -52,6 +72,8 @@ void hoveredOver(GUI_Button button);
 
 
 GUI_Button CreateButton(RenderPacket* gui_rp, vec2 pos, GUI_ACTION_TRIGGER trigger, void (*action)(int));
+
+void addGUIButton(GUI_Button button);
 
 void CreateMenu(vec2 pos);
 

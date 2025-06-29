@@ -10,7 +10,7 @@ typedef struct Drawables Drawables;
 
 Drawables InitialiseDrawables();
 
-void AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid);
+int AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid);
 
 /**
  * Finds the index of the given transform ID in the drawables table
@@ -73,5 +73,7 @@ RenderPacket InitialiseRenderPacket();
  * @param position The position to create the square at
  * @param scale The scale factor at which the square should be scaled
  * @param incol The colour to set the square (can be NULL as has a default value)
+ * 
+ * @returns The index of the renderable in the drawables
  */
-void CreateBasicSquare(RenderPacket* rp, vec2 position, float scale, vec4 incol);
+int CreateBasicSquare(RenderPacket* rp, vec2 position, float scale, vec4 incol);

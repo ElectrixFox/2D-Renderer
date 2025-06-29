@@ -11,7 +11,7 @@ drabs.rids = (unsigned int*)malloc(sizeof(unsigned int));
 return drabs;
 }
 
-void AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid)
+int AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid)
 {
 const unsigned int n = drabs->size;
 
@@ -24,6 +24,8 @@ drabs->rids[n] = rid;
 drabs->trsids[n] = trid;
 
 drabs->size++;    // increase the number of drawables
+
+return n;
 }
 
 int findDrawablesTransform(Drawables drabs, unsigned int trid)
@@ -121,7 +123,7 @@ rp.drabs = InitialiseDrawables();
 return rp;
 }
 
-void CreateBasicSquare(RenderPacket* rp, vec2 position, float scale, vec4 incol)
+int CreateBasicSquare(RenderPacket* rp, vec2 position, float scale, vec4 incol)
 {
 vec2 scle = (vec2){scale, scale};
 
@@ -134,5 +136,7 @@ unsigned int rid = CreatePlainSquareRenderable(&rp->rds);   // creates the rende
 unsigned int prog = rp->rds.shader[getRenderDetailsIDIndex(rp->rds, rid)];  // finds the program
 
 SetUniform4f(prog, "colour", incol);  // setting the colour
-AddDrawable(&rp->drabs, trsid, rid);    // adds the drawable
+int index = AddDrawable(&rp->drabs, trsid, rid);    // adds the drawable
+
+return index;
 }

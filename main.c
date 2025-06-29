@@ -81,8 +81,12 @@ InitialiseBlockDetails();
 
 BuildSelectBar(&ui_rds, &ui_tds, &ui_drabs); // build the item select bar
 
-RenderPacket gui_rp = InitialiseRenderPacket();
-CreateButton(&gui_rp, (vec2){500.0f, 500.0f}, (GUI_ACTION_TRIGGER)0, output);
+RenderPacket gui_rp = InitialiseGUI();
+assignGuiRenderPacket(&gui_rp);
+GUI_Button button = CreateButton(&gui_rp, (vec2){500.0f, 500.0f}, (GUI_ACTION_TRIGGER)0, &output);
+addGUIButton(button);
+
+
 
 int** grid;
 int w, h;
@@ -149,6 +153,9 @@ while(!glfwWindowShouldClose(window))
     ApplyProjection(cam, block_rds);
     ApplyProjection(cam, ui_rds);
     ApplyProjection(cam, gui_rp.rds);
+
+
+    checkButtons();
 
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
