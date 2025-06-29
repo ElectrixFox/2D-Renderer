@@ -4,7 +4,7 @@ int getOccurences(const char* string, const char* substr)
 {
 int count = 0;
 const char* tmp = string;
-while(tmp = strstr(tmp, substr))
+while((tmp = strstr(tmp, substr)))
     {
     count++;
     tmp++;

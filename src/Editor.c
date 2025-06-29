@@ -1,7 +1,6 @@
 #include "Editor.h"
 
 static BLOCK curblock = BLOCK_PLAYER;
-static int selspr = 1;
 
 const int snap_to_grid = 1;
 const int grid_size = 50;
@@ -35,7 +34,7 @@ const float padding = 10.0f;
 for (int i = 0; i < nblocks; i++)
     {
     vec2 position = {topright.x, topright.y - (i * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
-    unsigned int rid = PlaceBlock(rds, tds, drabs, (BLOCK)i, position);
+    PlaceBlock(rds, tds, drabs, (BLOCK)i, position);
     }
 }
 

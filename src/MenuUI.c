@@ -16,11 +16,19 @@ typedef struct
     int size;
     } GUI_Buttons;
 
+typedef struct
+    {
+    unsigned int* headids;
+    unsigned int* buids;
+    unsigned int* sizes;
+
+    unsigned int size;
+    } GUI_Menus;
+
 //-----------------------------------------------------------
 //------------------------- Globals -------------------------
 //-----------------------------------------------------------
 
-static unsigned int pressed;
 RenderPacket* rp;
 
 GUI_Buttons gui_buttons;
@@ -96,11 +104,11 @@ if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 //------------------------- Initialisation Functions -------------------------
 //----------------------------------------------------------------------------
 
-GUI_Button CreateButton(RenderPacket* gui_rp, vec2 pos, GUI_ACTION_TRIGGER trigger, void (*action)(int))
+GUI_Button CreateButton(RenderPacket* gui_rp, vec2 pos, GUI_ACTION_TRIGGER trigger, void (*action)(int), vec4 col)
 {
 static unsigned int buid = 0;
 GUI_Button button;
-unsigned int dind = CreateBasicSquare(gui_rp, pos, 25.0f, NULL);
+unsigned int dind = CreateBasicSquare(gui_rp, pos, 25.0f, col);
 button.buid = buid++;
 button.trsid = gui_rp->drabs.trsids[dind];
 
@@ -137,34 +145,33 @@ gui_buttons.size++;
 
 GUI_Menu CreateMenu(RenderPacket* gui_rp, vec2 pos, GUI_ACTION_TRIGGER trigger, void (*action)(int))
 {
-static unsigned int menuid = 0;
 GUI_Menu menu;
-unsigned int dind = CreateBasicSquare(gui_rp, pos, 25.0f, NULL);
-menu.head.buid = menuid++;
-menu.head.trsid = gui_rp->drabs.trsids[dind];
+menu.head = CreateButton(gui_rp, pos, trigger, action, (vec4){1.0f, 0.62f, 0.0f, 1.0f});
+addGUIButton(menu.head);
 
-switch (trigger)    // assigning the action
-    {
-    case PRESS:
-        menu.head.on_click = action;
-        break;
-    case HOVER:
-        menu.head.on_hover = action;
-    default:
-        break;
-    }
+menu.contents = (GUI_Button*)malloc(sizeof(GUI_Button));
+menu.size = 0;
 
 return menu;
 }
 
 void addMenuEntry(GUI_Menu* menu, GUI_Button entry)
 {
+const int stack_menu = 1;  // align the buttons
 
+ExpandByOne(menu->contents, menu->size, sizeof(GUI_Button));
+menu->contents[menu->size++] = entry;
+
+if(stack_menu)
+    {
+    vec2 headPos = getPosition(rp->tds, menu->head.trsid);
+    vec2 elepos = {headPos.x, headPos.y - (menu->size + 1) * 25.0f};
+    setPosition(rp->tds, entry.trsid, elepos);
+    }
 }
 
 void addGUIMenu(GUI_Menu menu)
 {
-
 
 }
 

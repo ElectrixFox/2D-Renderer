@@ -70,7 +70,7 @@ void checkButtons();
 //----------------------------------------------------------------------------
 
 
-GUI_Button CreateButton(RenderPacket* gui_rp, vec2 pos, GUI_ACTION_TRIGGER trigger, void (*action)(int));
+GUI_Button CreateButton(RenderPacket* gui_rp, vec2 pos, GUI_ACTION_TRIGGER trigger, void (*action)(int), vec4 col);
 
 void addGUIButton(GUI_Button button);
 

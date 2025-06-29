@@ -46,6 +46,11 @@ void output(int l)
 printf("\nI have been pressed %d", l);
 }
 
+void menoutput(int l)
+{
+printf("\nI the menu have been pressed %d", l);
+}
+
 int main()
 {
 unsigned int width = gwid;
@@ -83,12 +88,16 @@ BuildSelectBar(&ui_rds, &ui_tds, &ui_drabs); // build the item select bar
 
 RenderPacket gui_rp = InitialiseGUI();
 assignGuiRenderPacket(&gui_rp);
-GUI_Button button = CreateButton(&gui_rp, (vec2){500.0f, 500.0f}, (GUI_ACTION_TRIGGER)0, &output);
-GUI_Button bu2 = CreateButton(&gui_rp, (vec2){500.0f, 400.0f}, (GUI_ACTION_TRIGGER)0, &output);
+/*
+GUI_Button button = CreateButton(&gui_rp, (vec2){500.0f, 500.0f}, (GUI_ACTION_TRIGGER)0, &output, NULL);
+GUI_Button bu2 = CreateButton(&gui_rp, (vec2){600.0f, 600.0f}, (GUI_ACTION_TRIGGER)0, &output, NULL);
 addGUIButton(button);
 addGUIButton(bu2);
+*/
 
-
+GUI_Menu men = CreateMenu(&gui_rp, (vec2){600.0f, 600.0f}, (GUI_ACTION_TRIGGER)0, &menoutput);
+GUI_Button mbu1 = CreateButton(&gui_rp, (vec2){300.0f, 400.0f}, (GUI_ACTION_TRIGGER)0, &output, NULL);
+addMenuEntry(&men, mbu1);
 
 int** grid;
 int w, h;
