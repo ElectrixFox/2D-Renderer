@@ -1,90 +1,52 @@
-#include "BlockOperations.h"
+// #include "BlockOperations.h"
+#ifndef GUI_SYSTEM
+#define GUI_SYSTEM
+
+#pragma once
+#include "Drawable.h"
 #include "MathsOperations.h"
 #include "Array.h"
 
-struct UI_Button {
-    int ui_buid;
-    int pressed;
-};
+//--------------------------------------------------------------------
+//------------------------- Enum Definitions -------------------------
+//--------------------------------------------------------------------
 
-struct UI_Menu {
-    int ui_muid;
-    int size;
-};
-
-enum UIElement_Type
+typedef enum
     {
-    BUTTON = 1,
-    STATIC_MENU
-    // this is the type of element
-    };
+    PRESS,
+    HOVER
+    } GUI_ACTION_TRIGGER;
 
-union UIElement_Details
+typedef struct 
     {
-    // here is where all of the details will be
-    struct {
-        int pressed;
-    }
-    Button;
+    unsigned int trsid;
 
-    struct {
-        void** items;   // the UI element items
-        int size;   // the number of items
-        enum UIElement_Type type;   // the type of the items
-    } Menu;
+    void (*on_click)(int);  // click action
+    void (*on_hover)(int);  // hover action
+    } GUI_Button;
 
-    // this should be full of structs for each type of element
-    };
+//-----------------------------------------------------------------------
+//------------------------- Rendering Functions -------------------------
+//-----------------------------------------------------------------------
 
-struct UIElement
-    {
-    Array uiids;    // the IDs for the UI elements
-    Array trsids;   // the transform ID for this
-    
-    union UIElement_Details* uidets; // the details for the element
-    enum UIElement_Type* eletypes;   // the type of the element
-    int size;
-    };
-typedef struct UIElement UIElement;
+void drawRectangle();
 
-void CreateButton(UIElement* eletab, RenderPacket* rp, vec2 position, int scale);
+void drawGUIElements(RenderPacket gui_rp);
 
-struct UIContainer
-    {
-    
-    };
+//--------------------------------------------------------------------
+//------------------------- Action Functions -------------------------
+//--------------------------------------------------------------------
+
+void hasBeenPressed();
 
 
-
-enum UI_TYPES {
-    UI_BUTTON = 1,
-    UI_DROPDOWNMENU
-    };
-typedef enum UI_TYPES UI_TYPES;
-
-struct Buttons
-    {
-    
-    };
-
-struct DropDown_Menu
-    {
-    void** items;   // the actual items
-    int itsize; // the size of one item
-    int size;   // the number of items
-
-    int dropped;    // has the menu been dropped down
-
-    unsigned int icon;
-
-    vec2 position;  // where is the menu
-    };
-typedef struct DropDown_Menu DropDown_Menu;
+//----------------------------------------------------------------------------
+//------------------------- Initialisation Functions -------------------------
+//----------------------------------------------------------------------------
 
 
+GUI_Button CreateButton(RenderPacket* gui_rp, vec2 pos, GUI_ACTION_TRIGGER trigger, void (*action)(int));
 
-DropDown_Menu CreateDropDownMenu(RenderPacket* rp, vec2 position, int icon, int sizeoftype);
+void CreateMenu(vec2 pos);
 
-void addToMenu(RenderPacket* rp, DropDown_Menu* dmu, void* item);
-
-void toggleDropMenu(RenderPacket* rp, DropDown_Menu* dmu);
+#endif

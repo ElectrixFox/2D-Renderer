@@ -15,6 +15,8 @@
 #include "src/Drawable.h"
 #include "src/Editor.h"
 
+#include "src/MenuUI.h"
+
 void processInput(GLFWwindow* window)
 {
 if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  // if the escape key is pressed close the window
@@ -37,6 +39,11 @@ void on_window_resize(GLFWwindow* window, int width, int height)
 gwid = width;
 ghig = height;
 printf("\n%dx%d", gwid, ghig);
+}
+
+void output(int l)
+{
+printf("\nI have been pressed");
 }
 
 int main()
@@ -73,6 +80,9 @@ Drawables ui_drabs = InitialiseDrawables();
 InitialiseBlockDetails();
 
 BuildSelectBar(&ui_rds, &ui_tds, &ui_drabs); // build the item select bar
+
+RenderPacket gui_rp = InitialiseRenderPacket();
+CreateButton(&gui_rp, (vec2){500.0f, 500.0f}, (GUI_ACTION_TRIGGER)0, output);
 
 int** grid;
 int w, h;
@@ -138,6 +148,7 @@ while(!glfwWindowShouldClose(window))
     ApplyCamera(cam, block_rds);
     ApplyProjection(cam, block_rds);
     ApplyProjection(cam, ui_rds);
+    ApplyProjection(cam, gui_rp.rds);
 
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
@@ -145,6 +156,7 @@ while(!glfwWindowShouldClose(window))
 
     DrawDrawables(block_rds, block_tds, block_drabs);
     DrawDrawables(ui_rds, ui_tds, ui_drabs);
+    drawGUIElements(gui_rp);
     
     glfwSwapBuffers(window);
     glfwPollEvents();

@@ -1,13 +1,58 @@
 #include "MenuUI.h"
 
-void ExpandElements(UIElement* eletab)
+//-----------------------------------------------------------
+//------------------------- Globals -------------------------
+//-----------------------------------------------------------
+
+static vec2 curpos; // the position of the cursor
+
+//-----------------------------------------------------------------------
+//------------------------- Rendering Functions -------------------------
+//-----------------------------------------------------------------------
+
+void drawGUIElements(RenderPacket gui_rp)
 {
+DrawDrawables(gui_rp.rds, gui_rp.tds, gui_rp.drabs);
 }
 
-void CreateButton(UIElement* eletab, RenderPacket* rp, vec2 position, int scale)
+//--------------------------------------------------------------------
+//------------------------- Action Functions -------------------------
+//--------------------------------------------------------------------
+
+void hasBeenPressed()
 {
 
 }
+
+
+//----------------------------------------------------------------------------
+//------------------------- Initialisation Functions -------------------------
+//----------------------------------------------------------------------------
+
+GUI_Button CreateButton(RenderPacket* gui_rp, vec2 pos, GUI_ACTION_TRIGGER trigger, void (*action)(int))
+{
+GUI_Button button;
+CreateBasicSquare(gui_rp, pos, 25.0f, NULL);
+
+switch (trigger)    // assigning the action
+    {
+    case PRESS:
+        button.on_click = &action;
+        break;
+    case HOVER:
+        button.on_hover = &action;
+    default:
+        break;
+    }
+
+return button;
+}
+
+void CreateMenu(vec2 pos)
+{
+
+}
+
 
 /*
 DropDown_Menu CreateDropDownMenu(RenderPacket* rp, vec2 position, int icon, int sizeoftype)

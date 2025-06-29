@@ -63,3 +63,15 @@ struct RenderPacket
     TransformationDetails tds;
     };
 typedef struct RenderPacket RenderPacket;
+
+RenderPacket InitialiseRenderPacket();
+
+/**
+ * Creates a basic square at the given position with the given colour and scale
+ * 
+ * @param rp A pointer to the render packet
+ * @param position The position to create the square at
+ * @param scale The scale factor at which the square should be scaled
+ * @param incol The colour to set the square (can be NULL as has a default value)
+ */
+void CreateBasicSquare(RenderPacket* rp, vec2 position, float scale, vec4 incol);
