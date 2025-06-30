@@ -38,6 +38,14 @@ static int findUITriggerActionIDinTable(UI_Trigger_Action_Table ta, unsigned int
 static void addUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id, ui_act_fun action);
 
 /**
+ * Removes a trigger action from the trigger action table
+ * 
+ * @param ta Pointer to the trigger action table
+ * @param ui_id The ID of the UI element to remove
+ */
+static void removeUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id);
+
+/**
  * Sets a trigger action in the action table
  * 
  * @param ta Pointer to the trigger action table
@@ -83,6 +91,11 @@ expandUITriggerActionTable(ta);
 int index = ta->size - 1;  // temporary and should be replaced with a more optimal function
 ta->ui_id[index] = ui_id;
 ta->action[index] = action;
+}
+
+static void removeUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id)
+{
+
 }
 
 static void assignUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id, ui_act_fun action)
