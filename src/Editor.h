@@ -4,6 +4,7 @@
 #include "BlockOperations.h"
 #include "Camera.h"
 #include "Level.h"
+#include "SystemUI.h"
 
 #pragma region Main
 
@@ -62,6 +63,9 @@ void ApplyProjection(Camera cam, RenderDetails rds);
 
 
 #pragma region EditorUI
+
+void BuildNewSelectBar();
+
 /**
  * Builds the block selection bar
  * 

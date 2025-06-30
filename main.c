@@ -96,10 +96,11 @@ Drawables ui_drabs = InitialiseDrawables();
 
 InitialiseBlockDetails();
 
-BuildSelectBar(&ui_rds, &ui_tds, &ui_drabs); // build the item select bar
+// BuildSelectBar(&ui_rds, &ui_tds, &ui_drabs); // build the item select bar
+BuildNewSelectBar();
 
-unsigned int buid1 = addButton(&ui, &ui_rp, (vec2){500.0f, 500.0f}, 25.0f, NULL);
-unsigned int buid2 = addButton(&ui, &ui_rp, (vec2){500.0f, 400.0f}, 25.0f, NULL);
+unsigned int buid1 = addButton(&ui, &ui_rp, (vec2){500.0f, 500.0f}, 25.0f, (RenderInformation){NULL});
+unsigned int buid2 = addButton(&ui, &ui_rp, (vec2){500.0f, 400.0f}, 25.0f, (RenderInformation){NULL});
 assignButtonAction(&ui, buid1, (GUI_ACTION_TRIGGER)0, &output);
 assignButtonAction(&ui, buid2, (GUI_ACTION_TRIGGER)0, &output);
 
@@ -132,19 +133,19 @@ while(!glfwWindowShouldClose(window))   // main loop
         vec2 cpos = GetCursorPositionRelative(cam);
         vec2 ncpos = getCursorPosition();
 
-        if(!PressedArea(block_tds, cpos, 50.0f) && !PressedArea(ui_tds, ncpos, 50.0f))
+        if(!PressedArea(block_tds, cpos, 50.0f) && !PressedArea(ui_rp.tds, ncpos, 50.0f))
             {
             PlaceBlock(&block_rds, &block_tds, &block_drabs, getActiveBlock(), cpos);
             glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
             }
-        else if(PressedAnother(ui_tds, ncpos))
+        else if(PressedAnother(ui_rp.tds, ncpos))
             {
-            unsigned int trsid = getPressedBlock(ui_tds, ncpos);   // getting the temporary ID
-            unsigned int trid = ui_drabs.rids[findDrawablesTransform(ui_drabs, trsid)];
+            unsigned int trsid = getPressedBlock(ui_rp.tds, ncpos);   // getting the temporary ID
+            unsigned int trid = ui_rp.drabs.rids[findDrawablesTransform(ui_rp.drabs, trsid)];
             if(getSpriteCount(getBlockFromRenderID(trid)) > 1)
                 {
                 printf("\nUnfolding");
-                ToggleMoreOptions(&ui_rds, &ui_tds, &ui_drabs, trid);
+                // ToggleMoreOptions(&ui_rds, &ui_tds, &ui_drabs, trid);
                 // UnfoldMoreOptions(&ui_rds, &ui_tds, &ui_drabs, trid);
                 }
             else
@@ -167,14 +168,14 @@ while(!glfwWindowShouldClose(window))   // main loop
     MoveCamera(&cam);
     ApplyCamera(cam, block_rds);
     ApplyProjection(cam, block_rds);
-    ApplyProjection(cam, ui_rds);
+    // ApplyProjection(cam, ui_rds);
     ApplyProjection(cam, ui_rp.rds);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
     DrawDrawables(block_rds, block_tds, block_drabs);
-    DrawDrawables(ui_rds, ui_tds, ui_drabs);
+    // DrawDrawables(ui_rds, ui_tds, ui_drabs);
     DrawRenderPacket(ui_rp);
     
     glfwSwapBuffers(window);

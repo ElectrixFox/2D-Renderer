@@ -9,6 +9,13 @@ typedef enum SHAPE
     SQUARE = 0,
     } SHAPE;
 
+struct SpriteSheetInfo
+    {
+    const char* spfp;
+    unsigned int nosp;
+    unsigned int spr;
+    };
+typedef struct SpriteSheetInfo SpriteSheetInfo;
 
 struct viBundle
     {

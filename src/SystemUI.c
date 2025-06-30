@@ -11,7 +11,7 @@ ui.ui_id = (unsigned int*)malloc(sizeof(unsigned int));
 ui.trsid = (unsigned int*)malloc(sizeof(unsigned int));
 ui.trigger = (GUI_ACTION_TRIGGER*)malloc(sizeof(GUI_ACTION_TRIGGER));
 ui.action = (ui_act_fun*)malloc(10 * sizeof(ui_act_fun));
-ui.data = (void**)malloc(datsize);  // just a constant amount of memory to give
+ui.data = (RenderInformation*)malloc(sizeof(RenderInformation));    // just a constant amount of memory to give
 
 ui.size = 0;
 
@@ -45,7 +45,12 @@ static void addUIRendering(UI_Table* ui, RenderPacket* rp, unsigned int ui_id)
 {
 }
 
-unsigned int addButton(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, void* renderInfo)
+static void UnpackRenderInfo(void* renderInfo)
+{
+
+}
+
+unsigned int addButton(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, RenderInformation rendinf)
 {
 static unsigned int ui_id = 0;
 expandUITable(ui);
@@ -53,13 +58,22 @@ expandUITable(ui);
 int index = ui_id;  // temporary and should be replaced with a more optimal function
 ui->ui_id[index] = ui_id++;    // set and increase the ID
 
-if(renderInfo == NULL)
+int ind = -1;
+if(rendinf.rinf == (GUI_RENDER_INFO)NULL)
     {
-    ui->data[index] = (void*)malloc(sizeof(GUI_RENDER_INFO));
-    *(GUI_RENDER_INFO*)ui->data[index] = (GUI_RENDER_INFO)0;
+    ui->data[index].rinf = (GUI_RENDER_INFO)0;
+    ind = CreateBasicSquare(rp, pos, scale, NULL);  // creates the square
+    }
+else// if(rendinf.ssi.spfp != NULL)   // if there is a file path
+    {
+    ui->data[index].ssi = rendinf.ssi;
+    unsigned int rid = CreateSpriteRenderable(&rp->rds, rendinf.ssi.spfp, rendinf.ssi.nosp, rendinf.ssi.spr);
+    unsigned int trsid = AddTransformation(&rp->tds, pos, (vec2){scale, scale});
+    AddDrawable(&rp->drabs, trsid, rid);
+
+    ind = findDrawablesRenderable(rp->drabs, rid);
     }
 
-int ind = CreateBasicSquare(rp, pos, scale, NULL);  // creates the square
 unsigned int trsid = rp->drabs.trsids[ind]; // gets the transformation ID
 ui->trsid[index] = trsid;   // sets the new transformation ID
 

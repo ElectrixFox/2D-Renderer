@@ -17,8 +17,15 @@ typedef void (*ui_act_fun)(int);
 
 typedef enum
     {
-    DEFAULT_SQUARE = 0
+    DEFAULT_SQUARE = 1
     } GUI_RENDER_INFO;
+
+union RenderInformation
+    {
+    SpriteSheetInfo ssi;    // sprite sheet information if it is a sprite sheet
+    GUI_RENDER_INFO rinf;   // an enum to say if it is a basic shape
+    };
+typedef union RenderInformation RenderInformation;
 
 struct UI_Table
     {
@@ -29,7 +36,7 @@ struct UI_Table
     ui_act_fun* action; // the actions
     
     // the first part of the data for each element should be an indicator to what it contains and its size
-    void** data;    // the data for each element
+    RenderInformation* data;    // the data for each element
 
     int size;   // the number of entries
     };
@@ -59,11 +66,11 @@ unsigned int getUITransform(UI_Table ui, unsigned int ui_id);
  * @param rp A pointer to the render packet for the UI
  * @param pos The position of the button
  * @param scale The scale factor of the square for the button
- * @param renderInfo The information to be used to initialise the button
+ * @param rendinf The information to be used to initialise the button
  * 
  * @returns The ID of the new UI element
  */
-unsigned int addButton(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, void* renderInfo);
+unsigned int addButton(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, RenderInformation rendinf);
 
 /**
  * Assigns an action to a button which is performed when the trigger happens

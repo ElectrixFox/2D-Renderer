@@ -5,6 +5,9 @@ static BLOCK curblock = BLOCK_PLAYER;
 const int snap_to_grid = 1;
 const int grid_size = 50;
 
+extern UI_Table ui;
+extern RenderPacket ui_rp;
+
 #pragma region Main
 
 BLOCK getActiveBlock() { return curblock; }
@@ -24,6 +27,35 @@ void ApplyProjection(Camera cam, RenderDetails rds) { _ApplyProjection(cam, rds.
 #pragma endregion
 
 #pragma region EditorUI
+
+static void changeBlock(int ui_id)
+{
+printf("\nI have been pressed %d", ui_id);
+
+if(ui_id == 0)
+    {
+    unsigned int trsid = getUITransform(ui, ui_id);
+    unsigned int rid = ui_rp.drabs.rids[findDrawablesTransform(ui_rp.drabs, trsid)];
+    int index = getRenderDetailsIDIndex(ui_rp.rds, rid);
+    SetUniform4f(ui_rp.rds.shader[index], "colour", (vec4){1.0f, 0.62f, 0.0f, 1.0f});
+    }
+}
+
+void BuildNewSelectBar()
+{
+vec2 topright = {1255.0f, 695.0f};
+const unsigned int nblocks = getBlockCount();
+const float padding = 10.0f;
+
+for (int i = 0; i < nblocks; i++)
+    {
+    vec2 position = {topright.x, topright.y - (i * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
+    BlockInfo bi = getBlockInfo((BLOCK)i);
+    RenderInformation ri = (RenderInformation){ bi.spfp, bi.nosp, bi.spr };
+    unsigned int entry = addButton(&ui, &ui_rp, position, 25.0f, ri);
+    assignButtonAction(&ui, entry, (GUI_ACTION_TRIGGER)0, &changeBlock);
+    }
+}
 
 void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs)
 {
