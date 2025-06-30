@@ -2,6 +2,18 @@
 
 const int datsize = 256;
 
+UI_Trigger_Action_Table InitialiseUITriggerActions()
+{
+UI_Trigger_Action_Table ta;
+
+// initialising all of the memory
+ta.ui_id = (unsigned int*)malloc(sizeof(unsigned int));
+ta.action = (ui_act_fun*)malloc(10 * sizeof(ui_act_fun));
+ta.size = 0;
+
+return ta;
+}
+
 UI_Table InitialiseUI()
 {
 UI_Table ui;
@@ -9,13 +21,24 @@ UI_Table ui;
 // initialising all of the memory
 ui.ui_id = (unsigned int*)malloc(sizeof(unsigned int));
 ui.trsid = (unsigned int*)malloc(sizeof(unsigned int));
-ui.trigger = (GUI_ACTION_TRIGGER*)malloc(sizeof(GUI_ACTION_TRIGGER));
-ui.action = (ui_act_fun*)malloc(10 * sizeof(ui_act_fun));
-ui.data = (RenderInformation*)malloc(sizeof(RenderInformation));    // just a constant amount of memory to give
 
+for (int i = 0; i < UI_NO_TRIGGERS; i++)    // initialising the trigger actions
+    ui.actions[i] = InitialiseUITriggerActions();
+
+ui.data = (RenderInformation*)malloc(sizeof(RenderInformation));
 ui.size = 0;
 
 return ui;
+}
+
+static void expandUITriggerActionTable(UI_Trigger_Action_Table* ta)
+{
+const int n = ta->size;
+
+ExpandByOne(&ta->action, n, sizeof(ui_act_fun));
+ExpandByOne(&ta->ui_id, n, sizeof(unsigned int));
+
+ta->size++;
 }
 
 static void expandUITable(UI_Table* ui)
@@ -24,11 +47,17 @@ const int n = ui->size;
 
 ExpandByOne(&ui->ui_id, n, sizeof(unsigned int));
 ExpandByOne(&ui->trsid, n, sizeof(unsigned int));
-ExpandByOne(&ui->trigger, n, sizeof(GUI_ACTION_TRIGGER));
-ExpandByOne(&ui->action, n, sizeof(ui_act_fun));
 ExpandByOne(&ui->data, n, datsize);
 
 ui->size++; // increasing the size
+}
+
+static int findUITriggerActionIDinTable(UI_Trigger_Action_Table ta, unsigned int ui_id)
+{
+for (int i = 0; i < ta.size; i++)   // simple linear search
+    if(ta.ui_id[i] == ui_id)
+        return i;
+return -1;
 }
 
 static int findUIIDinTable(UI_Table ui, unsigned int ui_id)
@@ -71,6 +100,27 @@ ui->trsid[index] = trsid;   // sets the new transformation ID
 return ui->ui_id[index];
 }
 
+void addUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id, ui_act_fun action)
+{
+expandUITriggerActionTable(ta);
+
+int index = ta->size - 1;  // temporary and should be replaced with a more optimal function
+ta->ui_id[index] = ui_id;
+ta->action[index] = action;
+}
+
+void assignUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id, ui_act_fun action)
+{
+int index = findUITriggerActionIDinTable(*ta, ui_id);
+
+if(index == -1)
+    {
+    addUITriggerAction(ta, ui_id, action);
+    }
+else
+    ta->action[index] = action;
+}
+
 void assignButtonAction(UI_Table* ui, unsigned int ui_id, GUI_ACTION_TRIGGER trigger, ui_act_fun action)
 {
 int index = findUIIDinTable(*ui, ui_id);
@@ -81,8 +131,7 @@ if(index == -1)
     exit(1);
     }
 
-ui->trigger[index] = trigger;
-ui->action[index] = action;
+assignUITriggerAction(&ui->actions[trigger], ui_id, action);
 }
 
 static int pressedInRectangle(vec2 pos, vec2 scale)
@@ -103,29 +152,35 @@ void checkUI(UI_Table ui, RenderPacket rp)
 {
 GLFWwindow* window = getWindow();
 
+
+
 for (int i = 0; i < ui.size; i++)
     {
-    if(ui.trigger[i] != (GUI_ACTION_TRIGGER)HOVER)  // if is not hover then skip
+    int index = findUITriggerActionIDinTable(ui.actions[HOVER], ui.ui_id[i]);
+    if(index == -1) // if there is no hover action then skip
         continue;
     
     if(isCursorOnUIElement(ui, rp, ui.ui_id[i]))
         {
         printf("\nPerforming hover action for %d", ui.ui_id[i]);
-        ui.action[i](ui.ui_id[i]);
+        ui.actions[HOVER].action[index](ui.ui_id[i]);
         }
     }
 
 
 if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    {
     for (int i = 0; i < ui.size; i++)
         {
-        if(ui.trigger[i] != (GUI_ACTION_TRIGGER)0)   // if it is not press then continue
+        int index = findUITriggerActionIDinTable(ui.actions[PRESS], ui.ui_id[i]);
+        if(index == -1) // if there is no hover action then skip
             continue;
-
+        
         if(isCursorOnUIElement(ui, rp, ui.ui_id[i]))
             {
             printf("\nPerforming action for %d", ui.ui_id[i]);
-            ui.action[i](ui.ui_id[i]);
+            ui.actions[PRESS].action[index](ui.ui_id[i]);
             }
         }
+    }
 }

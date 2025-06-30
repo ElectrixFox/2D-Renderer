@@ -10,7 +10,8 @@
 typedef enum
     {
     PRESS,
-    HOVER
+    HOVER,
+    UI_NO_TRIGGERS
     } GUI_ACTION_TRIGGER;
 
 typedef void (*ui_act_fun)(int);
@@ -27,13 +28,21 @@ union RenderInformation
     };
 typedef union RenderInformation RenderInformation;
 
+struct UI_Trigger_Action_Table
+    {
+    unsigned int* ui_id;
+    ui_act_fun* action; // the actions for this trigger
+    int size;
+    };
+typedef struct UI_Trigger_Action_Table UI_Trigger_Action_Table;
+
+
 struct UI_Table
     {
     unsigned int* ui_id;    // primary key
     unsigned int* trsid;    // foreign key to link to transform
 
-    GUI_ACTION_TRIGGER* trigger;    // the triggers
-    ui_act_fun* action; // the actions
+    UI_Trigger_Action_Table actions[UI_NO_TRIGGERS];  // array of all different actions, since indexed by action it should be easy to find the correct ones
     
     // the first part of the data for each element should be an indicator to what it contains and its size
     RenderInformation* data;    // the data for each element
@@ -41,6 +50,14 @@ struct UI_Table
     int size;   // the number of entries
     };
 typedef struct UI_Table UI_Table;
+
+/**
+ * Initialises the UI triggers and allocates memory
+ * 
+ * @returns A new UI trigger table containing all of the actions
+ */
+UI_Trigger_Action_Table InitialiseUITriggerActions();
+
 
 /**
  * Initialises the UI and allocates memory
