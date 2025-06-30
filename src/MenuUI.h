@@ -1,4 +1,5 @@
 // #include "BlockOperations.h"
+#define GUI_SYSTEM
 #ifndef GUI_SYSTEM
 #define GUI_SYSTEM
 

@@ -140,3 +140,5 @@ int index = AddDrawable(&rp->drabs, trsid, rid);    // adds the drawable
 
 return index;
 }
+
+void DrawRenderPacket(RenderPacket rp) { DrawDrawables(rp.rds, rp.tds, rp.drabs); }

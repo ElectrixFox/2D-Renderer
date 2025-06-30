@@ -77,3 +77,10 @@ RenderPacket InitialiseRenderPacket();
  * @returns The index of the renderable in the drawables
  */
 int CreateBasicSquare(RenderPacket* rp, vec2 position, float scale, vec4 incol);
+
+/**
+ * Draws all of the items in the render packet
+ * 
+ * @param rp The render packet of the things to draw
+ */
+void DrawRenderPacket(RenderPacket rp);

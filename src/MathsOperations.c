@@ -5,8 +5,27 @@ void OutputVec2(vec2 v)
 printf("(%.2f, %.2f)", v.x, v.y);
 }
 
+/**
+ * Increases the size of the passed array to the new size
+ * 
+ * @param arr A pointer to the array to expand
+ * @param osize The current size of the array
+ * @param nsize The new size of the array
+ * @param elesize The size of an element in the array
+ * 
+ * @warning Remember to pass the array as a pointer not just an array
+ */
 void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize) { *arr = realloc(*arr, elesize * nsize); }
 
+/**
+ * Increases the size of the passed array by one
+ * 
+ * @param arr A pointer to the array to expand
+ * @param size The size of the array
+ * @param elesize The size of an element in the array
+ * 
+ * @warning Remember to pass the array as a pointer not just an array
+ */
 void ExpandByOne(void **arr, const unsigned int size, unsigned int elesize) { ExpandArray(arr, size, size + 1, elesize); }
 
 vec2 ScalarMultVec2(vec2 v, float a) { return (vec2){a * v.x, a * v.y}; }

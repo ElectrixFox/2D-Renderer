@@ -1,3 +1,5 @@
+#define GUI_SYSTEM
+#ifndef GUI_SYSTEM
 #include "MenuUI.h"
 
 //-----------------------------------------------------------------------
@@ -218,3 +220,4 @@ else
     foldMenu(dmu);
 }
 */
+#endif

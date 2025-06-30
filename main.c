@@ -14,8 +14,7 @@
 #include "src/Input.h"
 #include "src/Drawable.h"
 #include "src/Editor.h"
-
-#include "src/MenuUI.h"
+#include "src/SystemUI.h"
 
 void processInput(GLFWwindow* window)
 {
@@ -72,6 +71,8 @@ glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 InitialiseInput(window);
 Camera cam = CreateCamera((vec2){0, 0}, (vec2){gwid, ghig}, &gwid, &ghig);
+UI_Table ui = InitialiseUI();
+RenderPacket ui_rp = InitialiseRenderPacket();
 
 RenderDetails block_rds = InitialiseRenderDetails();
 RenderDetails ui_rds = InitialiseRenderDetails();
@@ -86,18 +87,10 @@ InitialiseBlockDetails();
 
 BuildSelectBar(&ui_rds, &ui_tds, &ui_drabs); // build the item select bar
 
-RenderPacket gui_rp = InitialiseGUI();
-assignGuiRenderPacket(&gui_rp);
-/*
-GUI_Button button = CreateButton(&gui_rp, (vec2){500.0f, 500.0f}, (GUI_ACTION_TRIGGER)0, &output, NULL);
-GUI_Button bu2 = CreateButton(&gui_rp, (vec2){600.0f, 600.0f}, (GUI_ACTION_TRIGGER)0, &output, NULL);
-addGUIButton(button);
-addGUIButton(bu2);
-*/
-
-GUI_Menu men = CreateMenu(&gui_rp, (vec2){600.0f, 600.0f}, (GUI_ACTION_TRIGGER)0, &menoutput);
-GUI_Button mbu1 = CreateButton(&gui_rp, (vec2){300.0f, 400.0f}, (GUI_ACTION_TRIGGER)0, &output, NULL);
-addMenuEntry(&men, mbu1);
+unsigned int buid1 = addButton(&ui, &ui_rp, (vec2){500.0f, 500.0f}, 25.0f, NULL);
+unsigned int buid2 = addButton(&ui, &ui_rp, (vec2){500.0f, 400.0f}, 25.0f, NULL);
+assignButtonAction(&ui, buid1, (GUI_ACTION_TRIGGER)0, &output);
+assignButtonAction(&ui, buid2, (GUI_ACTION_TRIGGER)0, &output);
 
 int** grid;
 int w, h;
@@ -163,18 +156,14 @@ while(!glfwWindowShouldClose(window))
     ApplyCamera(cam, block_rds);
     ApplyProjection(cam, block_rds);
     ApplyProjection(cam, ui_rds);
-    ApplyProjection(cam, gui_rp.rds);
-
-
-    checkButtons();
-
+    ApplyProjection(cam, ui_rp.rds);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
     DrawDrawables(block_rds, block_tds, block_drabs);
     DrawDrawables(ui_rds, ui_tds, ui_drabs);
-    drawGUIElements(gui_rp);
+    DrawRenderPacket(ui_rp);
     
     glfwSwapBuffers(window);
     glfwPollEvents();
