@@ -156,14 +156,14 @@ GLFWwindow* window = getWindow();
 
 for (int i = 0; i < ui.size; i++)
     {
-    int index = findUITriggerActionIDinTable(ui.actions[HOVER], ui.ui_id[i]);
+    int index = findUITriggerActionIDinTable(ui.actions[UI_TRIGGER_HOVER], ui.ui_id[i]);
     if(index == -1) // if there is no hover action then skip
         continue;
     
     if(isCursorOnUIElement(ui, rp, ui.ui_id[i]))
         {
-        printf("\nPerforming hover action for %d", ui.ui_id[i]);
-        ui.actions[HOVER].action[index](ui.ui_id[i]);
+        // printf("\nPerforming hover action for %d", ui.ui_id[i]);
+        ui.actions[UI_TRIGGER_HOVER].action[index](ui.ui_id[i]);
         }
     }
 
@@ -172,14 +172,14 @@ if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
     {
     for (int i = 0; i < ui.size; i++)
         {
-        int index = findUITriggerActionIDinTable(ui.actions[PRESS], ui.ui_id[i]);
+        int index = findUITriggerActionIDinTable(ui.actions[UI_TRIGGER_PRESS], ui.ui_id[i]);
         if(index == -1) // if there is no hover action then skip
             continue;
         
         if(isCursorOnUIElement(ui, rp, ui.ui_id[i]))
             {
             printf("\nPerforming action for %d", ui.ui_id[i]);
-            ui.actions[PRESS].action[index](ui.ui_id[i]);
+            ui.actions[UI_TRIGGER_PRESS].action[index](ui.ui_id[i]);
             }
         }
     }

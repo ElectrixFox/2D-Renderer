@@ -9,8 +9,8 @@
 
 typedef enum
     {
-    PRESS,
-    HOVER,
+    UI_TRIGGER_PRESS,
+    UI_TRIGGER_HOVER,
     UI_NO_TRIGGERS
     } GUI_ACTION_TRIGGER;
 

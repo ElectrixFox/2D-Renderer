@@ -31,14 +31,34 @@ void ApplyProjection(Camera cam, RenderDetails rds) { _ApplyProjection(cam, rds.
 static void changeBlock(int ui_id)
 {
 RenderInformation ri = getUIRenderInformation(ui, ui_id);   // getting the render information
-SpriteSheetInfo ssi = ri.ssi;
-
-if(ssi.nosp > 1)
-    {
-    
-    }
 BLOCK block = getBlockFromFilePath(ri.ssi.spfp);    // getting the block
 setActiveBlock(block);  // sets the active block
+}
+
+static void unfoldBlockOptions(int ui_id)
+{
+static int folded = 1;
+static int prevuid = -1;
+const float padding = 10.0f;
+
+if(prevuid == ui_id)
+    return;
+
+RenderInformation ri = getUIRenderInformation(ui, ui_id);   // getting the render information
+unsigned int trsid = getUITransform(ui, ui_id);
+vec2 pos = getPosition(ui_rp.tds, trsid);
+SpriteSheetInfo ssi = ri.ssi;
+BLOCK block = getBlockFromFilePath(ri.ssi.spfp);    // getting the block
+
+for (int i = 2; i <= ssi.nosp; i++)
+    {
+    vec2 position = {pos.x - ((i - 1) * 50.0f + padding), pos.y}; // placing the items in a horizontal line on the right side of the screen
+    RenderInformation ri = (RenderInformation){ ssi.spfp, ssi.nosp, i };
+    unsigned int entry = addButton(&ui, &ui_rp, position, 25.0f, ri);
+    assignButtonAction(&ui, entry, (GUI_ACTION_TRIGGER)0, &changeBlock);
+    }
+
+prevuid = ui_id;
 }
 
 void BuildNewSelectBar()
@@ -54,6 +74,11 @@ for (int i = 0; i < nblocks; i++)
     RenderInformation ri = (RenderInformation){ bi.spfp, bi.nosp, bi.spr };
     unsigned int entry = addButton(&ui, &ui_rp, position, 25.0f, ri);
     assignButtonAction(&ui, entry, (GUI_ACTION_TRIGGER)0, &changeBlock);
+
+    if(ri.ssi.nosp > 1)
+        {
+        assignButtonAction(&ui, entry, UI_TRIGGER_HOVER, &unfoldBlockOptions);
+        }
     }
 }
 
