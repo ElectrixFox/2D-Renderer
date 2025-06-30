@@ -98,9 +98,10 @@ ReadLevel("res/levels/level1.txt", &w, &h, &grid);
 OutputLevel(grid, w, h);
 DrawLevel(&block_rds, &block_tds, &block_drabs, w, h, grid);
 
-while(!glfwWindowShouldClose(window))
+while(!glfwWindowShouldClose(window))   // main loop
     {
-    // loop
+    checkUI(ui, ui_rp);
+    
     if(isPressedSingle(GLFW_KEY_ESCAPE))
         glfwSetWindowShouldClose(window, 1);
 

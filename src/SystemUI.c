@@ -80,3 +80,55 @@ ui->trigger[index] = trigger;
 ui->action[index] = action;
 }
 
+static int pressedInRectangle(vec2 pos, vec2 scale)
+{
+vec2 cpos = getCursorPosition();
+return PointInSquare(cpos, pos, scale);
+}
+
+int hasBeenPressed(UI_Table ui, RenderPacket rp, unsigned int ui_id)
+{
+int index = findUIIDinTable(ui, ui_id);
+vec2 pos = getPosition(rp.tds, ui.trsid[index]);
+vec2 scale = getScale(rp.tds, ui.trsid[index]);
+return pressedInRectangle(pos, scale);
+}
+
+int hoveredOver(UI_Table ui, RenderPacket rp, unsigned int ui_id)
+{
+int index = findUIIDinTable(ui, ui_id);
+vec2 pos = getPosition(rp.tds, ui.trsid[index]);
+vec2 scale = getScale(rp.tds, ui.trsid[index]);
+return pressedInRectangle(pos, scale);
+}
+
+void checkUI(UI_Table ui, RenderPacket rp)
+{
+GLFWwindow* window = getWindow();
+
+for (int i = 0; i < ui.size; i++)
+    {
+    if(ui.trigger[i] != (GUI_ACTION_TRIGGER)HOVER)  // if is not hover then skip
+        continue;
+    
+    if(hoveredOver(ui, rp, ui.ui_id[i]))
+        {
+        printf("\nPerforming hover action for %d", ui.ui_id[i]);
+        ui.action[i](ui.ui_id[i]);
+        }
+    }
+
+
+if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    for (int i = 0; i < ui.size; i++)
+        {
+        if(ui.trigger[i] != (GUI_ACTION_TRIGGER)0)   // if it is not press then continue
+            continue;
+
+        if(hasBeenPressed(ui, rp, ui.ui_id[i]))
+            {
+            printf("\nPerforming action for %d", ui.ui_id[i]);
+            ui.action[i](ui.ui_id[i]);
+            }
+        }
+}

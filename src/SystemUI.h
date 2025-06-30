@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Drawable.h"
+#include "Input.h"
 #include "Array.h"
 
 typedef enum
@@ -55,5 +56,11 @@ UI_Table InitialiseUI();
 unsigned int addButton(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, void* renderInfo);
 
 void assignButtonAction(UI_Table* ui, unsigned int ui_id, GUI_ACTION_TRIGGER trigger, ui_act_fun action);
+
+int hasBeenPressed(UI_Table ui, RenderPacket rp, unsigned int ui_id);
+
+int hoveredOver(UI_Table ui, RenderPacket rp, unsigned int ui_id);
+
+void checkUI(UI_Table ui, RenderPacket rp);
 
 #endif
