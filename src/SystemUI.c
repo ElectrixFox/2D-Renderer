@@ -2,7 +2,51 @@
 
 const int datsize = 256;
 
-UI_Trigger_Action_Table InitialiseUITriggerActions()
+#pragma region Trigger Action Table
+
+/**
+ * Initialises the UI triggers and allocates memory
+ * 
+ * @returns A new UI trigger table containing all of the actions
+ */
+static UI_Trigger_Action_Table InitialiseUITriggerActions();
+
+/**
+ * Adds a new action record to the table
+ * 
+ * @param ta A pointer to the trigger action table for a given trigger
+ */
+static void expandUITriggerActionTable(UI_Trigger_Action_Table* ta);
+
+/**
+ * Finds the UI ID within the trigger action table
+ * 
+ * @param ta The trigger action table
+ * @param ui_id The UI ID of the element to find
+ * 
+ * @returns The index of the UI ID in the action table if found, -1 if not
+ */
+static int findUITriggerActionIDinTable(UI_Trigger_Action_Table ta, unsigned int ui_id);
+
+/**
+ * Adds a trigger action to the trigger action table
+ * 
+ * @param ta Pointer to the trigger action table
+ * @param ui_id The ID of the UI element to add the action to
+ * @param action The action to add
+ */
+static void addUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id, ui_act_fun action);
+
+/**
+ * Sets a trigger action in the action table
+ * 
+ * @param ta Pointer to the trigger action table
+ * @param ui_id The ID of the UI element to add the action to
+ * @param action The action to add
+ */
+static void assignUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id, ui_act_fun action);
+
+static UI_Trigger_Action_Table InitialiseUITriggerActions()
 {
 UI_Trigger_Action_Table ta;
 
@@ -13,6 +57,47 @@ ta.size = 0;
 
 return ta;
 }
+
+static void expandUITriggerActionTable(UI_Trigger_Action_Table* ta)
+{
+const int n = ta->size;
+
+ExpandByOne(&ta->action, n, sizeof(ui_act_fun));
+ExpandByOne(&ta->ui_id, n, sizeof(unsigned int));
+
+ta->size++;
+}
+
+static int findUITriggerActionIDinTable(UI_Trigger_Action_Table ta, unsigned int ui_id)
+{
+for (int i = 0; i < ta.size; i++)   // simple linear search
+    if(ta.ui_id[i] == ui_id)
+        return i;
+return -1;
+}
+
+static void addUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id, ui_act_fun action)
+{
+expandUITriggerActionTable(ta);
+
+int index = ta->size - 1;  // temporary and should be replaced with a more optimal function
+ta->ui_id[index] = ui_id;
+ta->action[index] = action;
+}
+
+static void assignUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id, ui_act_fun action)
+{
+int index = findUITriggerActionIDinTable(*ta, ui_id);
+
+if(index == -1)
+    {
+    addUITriggerAction(ta, ui_id, action);
+    }
+else
+    ta->action[index] = action;
+}
+
+#pragma endregion
 
 UI_Table InitialiseUI()
 {
@@ -31,16 +116,6 @@ ui.size = 0;
 return ui;
 }
 
-static void expandUITriggerActionTable(UI_Trigger_Action_Table* ta)
-{
-const int n = ta->size;
-
-ExpandByOne(&ta->action, n, sizeof(ui_act_fun));
-ExpandByOne(&ta->ui_id, n, sizeof(unsigned int));
-
-ta->size++;
-}
-
 static void expandUITable(UI_Table* ui)
 {
 const int n = ui->size;
@@ -50,14 +125,6 @@ ExpandByOne(&ui->trsid, n, sizeof(unsigned int));
 ExpandByOne(&ui->data, n, datsize);
 
 ui->size++; // increasing the size
-}
-
-static int findUITriggerActionIDinTable(UI_Trigger_Action_Table ta, unsigned int ui_id)
-{
-for (int i = 0; i < ta.size; i++)   // simple linear search
-    if(ta.ui_id[i] == ui_id)
-        return i;
-return -1;
 }
 
 static int findUIIDinTable(UI_Table ui, unsigned int ui_id)
@@ -98,27 +165,6 @@ unsigned int trsid = rp->drabs.trsids[ind]; // gets the transformation ID
 ui->trsid[index] = trsid;   // sets the new transformation ID
 
 return ui->ui_id[index];
-}
-
-void addUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id, ui_act_fun action)
-{
-expandUITriggerActionTable(ta);
-
-int index = ta->size - 1;  // temporary and should be replaced with a more optimal function
-ta->ui_id[index] = ui_id;
-ta->action[index] = action;
-}
-
-void assignUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id, ui_act_fun action)
-{
-int index = findUITriggerActionIDinTable(*ta, ui_id);
-
-if(index == -1)
-    {
-    addUITriggerAction(ta, ui_id, action);
-    }
-else
-    ta->action[index] = action;
 }
 
 void assignButtonAction(UI_Table* ui, unsigned int ui_id, GUI_ACTION_TRIGGER trigger, ui_act_fun action)

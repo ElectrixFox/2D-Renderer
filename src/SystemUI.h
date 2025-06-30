@@ -52,14 +52,6 @@ struct UI_Table
 typedef struct UI_Table UI_Table;
 
 /**
- * Initialises the UI triggers and allocates memory
- * 
- * @returns A new UI trigger table containing all of the actions
- */
-UI_Trigger_Action_Table InitialiseUITriggerActions();
-
-
-/**
  * Initialises the UI and allocates memory
  * 
  * @returns A new UI table containing all of the information

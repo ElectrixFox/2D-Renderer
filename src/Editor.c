@@ -42,7 +42,10 @@ static int prevuid = -1;
 const float padding = 10.0f;
 
 if(prevuid == ui_id)
+    {
+    
     return;
+    }
 
 RenderInformation ri = getUIRenderInformation(ui, ui_id);   // getting the render information
 unsigned int trsid = getUITransform(ui, ui_id);
