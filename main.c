@@ -40,9 +40,20 @@ ghig = height;
 printf("\n%dx%d", gwid, ghig);
 }
 
-void output(int l)
+UI_Table ui;
+RenderPacket ui_rp;
+
+void output(int ui_id)
 {
-printf("\nI have been pressed %d", l);
+printf("\nI have been pressed %d", ui_id);
+
+if(ui_id == 0)
+    {
+    unsigned int trsid = getUITransform(ui, ui_id);
+    unsigned int rid = ui_rp.drabs.rids[findDrawablesTransform(ui_rp.drabs, trsid)];
+    int index = getRenderDetailsIDIndex(ui_rp.rds, rid);
+    SetUniform4f(ui_rp.rds.shader[index], "colour", (vec4){1.0f, 0.62f, 0.0f, 1.0f});
+    }
 }
 
 void menoutput(int l)
@@ -71,8 +82,8 @@ glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 InitialiseInput(window);
 Camera cam = CreateCamera((vec2){0, 0}, (vec2){gwid, ghig}, &gwid, &ghig);
-UI_Table ui = InitialiseUI();
-RenderPacket ui_rp = InitialiseRenderPacket();
+ui = InitialiseUI();
+ui_rp = InitialiseRenderPacket();
 
 RenderDetails block_rds = InitialiseRenderDetails();
 RenderDetails ui_rds = InitialiseRenderDetails();

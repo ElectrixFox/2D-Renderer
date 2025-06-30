@@ -43,6 +43,16 @@ typedef struct UI_Table UI_Table;
 UI_Table InitialiseUI();
 
 /**
+ * Gets the transform ID for the given UI element
+ * 
+ * @param ui The UI table
+ * @param ui_id The ID of the UI element
+ * 
+ * @returns The transform ID for the UI element
+ */
+unsigned int getUITransform(UI_Table ui, unsigned int ui_id);
+
+/**
  * Creates a button at the given position with the given details
  * 
  * @param ui A pointer to the UI table
@@ -55,12 +65,22 @@ UI_Table InitialiseUI();
  */
 unsigned int addButton(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, void* renderInfo);
 
+/**
+ * Assigns an action to a button which is performed when the trigger happens
+ * 
+ * @param ui A pointer to the UI table
+ * @param ui_id The ID of the UI element to assign the action to
+ * @param trigger The trigger for the action
+ * @param action A pointer to a function for the action
+ */
 void assignButtonAction(UI_Table* ui, unsigned int ui_id, GUI_ACTION_TRIGGER trigger, ui_act_fun action);
 
-int hasBeenPressed(UI_Table ui, RenderPacket rp, unsigned int ui_id);
-
-int hoveredOver(UI_Table ui, RenderPacket rp, unsigned int ui_id);
-
+/**
+ * Checks and performs the relevant actions on the UI elements according to their triggers
+ * 
+ * @param ui The UI table
+ * @param rp The render packet for the UI
+ */
 void checkUI(UI_Table ui, RenderPacket rp);
 
 #endif

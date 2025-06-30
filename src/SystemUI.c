@@ -39,6 +39,8 @@ for (int i = 0; i < ui.size; i++)   // simple linear search
 return -1;
 }
 
+unsigned int getUITransform(UI_Table ui, unsigned int ui_id) { return ui.trsid[findUIIDinTable(ui, ui_id)]; }
+
 static void addUIRendering(UI_Table* ui, RenderPacket* rp, unsigned int ui_id)
 {
 }
@@ -86,15 +88,7 @@ vec2 cpos = getCursorPosition();
 return PointInSquare(cpos, pos, scale);
 }
 
-int hasBeenPressed(UI_Table ui, RenderPacket rp, unsigned int ui_id)
-{
-int index = findUIIDinTable(ui, ui_id);
-vec2 pos = getPosition(rp.tds, ui.trsid[index]);
-vec2 scale = getScale(rp.tds, ui.trsid[index]);
-return pressedInRectangle(pos, scale);
-}
-
-int hoveredOver(UI_Table ui, RenderPacket rp, unsigned int ui_id)
+static int isCursorOnUIElement(UI_Table ui, RenderPacket rp, unsigned int ui_id)
 {
 int index = findUIIDinTable(ui, ui_id);
 vec2 pos = getPosition(rp.tds, ui.trsid[index]);
@@ -111,7 +105,7 @@ for (int i = 0; i < ui.size; i++)
     if(ui.trigger[i] != (GUI_ACTION_TRIGGER)HOVER)  // if is not hover then skip
         continue;
     
-    if(hoveredOver(ui, rp, ui.ui_id[i]))
+    if(isCursorOnUIElement(ui, rp, ui.ui_id[i]))
         {
         printf("\nPerforming hover action for %d", ui.ui_id[i]);
         ui.action[i](ui.ui_id[i]);
@@ -125,7 +119,7 @@ if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         if(ui.trigger[i] != (GUI_ACTION_TRIGGER)0)   // if it is not press then continue
             continue;
 
-        if(hasBeenPressed(ui, rp, ui.ui_id[i]))
+        if(isCursorOnUIElement(ui, rp, ui.ui_id[i]))
             {
             printf("\nPerforming action for %d", ui.ui_id[i]);
             ui.action[i](ui.ui_id[i]);
