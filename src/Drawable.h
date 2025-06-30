@@ -10,6 +10,15 @@ typedef struct Drawables Drawables;
 
 Drawables InitialiseDrawables();
 
+/**
+ * Adds an entry to the drawables links
+ * 
+ * @param drabs A pointer to the drawables table
+ * @param trid The transform ID to add
+ * @param rid The render ID to add
+ * 
+ * @returns The index that the record was added at
+ */
 int AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid);
 
 /**

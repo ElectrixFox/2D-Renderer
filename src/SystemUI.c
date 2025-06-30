@@ -41,14 +41,7 @@ return -1;
 
 unsigned int getUITransform(UI_Table ui, unsigned int ui_id) { return ui.trsid[findUIIDinTable(ui, ui_id)]; }
 
-static void addUIRendering(UI_Table* ui, RenderPacket* rp, unsigned int ui_id)
-{
-}
-
-static void UnpackRenderInfo(void* renderInfo)
-{
-
-}
+RenderInformation getUIRenderInformation(UI_Table ui, unsigned int ui_id) { return ui.data[findUIIDinTable(ui, ui_id)]; }
 
 unsigned int addButton(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, RenderInformation rendinf)
 {
@@ -64,20 +57,16 @@ if(rendinf.rinf == (GUI_RENDER_INFO)NULL)
     ui->data[index].rinf = (GUI_RENDER_INFO)0;
     ind = CreateBasicSquare(rp, pos, scale, NULL);  // creates the square
     }
-else// if(rendinf.ssi.spfp != NULL)   // if there is a file path
+else if(rendinf.ssi.spfp != NULL)   // if there is a file path
     {
     ui->data[index].ssi = rendinf.ssi;
     unsigned int rid = CreateSpriteRenderable(&rp->rds, rendinf.ssi.spfp, rendinf.ssi.nosp, rendinf.ssi.spr);
     unsigned int trsid = AddTransformation(&rp->tds, pos, (vec2){scale, scale});
-    AddDrawable(&rp->drabs, trsid, rid);
-
-    ind = findDrawablesRenderable(rp->drabs, rid);
+    ind = AddDrawable(&rp->drabs, trsid, rid);
     }
 
 unsigned int trsid = rp->drabs.trsids[ind]; // gets the transformation ID
 ui->trsid[index] = trsid;   // sets the new transformation ID
-
-addUIRendering(ui, rp, ui->ui_id[index]);
 
 return ui->ui_id[index];
 }

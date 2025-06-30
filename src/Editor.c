@@ -30,15 +30,9 @@ void ApplyProjection(Camera cam, RenderDetails rds) { _ApplyProjection(cam, rds.
 
 static void changeBlock(int ui_id)
 {
-printf("\nI have been pressed %d", ui_id);
-
-if(ui_id == 0)
-    {
-    unsigned int trsid = getUITransform(ui, ui_id);
-    unsigned int rid = ui_rp.drabs.rids[findDrawablesTransform(ui_rp.drabs, trsid)];
-    int index = getRenderDetailsIDIndex(ui_rp.rds, rid);
-    SetUniform4f(ui_rp.rds.shader[index], "colour", (vec4){1.0f, 0.62f, 0.0f, 1.0f});
-    }
+RenderInformation ri = getUIRenderInformation(ui, ui_id);   // getting the render information
+BLOCK block = getBlockFromFilePath(ri.ssi.spfp);    // getting the block
+setActiveBlock(block);  // sets the active block
 }
 
 void BuildNewSelectBar()

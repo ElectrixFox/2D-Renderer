@@ -60,6 +60,16 @@ UI_Table InitialiseUI();
 unsigned int getUITransform(UI_Table ui, unsigned int ui_id);
 
 /**
+ * Gets the render information for the given UI element
+ * 
+ * @param ui The UI table
+ * @param ui_id The ID of the UI element
+ * 
+ * @returns The render information for the UI element
+ */
+RenderInformation getUIRenderInformation(UI_Table ui, unsigned int ui_id);
+
+/**
  * Creates a button at the given position with the given details
  * 
  * @param ui A pointer to the UI table
