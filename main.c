@@ -86,17 +86,11 @@ ui = InitialiseUI();
 ui_rp = InitialiseRenderPacket();
 
 RenderDetails block_rds = InitialiseRenderDetails();
-RenderDetails ui_rds = InitialiseRenderDetails();
-
 TransformationDetails block_tds = InitialiseTransformationDetails();
-TransformationDetails ui_tds = InitialiseTransformationDetails();
-
 Drawables block_drabs = InitialiseDrawables();
-Drawables ui_drabs = InitialiseDrawables();
 
 InitialiseBlockDetails();
 
-// BuildSelectBar(&ui_rds, &ui_tds, &ui_drabs); // build the item select bar
 BuildNewSelectBar();
 
 unsigned int buid1 = addButton(&ui, &ui_rp, (vec2){500.0f, 500.0f}, 25.0f, (RenderInformation){NULL});
@@ -137,19 +131,6 @@ while(!glfwWindowShouldClose(window))   // main loop
             {
             PlaceBlock(&block_rds, &block_tds, &block_drabs, getActiveBlock(), cpos);
             glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
-            }
-        else if(PressedAnother(ui_rp.tds, ncpos))
-            {
-            unsigned int trsid = getPressedBlock(ui_rp.tds, ncpos);   // getting the temporary ID
-            unsigned int trid = ui_rp.drabs.rids[findDrawablesTransform(ui_rp.drabs, trsid)];
-            if(getSpriteCount(getBlockFromRenderID(trid)) > 1)
-                {
-                printf("\nUnfolding");
-                // ToggleMoreOptions(&ui_rds, &ui_tds, &ui_drabs, trid);
-                // UnfoldMoreOptions(&ui_rds, &ui_tds, &ui_drabs, trid);
-                }
-            else
-                SelectBlock(ui_drabs, trsid);
             }
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }

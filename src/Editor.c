@@ -31,6 +31,12 @@ void ApplyProjection(Camera cam, RenderDetails rds) { _ApplyProjection(cam, rds.
 static void changeBlock(int ui_id)
 {
 RenderInformation ri = getUIRenderInformation(ui, ui_id);   // getting the render information
+SpriteSheetInfo ssi = ri.ssi;
+
+if(ssi.nosp > 1)
+    {
+    
+    }
 BLOCK block = getBlockFromFilePath(ri.ssi.spfp);    // getting the block
 setActiveBlock(block);  // sets the active block
 }
