@@ -15,15 +15,29 @@ typedef enum
 
 typedef void (*ui_act_fun)(int);
 
+typedef struct
+    {
+    Array ui_ids;
+    unsigned int men_head_ui_id;
+    } GUI_MENU;
+
 typedef enum
     {
     DEFAULT_SQUARE = 1
     } GUI_RENDER_INFO;
 
+typedef enum
+    {
+    UI_TYPE_NULL,
+    UI_TYPE_BUTTON,
+    UI_TYPE_MENU
+    } UI_ELEMENT_TYPE;
+
 union RenderInformation
     {
     SpriteSheetInfo ssi;    // sprite sheet information if it is a sprite sheet
     GUI_RENDER_INFO rinf;   // an enum to say if it is a basic shape
+    GUI_MENU meni;  // a container of UI IDs which holds the menu contents and the actual menu head
     };
 typedef union RenderInformation RenderInformation;
 
@@ -102,6 +116,8 @@ unsigned int addButton(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, Re
  * @param action A pointer to a function for the action
  */
 void assignButtonAction(UI_Table* ui, unsigned int ui_id, GUI_ACTION_TRIGGER trigger, ui_act_fun action);
+
+unsigned int createUIElement(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, UI_ELEMENT_TYPE type, RenderInformation rendinf);
 
 /**
  * Removes the button with the given ID from the table

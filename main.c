@@ -91,12 +91,17 @@ Drawables block_drabs = InitialiseDrawables();
 
 InitialiseBlockDetails();
 
-BuildNewSelectBar();
+// BuildNewSelectBar();
 
-unsigned int buid1 = addButton(&ui, &ui_rp, (vec2){500.0f, 500.0f}, 25.0f, (RenderInformation){NULL});
-unsigned int buid2 = addButton(&ui, &ui_rp, (vec2){500.0f, 400.0f}, 25.0f, (RenderInformation){NULL});
+unsigned int buid1 = createUIElement(&ui, &ui_rp, (vec2){500.0f, 500.0f}, 25.0f, UI_TYPE_NULL, (RenderInformation){NULL});
+unsigned int buid2 = createUIElement(&ui, &ui_rp, (vec2){500.0f, 400.0f}, 25.0f, UI_TYPE_NULL, (RenderInformation){NULL});
 assignButtonAction(&ui, buid1, (GUI_ACTION_TRIGGER)0, &output);
 assignButtonAction(&ui, buid2, (GUI_ACTION_TRIGGER)0, &output);
+
+unsigned int buid3 = createUIElement(&ui, &ui_rp, (vec2){700.0f, 500.0f}, 25.0f, UI_TYPE_NULL, (RenderInformation){NULL});
+RenderInformation ri;
+ri.meni = (GUI_MENU){(Array){NULL}, buid3};
+unsigned int menid1 = createUIElement(&ui, &ui_rp, (vec2){700.0f, 500.0f}, 25.0f, UI_TYPE_MENU, ri);
 
 int** grid;
 int w, h;

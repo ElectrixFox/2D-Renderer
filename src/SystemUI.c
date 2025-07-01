@@ -194,6 +194,9 @@ else if(rendinf.ssi.spfp != NULL)   // if there is a file path
     unsigned int trsid = AddTransformation(&rp->tds, pos, (vec2){scale, scale});
     ind = AddDrawable(&rp->drabs, trsid, rid);
     }
+else if(rendinf.meni.ui_ids.size != 0)  // if there are some IDs in the menu
+    {
+    }
 
 unsigned int trsid = rp->drabs.trsids[ind]; // gets the transformation ID
 ui->trsid[index] = trsid;   // sets the new transformation ID
@@ -213,6 +216,68 @@ if(index == -1)
 
 assignUITriggerAction(&ui->actions[trigger], ui_id, action);
 }
+
+void tst(int l)
+{
+printf("\nDoing menu thing for %d", l);
+}
+
+unsigned int createUIElement(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, UI_ELEMENT_TYPE type, RenderInformation rendinf)
+{
+static unsigned int ui_id = 0;
+expandUITable(ui);
+
+int index = ui_id;  // temporary and should be replaced with a more optimal function
+ui->ui_id[index] = ui_id++;    // set and increase the ID
+
+int ind = -1;
+
+switch (type)   // doing the appropriate thing for each type
+    {
+    case UI_TYPE_NULL:
+        ui->data[index].rinf = (GUI_RENDER_INFO)0;
+        ind = CreateBasicSquare(rp, pos, scale, NULL);  // creates the square
+        break;
+    case UI_TYPE_BUTTON:
+        ui->data[index].ssi = rendinf.ssi;
+        unsigned int rid = CreateSpriteRenderable(&rp->rds, rendinf.ssi.spfp, rendinf.ssi.nosp, rendinf.ssi.spr);
+        unsigned int trsid = AddTransformation(&rp->tds, pos, (vec2){scale, scale});
+        ind = AddDrawable(&rp->drabs, trsid, rid);
+        break;
+    case UI_TYPE_MENU:
+        ui->data[index].meni = rendinf.meni;    // set the menu data
+        assignButtonAction(ui, rendinf.meni.men_head_ui_id, UI_TRIGGER_PRESS, &tst);
+        break;
+    default:
+        break;
+    }
+
+unsigned int trsid = rp->drabs.trsids[ind]; // gets the transformation ID
+ui->trsid[index] = trsid;   // sets the new transformation ID
+
+return ui->ui_id[index];    // returning the new UI ID
+}
+
+static unsigned int addToMenu(UI_Table* ui, RenderPacket* rp, unsigned int ui_id, UI_ELEMENT_TYPE type, RenderInformation rendinf)
+{
+const float padding = 10.0f;
+int index = findUIIDinTable(*ui, ui_id);    // getting the UI element in the UI table
+vec2 pos = getPosition(rp->tds, ui->trsid[index]); // getting the position
+vec2 scale = getScale(rp->tds, ui->trsid[index]); // getting the scale
+
+GUI_MENU meni = ui->data[index].meni;    // getting the menu
+int mensize = meni.ui_ids.size; // getting the size of the menu
+
+pos = (vec2){pos.x - (mensize + 1) * 50.0f + padding, pos.y};   // getting the new position
+
+unsigned int nui_id = createUIElement(ui, rp, pos, scale.x, type, rendinf); // creating the new element
+
+AppendToArray(&meni.ui_ids, nui_id);    // adding the new ID to the array
+
+return nui_id;
+}
+
+
 
 void removeButton(UI_Table* ui, RenderPacket* rp, unsigned int ui_id)
 {
