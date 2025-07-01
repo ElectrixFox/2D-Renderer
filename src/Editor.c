@@ -41,9 +41,9 @@ static int folded = 1;
 static int prevuid = -1;
 const float padding = 10.0f;
 
-if(prevuid == ui_id)
+if(prevuid == ui_id && folded == 0)
     {
-    
+    folded = 1;
     return;
     }
 
@@ -62,6 +62,7 @@ for (int i = 2; i <= ssi.nosp; i++)
     }
 
 prevuid = ui_id;
+folded = 0;
 }
 
 void BuildNewSelectBar()

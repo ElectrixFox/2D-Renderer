@@ -95,7 +95,28 @@ ta->action[index] = action;
 
 static void removeUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id)
 {
+int index = findUITriggerActionIDinTable(*ta, ui_id);
 
+if(index == -1)
+    return; // if the index isn't found just quit
+
+const int size = ta->size;
+if(index == size - 1) goto end;   // if the index is the last thing just decrease the size
+
+// getting temporary stuff
+unsigned int tmpid = ta->ui_id[index];
+ui_act_fun tact = ta->action[index];
+
+// setting the to delete to the end values
+ta->ui_id[index] = ta->ui_id[size - 1];
+ta->action[index] = ta->action[size - 1];
+
+// setting the end to the thing to delete
+ta->ui_id[size - 1] = tmpid;
+ta->action[size - 1] = tact;
+
+end:
+ta->size--; // decrease the size so it is effectively not there
 }
 
 static void assignUITriggerAction(UI_Trigger_Action_Table* ta, unsigned int ui_id, ui_act_fun action)
@@ -191,6 +212,40 @@ if(index == -1)
     }
 
 assignUITriggerAction(&ui->actions[trigger], ui_id, action);
+}
+
+void removeButton(UI_Table* ui, RenderPacket* rp, unsigned int ui_id)
+{
+int index = findUIIDinTable(*ui, ui_id);
+
+if(index == -1)
+    return; // if the index isn't found just quit
+
+const int size = ui->size;
+if(index == size - 1) goto end;   // if the index is the last thing just decrease the size
+
+for (int i = 0; i < UI_NO_TRIGGERS; i++)    // removes all the possible actions
+    removeUITriggerAction(&ui->actions[i], ui_id);   // removes the actions
+
+RemoveDrawable(&rp->drabs, &rp->rds, &rp->tds, ui->trsid[index]);   // removing the drawable element
+
+// getting the temporary variables
+unsigned int tmpid = ui->ui_id[index];
+unsigned int tmptrsid = ui->trsid[index];
+RenderInformation tmpdata = ui->data[index];
+
+// setting the to delete to the end values
+ui->ui_id[index] = ui->ui_id[size - 1];
+ui->trsid[index] = ui->trsid[size - 1];
+ui->data[index] = ui->data[size - 1];
+
+// overwriting the end values so they can be ignored 
+ui->ui_id[size - 1] = tmpid;
+ui->trsid[size - 1] = tmptrsid;
+ui->data[size - 1] = tmpdata;
+
+end:
+ui->size--; // decrease the size so it is effectively not there
 }
 
 static int pressedInRectangle(vec2 pos, vec2 scale)

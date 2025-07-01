@@ -1,4 +1,3 @@
-
 #ifndef SYSTEMUI_H
 #define SYSTEMUI_H
 
@@ -28,6 +27,8 @@ union RenderInformation
     };
 typedef union RenderInformation RenderInformation;
 
+#pragma region Trigger Action Table
+
 struct UI_Trigger_Action_Table
     {
     unsigned int* ui_id;
@@ -36,6 +37,7 @@ struct UI_Trigger_Action_Table
     };
 typedef struct UI_Trigger_Action_Table UI_Trigger_Action_Table;
 
+#pragma endregion
 
 struct UI_Table
     {
@@ -100,6 +102,15 @@ unsigned int addButton(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, Re
  * @param action A pointer to a function for the action
  */
 void assignButtonAction(UI_Table* ui, unsigned int ui_id, GUI_ACTION_TRIGGER trigger, ui_act_fun action);
+
+/**
+ * Removes the button with the given ID from the table
+ * 
+ * @param ui A pointer to the UI table
+ * @param rp A pointer to the render packet
+ * @param ui_id The ID of the UI element to delete
+ */
+void removeButton(UI_Table* ui, RenderPacket* rp, unsigned int ui_id);
 
 /**
  * Checks and performs the relevant actions on the UI elements according to their triggers
