@@ -278,7 +278,7 @@ OutputVec2(pos);
 GUI_MENU meni = ui->data[index].meni;    // getting the menu
 int mensize = meni.ui_ids.size; // getting the size of the menu
 
-pos = (vec2){pos.x - (mensize + 1) * 50.0f + padding, pos.y};   // getting the new position
+pos = (vec2){pos.x - ((mensize + 1) * 50.0f + padding), pos.y};   // getting the new position
 
 unsigned int nui_id = createUIElement(ui, rp, pos, scale.x, type, rendinf); // creating the new element
 

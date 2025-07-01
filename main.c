@@ -91,7 +91,7 @@ Drawables block_drabs = InitialiseDrawables();
 
 InitialiseBlockDetails();
 
-// BuildNewSelectBar();
+BuildNewSelectBar();
 
 unsigned int buid1 = createUIElement(&ui, &ui_rp, (vec2){500.0f, 500.0f}, 25.0f, UI_TYPE_NULL, (RenderInformation){NULL});
 unsigned int buid2 = createUIElement(&ui, &ui_rp, (vec2){500.0f, 400.0f}, 25.0f, UI_TYPE_NULL, (RenderInformation){NULL});

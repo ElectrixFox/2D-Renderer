@@ -76,12 +76,19 @@ for (int i = 0; i < nblocks; i++)
     vec2 position = {topright.x, topright.y - (i * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
     BlockInfo bi = getBlockInfo((BLOCK)i);
     RenderInformation ri = (RenderInformation){ bi.spfp, bi.nosp, bi.spr };
-    unsigned int entry = addButton(&ui, &ui_rp, position, 25.0f, ri);
+    unsigned int entry = createUIElement(&ui, &ui_rp, position, 25.0f, UI_TYPE_BUTTON, ri);
     assignButtonAction(&ui, entry, (GUI_ACTION_TRIGGER)0, &changeBlock);
-
     if(ri.ssi.nosp > 1)
         {
-        assignButtonAction(&ui, entry, UI_TRIGGER_HOVER, &unfoldBlockOptions);
+        RenderInformation tri;
+        tri.meni = (GUI_MENU){(Array){NULL}, entry};
+        unsigned int menhead = createUIElement(&ui, &ui_rp, position, 25.0f, UI_TYPE_MENU, tri);
+
+        for (int i = 2; i <= bi.nosp; i++)
+            {
+            unsigned int menentry = addToMenu(&ui, &ui_rp, menhead, UI_TYPE_BUTTON, (RenderInformation){ bi.spfp, bi.nosp, i });
+            assignButtonAction(&ui, menentry, UI_TRIGGER_PRESS, &changeBlock);
+            }
         }
     }
 }
