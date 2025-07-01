@@ -224,9 +224,7 @@ static void unfoldMenuAction(UI_Table* ui, RenderPacket* rp, unsigned int ui_id)
 
 static void unfoldMenu(int ui_id)
 {
-
-
-printf("\nDoing menu thing for %d", ui_id);
+// printf("\nDoing menu thing for %d", ui_id);
 }
 
 unsigned int createUIElement(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, UI_ELEMENT_TYPE type, RenderInformation rendinf)
@@ -255,7 +253,7 @@ switch (type)   // doing the appropriate thing for each type
         ui->data[index].meni = rendinf.meni;    // set the menu data
         int tindex = findUIIDinTable(*ui, rendinf.meni.men_head_ui_id);
         ind = findDrawablesTransform(rp->drabs, ui->trsid[tindex]);
-        assignButtonAction(ui, rendinf.meni.men_head_ui_id, UI_TRIGGER_PRESS, &unfoldMenu);    // setting the menu action
+        assignButtonAction(ui, rendinf.meni.men_head_ui_id, UI_TRIGGER_HOVER, &unfoldMenu);    // setting the menu action
         break;
     default:
         break;
