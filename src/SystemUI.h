@@ -119,6 +119,8 @@ void assignButtonAction(UI_Table* ui, unsigned int ui_id, GUI_ACTION_TRIGGER tri
 
 unsigned int createUIElement(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, UI_ELEMENT_TYPE type, RenderInformation rendinf);
 
+unsigned int addToMenu(UI_Table* ui, RenderPacket* rp, unsigned int ui_id, UI_ELEMENT_TYPE type, RenderInformation rendinf);
+
 /**
  * Removes the button with the given ID from the table
  * 

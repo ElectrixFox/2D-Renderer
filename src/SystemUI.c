@@ -217,9 +217,16 @@ if(index == -1)
 assignUITriggerAction(&ui->actions[trigger], ui_id, action);
 }
 
-void tst(int l)
+static void unfoldMenuAction(UI_Table* ui, RenderPacket* rp, unsigned int ui_id)
 {
-printf("\nDoing menu thing for %d", l);
+
+}
+
+static void unfoldMenu(int ui_id)
+{
+
+
+printf("\nDoing menu thing for %d", ui_id);
 }
 
 unsigned int createUIElement(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, UI_ELEMENT_TYPE type, RenderInformation rendinf)
@@ -246,7 +253,9 @@ switch (type)   // doing the appropriate thing for each type
         break;
     case UI_TYPE_MENU:
         ui->data[index].meni = rendinf.meni;    // set the menu data
-        assignButtonAction(ui, rendinf.meni.men_head_ui_id, UI_TRIGGER_PRESS, &tst);
+        int tindex = findUIIDinTable(*ui, rendinf.meni.men_head_ui_id);
+        ind = findDrawablesTransform(rp->drabs, ui->trsid[tindex]);
+        assignButtonAction(ui, rendinf.meni.men_head_ui_id, UI_TRIGGER_PRESS, &unfoldMenu);    // setting the menu action
         break;
     default:
         break;
@@ -258,12 +267,15 @@ ui->trsid[index] = trsid;   // sets the new transformation ID
 return ui->ui_id[index];    // returning the new UI ID
 }
 
-static unsigned int addToMenu(UI_Table* ui, RenderPacket* rp, unsigned int ui_id, UI_ELEMENT_TYPE type, RenderInformation rendinf)
+unsigned int addToMenu(UI_Table* ui, RenderPacket* rp, unsigned int ui_id, UI_ELEMENT_TYPE type, RenderInformation rendinf)
 {
 const float padding = 10.0f;
 int index = findUIIDinTable(*ui, ui_id);    // getting the UI element in the UI table
 vec2 pos = getPosition(rp->tds, ui->trsid[index]); // getting the position
 vec2 scale = getScale(rp->tds, ui->trsid[index]); // getting the scale
+
+printf("\nMenu head location: ");
+OutputVec2(pos);
 
 GUI_MENU meni = ui->data[index].meni;    // getting the menu
 int mensize = meni.ui_ids.size; // getting the size of the menu
@@ -272,7 +284,10 @@ pos = (vec2){pos.x - (mensize + 1) * 50.0f + padding, pos.y};   // getting the n
 
 unsigned int nui_id = createUIElement(ui, rp, pos, scale.x, type, rendinf); // creating the new element
 
-AppendToArray(&meni.ui_ids, nui_id);    // adding the new ID to the array
+AppendToArray(&ui->data[index].meni.ui_ids, nui_id);    // adding the new ID to the array
+
+printf("\nMenu entry location: ");
+OutputVec2(pos);
 
 return nui_id;
 }

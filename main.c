@@ -102,6 +102,8 @@ unsigned int buid3 = createUIElement(&ui, &ui_rp, (vec2){700.0f, 500.0f}, 25.0f,
 RenderInformation ri;
 ri.meni = (GUI_MENU){(Array){NULL}, buid3};
 unsigned int menid1 = createUIElement(&ui, &ui_rp, (vec2){700.0f, 500.0f}, 25.0f, UI_TYPE_MENU, ri);
+unsigned int entid1 = addToMenu(&ui, &ui_rp, menid1, UI_TYPE_NULL, (RenderInformation){NULL});
+assignButtonAction(&ui, entid1, (GUI_ACTION_TRIGGER)0, &output);
 
 int** grid;
 int w, h;
