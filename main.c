@@ -136,7 +136,7 @@ while(!glfwWindowShouldClose(window))   // main loop
 
         if(!PressedArea(block_tds, cpos, 50.0f) && !PressedArea(ui_rp.tds, ncpos, 50.0f))
             {
-            PlaceBlock(&block_rds, &block_tds, &block_drabs, getActiveBlock(), cpos);
+            _PlaceBlockCustom(&block_rds, &block_tds, &block_drabs, getActiveBlock(), cpos);
             glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
             }
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements

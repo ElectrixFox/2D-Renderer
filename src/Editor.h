@@ -22,14 +22,14 @@
  * 
  * @returns The block type to be created
  */
-BLOCK getActiveBlock();
+BlockInfo getActiveBlock();
 
 /**
  * Sets the block to be created
  * 
  * @param block The block which should be used when blocks are created
  */
-void setActiveBlock(BLOCK block);
+void setActiveBlock(BlockInfo block);
 
 /**
  * Selects the block type to be placed

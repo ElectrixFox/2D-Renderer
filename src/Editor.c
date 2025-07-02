@@ -1,6 +1,7 @@
 #include "Editor.h"
 
 static BLOCK curblock = BLOCK_PLAYER;
+static BlockInfo cblock = {"res/sprites/player_spritesheet.png", 2, 1};
 
 const int snap_to_grid = 1;
 const int grid_size = 50;
@@ -10,14 +11,16 @@ extern RenderPacket ui_rp;
 
 #pragma region Main
 
-BLOCK getActiveBlock() { return curblock; }
+BlockInfo getActiveBlock() { return cblock; }
 
-void setActiveBlock(BLOCK block) { curblock = block; }
+void setActiveBlock(BlockInfo block) { cblock = block; }
 
 void SelectBlock(Drawables drabs, unsigned int trsid)
 {
+/*
 int index = findDrawablesTransform(drabs, trsid); // find the drawable from the transform
 setActiveBlock(getBlockFromRenderID(drabs.rids[index]));    // sets the active block
+*/
 }
 
 void ApplyCamera(Camera cam, RenderDetails rds) { _ApplyCamera(cam, rds.shader, rds.size); }
@@ -31,8 +34,9 @@ void ApplyProjection(Camera cam, RenderDetails rds) { _ApplyProjection(cam, rds.
 static void changeBlock(int ui_id)
 {
 RenderInformation ri = getUIRenderInformation(ui, ui_id);   // getting the render information
-BLOCK block = getBlockFromFilePath(ri.ssi.spfp);    // getting the block
-setActiveBlock(block);  // sets the active block
+BlockInfo bi = { ri.ssi.spfp, ri.ssi.nosp, ri.ssi.spr };
+// BLOCK block = getBlockFromFilePath(ri.ssi.spfp);    // getting the block
+setActiveBlock(bi);  // sets the active block
 }
 
 static void unfoldBlockOptions(int ui_id)
