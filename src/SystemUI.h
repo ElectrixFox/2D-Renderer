@@ -104,6 +104,8 @@ RenderInformation getUIRenderInformation(UI_Table ui, unsigned int ui_id);
  * @param rendinf The information to be used to initialise the button
  * 
  * @returns The ID of the new UI element
+ * 
+ * @deprecated
  */
 unsigned int addButton(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, RenderInformation rendinf);
 
@@ -117,16 +119,40 @@ unsigned int addButton(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, Re
  */
 void assignButtonAction(UI_Table* ui, unsigned int ui_id, GUI_ACTION_TRIGGER trigger, ui_act_fun action);
 
+/**
+ * Creates a UI element at the given position with the given details
+ * 
+ * @param ui A pointer to the UI table
+ * @param rp A pointer to the render packet for the UI
+ * @param pos The position of the element
+ * @param scale The scale factor of the square for the element
+ * @param type The type of the UI element
+ * @param rendinf The information to be used to initialise the element
+ * 
+ * @returns The ID of the new UI element
+ */
 unsigned int createUIElement(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, UI_ELEMENT_TYPE type, RenderInformation rendinf);
+
+/**
+ * Removes the UI element with the given ID from the table
+ * 
+ * @param ui A pointer to the UI table
+ * @param rp A pointer to the render packet
+ * @param type The type of the element so that it can be deleted properly
+ * @param ui_id The ID of the UI element to delete
+ */
+void removeUIElement(UI_Table* ui, RenderPacket* rp, UI_ELEMENT_TYPE type, unsigned int ui_id);
 
 unsigned int addToMenu(UI_Table* ui, RenderPacket* rp, unsigned int ui_id, UI_ELEMENT_TYPE type, RenderInformation rendinf);
 
 /**
- * Removes the button with the given ID from the table
+ * removes the button with the given id from the table
  * 
- * @param ui A pointer to the UI table
- * @param rp A pointer to the render packet
- * @param ui_id The ID of the UI element to delete
+ * @param ui a pointer to the ui table
+ * @param rp a pointer to the render packet
+ * @param ui_id the id of the ui element to delete
+ * 
+ * @deprecated
  */
 void removeButton(UI_Table* ui, RenderPacket* rp, unsigned int ui_id);
 

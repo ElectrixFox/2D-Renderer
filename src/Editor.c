@@ -43,33 +43,47 @@ static void unfoldBlockOptions(int ui_id)
 {
 static int folded = 1;
 static int prevuid = -1;
-const float padding = 10.0f;
 
-if(prevuid == ui_id && folded == 0)
+OutputArray(ui.data[0].meni.ui_ids);
+if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu is folded
     {
-    folded = 1;
-    return;
+    if(prevuid != -1)
+        {
+        GUI_MENU meni = getUIRenderInformation(ui, prevuid).meni;   // getting the render information
+        printf("\nFolding %d", prevuid);
+        for (int i = 0; i < meni.ui_ids.size; i++)
+            {
+            printf("\nRemoving");
+            removeUIElement(&ui, &ui_rp, UI_TYPE_BUTTON, meni.ui_ids.data[i]); // remove each of the buttons
+            }
+        }
+
+    printf("\nUnfolding %d", ui_id);
+    GUI_MENU meni = getUIRenderInformation(ui, ui_id).meni;   // getting the render information
+    OutputArray(meni.ui_ids);
+
+    unsigned int head_id = meni.men_head_ui_id;
+    printf("\nMenu head ID: %d", head_id);
+    
+    SpriteSheetInfo ssi = getUIRenderInformation(ui, head_id).ssi;  // getting the sprite sheet info about the head
+
+    BLOCK block = getBlockFromFilePath(ssi.spfp);   // getting the block
+    BlockInfo bi = getBlockInfo(block);
+
+    for (int i = 2; i <= bi.nosp; i++)
+        {
+        RenderInformation ri;
+        ri.ssi = (SpriteSheetInfo){ bi.spfp, bi.nosp, i };
+        unsigned int menentry = addToMenu(&ui, &ui_rp, head_id, UI_TYPE_BUTTON, ri);
+        assignButtonAction(&ui, menentry, UI_TRIGGER_PRESS, &changeBlock);
+        }
+
+    prevuid = ui_id;
+    folded = 0;
     }
-
-RenderInformation ri = getUIRenderInformation(ui, ui_id);   // getting the render information
-unsigned int trsid = getUITransform(ui, ui_id);
-vec2 pos = getPosition(ui_rp.tds, trsid);
-SpriteSheetInfo ssi = ri.ssi;
-BLOCK block = getBlockFromFilePath(ri.ssi.spfp);    // getting the block
-
-for (int i = 2; i <= ssi.nosp; i++)
-    {
-    vec2 position = {pos.x - ((i - 1) * 50.0f + padding), pos.y}; // placing the items in a horizontal line on the right side of the screen
-    RenderInformation ri = (RenderInformation){ ssi.spfp, ssi.nosp, i };
-    unsigned int entry = addButton(&ui, &ui_rp, position, 25.0f, ri);
-    assignButtonAction(&ui, entry, (GUI_ACTION_TRIGGER)0, &changeBlock);
-    }
-
-prevuid = ui_id;
-folded = 0;
 }
 
-void BuildNewSelectBar()
+void BuildNewSelectBar(UI_Table* uitab, RenderPacket* rp)
 {
 vec2 topright = {1255.0f, 695.0f};
 const unsigned int nblocks = getBlockCount();
@@ -79,20 +93,27 @@ for (int i = 0; i < nblocks; i++)
     {
     vec2 position = {topright.x, topright.y - (i * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
     BlockInfo bi = getBlockInfo((BLOCK)i);
-    RenderInformation ri = (RenderInformation){ bi.spfp, bi.nosp, bi.spr };
-    unsigned int entry = createUIElement(&ui, &ui_rp, position, 25.0f, UI_TYPE_BUTTON, ri);
-    assignButtonAction(&ui, entry, (GUI_ACTION_TRIGGER)0, &changeBlock);
-    if(ri.ssi.nosp > 1)
+    RenderInformation ri;
+    ri.ssi = (SpriteSheetInfo){ bi.spfp, bi.nosp, bi.spr };
+    unsigned int entry = createUIElement(uitab, rp, position, 25.0f, UI_TYPE_BUTTON, ri);
+    assignButtonAction(uitab, entry, (GUI_ACTION_TRIGGER)0, &changeBlock);
+    if(ri.ssi.nosp > 1 && getBlockFromFilePath(bi.spfp) != BLOCK_IMMOVABLE_BLOCK)   // if there is more than one sprite and the block isn't the immovable type
         {
         RenderInformation tri;
         tri.meni = (GUI_MENU){(Array){NULL}, entry};
-        unsigned int menhead = createUIElement(&ui, &ui_rp, position, 25.0f, UI_TYPE_MENU, tri);
+        unsigned int menhead = createUIElement(uitab, rp, position, 25.0f, UI_TYPE_MENU, tri);
+        assignButtonAction(uitab, menhead, UI_TRIGGER_HOVER, &unfoldBlockOptions);
+        
+        printf("\nCreating the Menu");
+        OutputArray(uitab->data[0].meni.ui_ids);
 
+        /*
         for (int i = 2; i <= bi.nosp; i++)
             {
             unsigned int menentry = addToMenu(&ui, &ui_rp, menhead, UI_TYPE_BUTTON, (RenderInformation){ bi.spfp, bi.nosp, i });
             assignButtonAction(&ui, menentry, UI_TRIGGER_PRESS, &changeBlock);
             }
+        */
         }
     }
 }

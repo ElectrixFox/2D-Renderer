@@ -173,6 +173,8 @@ unsigned int getUITransform(UI_Table ui, unsigned int ui_id) { return ui.trsid[f
 
 RenderInformation getUIRenderInformation(UI_Table ui, unsigned int ui_id) { return ui.data[findUIIDinTable(ui, ui_id)]; }
 
+RenderInformation* _getUIRenderInformation(UI_Table ui, unsigned int ui_id) { return &ui.data[findUIIDinTable(ui, ui_id)]; }
+
 unsigned int addButton(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, RenderInformation rendinf)
 {
 static unsigned int ui_id = 0;
@@ -242,15 +244,24 @@ switch (type)   // doing the appropriate thing for each type
     case UI_TYPE_NULL:
         ui->data[index].rinf = (GUI_RENDER_INFO)0;
         ind = CreateBasicSquare(rp, pos, scale, NULL);  // creates the square
+        
+        unsigned int trsid = rp->drabs.trsids[ind]; // gets the transformation ID
+        ui->trsid[index] = trsid;   // sets the new transformation ID
         break;
     case UI_TYPE_BUTTON:
         ui->data[index].ssi = rendinf.ssi;
         unsigned int rid = CreateSpriteRenderable(&rp->rds, rendinf.ssi.spfp, rendinf.ssi.nosp, rendinf.ssi.spr);
-        unsigned int trsid = AddTransformation(&rp->tds, pos, (vec2){scale, scale});
+        trsid = AddTransformation(&rp->tds, pos, (vec2){scale, scale});
         ind = AddDrawable(&rp->drabs, trsid, rid);
+
+        ui->trsid[index] = trsid;
         break;
     case UI_TYPE_MENU:
         ui->data[index].meni = rendinf.meni;    // set the menu data
+        ui->data[index].meni.ui_ids.data = (unsigned int*)malloc(sizeof(unsigned int));
+        ui->data[index].meni.ui_ids.size = 0;
+        printf("\nCreation");
+
         int tindex = findUIIDinTable(*ui, rendinf.meni.men_head_ui_id);
         ind = findDrawablesTransform(rp->drabs, ui->trsid[tindex]);
         assignButtonAction(ui, rendinf.meni.men_head_ui_id, UI_TRIGGER_HOVER, &unfoldMenu);    // setting the menu action
@@ -259,10 +270,73 @@ switch (type)   // doing the appropriate thing for each type
         break;
     }
 
+/*
 unsigned int trsid = rp->drabs.trsids[ind]; // gets the transformation ID
 ui->trsid[index] = trsid;   // sets the new transformation ID
+*/
 
 return ui->ui_id[index];    // returning the new UI ID
+}
+
+static void removeUIElementSingle(UI_Table* ui, RenderPacket* rp, unsigned int ui_id)
+{
+int index = findUIIDinTable(*ui, ui_id);
+
+if(index == -1)
+    return; // if the index isn't found just quit
+
+const int size = ui->size;
+if(index == size - 1) goto end;   // if the index is the last thing just decrease the size
+
+for (int i = 0; i < UI_NO_TRIGGERS; i++)    // removes all the possible actions
+    removeUITriggerAction(&ui->actions[i], ui_id);   // removes the actions
+
+RemoveDrawable(&rp->drabs, &rp->rds, &rp->tds, ui->trsid[index]);   // removing the drawable element
+
+// getting the temporary variables
+unsigned int tmpid = ui->ui_id[index];
+unsigned int tmptrsid = ui->trsid[index];
+RenderInformation tmpdata = ui->data[index];
+
+// setting the to delete to the end values
+ui->ui_id[index] = ui->ui_id[size - 1];
+ui->trsid[index] = ui->trsid[size - 1];
+ui->data[index] = ui->data[size - 1];
+
+// overwriting the end values so they can be ignored 
+ui->ui_id[size - 1] = tmpid;
+ui->trsid[size - 1] = tmptrsid;
+ui->data[size - 1] = tmpdata;
+
+end:
+ui->size--; // decrease the size so it is effectively not there
+}
+
+void removeUIElement(UI_Table* ui, RenderPacket* rp, UI_ELEMENT_TYPE type, unsigned int ui_id)
+{
+int index = findUIIDinTable(*ui, ui_id);    // finding the ID in the UI table
+
+switch (type)   // doing the appropriate thing for each type
+    {
+    case UI_TYPE_NULL:
+        removeUIElementSingle(ui, rp, ui_id);
+        break;
+    case UI_TYPE_BUTTON:
+        removeUIElementSingle(ui, rp, ui_id);
+        break;
+    case UI_TYPE_MENU:
+        GUI_MENU* menu = &_getUIRenderInformation(*ui, ui_id)->meni;
+        for (int i = 0; i < menu->ui_ids.size; i++)
+            {
+            removeUIElementSingle(ui, rp, menu->ui_ids.data[i]);
+            }
+        menu->ui_ids.size = 0;  // resetting the size
+        removeUIElementSingle(ui, rp, menu->men_head_ui_id);    // removing the head element
+        break;
+    default:
+        break;
+    }
+
 }
 
 unsigned int addToMenu(UI_Table* ui, RenderPacket* rp, unsigned int ui_id, UI_ELEMENT_TYPE type, RenderInformation rendinf)
@@ -275,8 +349,13 @@ vec2 scale = getScale(rp->tds, ui->trsid[index]); // getting the scale
 printf("\nMenu head location: ");
 OutputVec2(pos);
 
-GUI_MENU meni = ui->data[index].meni;    // getting the menu
-int mensize = meni.ui_ids.size; // getting the size of the menu
+RenderInformation ri = getUIRenderInformation(*ui, ui_id);
+int mensize = ri.meni.ui_ids.size;
+
+printf("\nAdding to menu");
+OutputArray(ri.meni.ui_ids);
+// GUI_MENU meni = ui->data[index].meni;    // getting the menu
+// int mensize = meni.ui_ids.size; // getting the size of the menu
 
 pos = (vec2){pos.x - ((mensize + 1) * 50.0f + padding), pos.y};   // getting the new position
 
@@ -288,6 +367,19 @@ printf("\nMenu entry location: ");
 OutputVec2(pos);
 
 return nui_id;
+}
+
+void removeFromMenu(UI_Table* ui, RenderPacket* rp, unsigned int menid, unsigned int ui_id)
+{
+const float padding = 10.0f;
+int men_index = findUIIDinTable(*ui, menid);    // getting the menu ID
+int index = findUIIDinTable(*ui, ui_id);    // getting the UI element in the UI table
+
+GUI_MENU meni = ui->data[men_index].meni;   // getting the menu
+
+
+
+ui->data[men_index].meni.ui_ids.size--; // decrease the size
 }
 
 

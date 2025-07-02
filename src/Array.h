@@ -7,3 +7,5 @@ typedef struct Array
     } Array;
 
 void AppendToArray(Array* arr, unsigned int item);
+
+void OutputArray(Array arr);
