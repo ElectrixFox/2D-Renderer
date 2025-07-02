@@ -340,13 +340,11 @@ vec2 scale = getScale(rp->tds, ui->trsid[index]); // getting the scale
 printf("\nMenu head location: ");
 OutputVec2(pos);
 
-RenderInformation ri = getUIRenderInformation(*ui, ui_id);
-int mensize = ri.meni.ui_ids.size;
+RenderInformation ri = getUIRenderInformation(*ui, ui_id);  // getting the render information
+int mensize = ri.meni.ui_ids.size;  // getting the size of the menu
 
 printf("\nAdding to menu");
 OutputArray(ri.meni.ui_ids);
-// GUI_MENU meni = ui->data[index].meni;    // getting the menu
-// int mensize = meni.ui_ids.size; // getting the size of the menu
 
 pos = (vec2){pos.x - ((mensize + 1) * 50.0f + padding), pos.y};   // getting the new position
 

@@ -44,13 +44,13 @@ static void unfoldBlockOptions(int ui_id)
 static int folded = 1;
 static int prevuid = -1;
 
-printf("\nToggling the menu");
 if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu is folded
     {
     if(prevuid != -1)
         {
         GUI_MENU meni = getUIRenderInformation(ui, prevuid).meni;   // getting the render information
         printf("\nFolding %d", prevuid);
+        OutputArray(meni.ui_ids);
         for (int i = 0; i < meni.ui_ids.size; i++)
             {
             printf("\nRemoving");
@@ -60,13 +60,9 @@ if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu
 
     printf("\nUnfolding %d", ui_id);
     GUI_MENU meni = getUIRenderInformation(ui, ui_id).meni;   // getting the render information
-    OutputArray(meni.ui_ids);
-
     unsigned int head_id = meni.men_head_ui_id;
-    printf("\nMenu head ID: %d", head_id);
     
     SpriteSheetInfo ssi = getUIRenderInformation(ui, head_id).ssi;  // getting the sprite sheet info about the head
-
     BLOCK block = getBlockFromFilePath(ssi.spfp);   // getting the block
     BlockInfo bi = getBlockInfo(block);
 
@@ -74,7 +70,11 @@ if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu
         {
         RenderInformation ri;
         ri.ssi = (SpriteSheetInfo){ bi.spfp, bi.nosp, i };
+        printf("\n%d", ui.size);
         unsigned int menentry = addToMenu(&ui, &ui_rp, ui_id, UI_TYPE_BUTTON, ri);
+        printf("\n%d", ui.size);
+        OutputArray(getUIRenderInformation(ui, ui_id).meni.ui_ids);
+        OutputArray((Array){ui.ui_id, ui.size + 1});
         assignButtonAction(&ui, menentry, UI_TRIGGER_PRESS, &changeBlock);
         }
 
