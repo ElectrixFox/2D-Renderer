@@ -44,7 +44,7 @@ static void unfoldBlockOptions(int ui_id)
 static int folded = 1;
 static int prevuid = -1;
 
-OutputArray(ui.data[0].meni.ui_ids);
+printf("\nToggling the menu");
 if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu is folded
     {
     if(prevuid != -1)
@@ -74,7 +74,7 @@ if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu
         {
         RenderInformation ri;
         ri.ssi = (SpriteSheetInfo){ bi.spfp, bi.nosp, i };
-        unsigned int menentry = addToMenu(&ui, &ui_rp, head_id, UI_TYPE_BUTTON, ri);
+        unsigned int menentry = addToMenu(&ui, &ui_rp, ui_id, UI_TYPE_BUTTON, ri);
         assignButtonAction(&ui, menentry, UI_TRIGGER_PRESS, &changeBlock);
         }
 
@@ -83,7 +83,7 @@ if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu
     }
 }
 
-void BuildNewSelectBar(UI_Table* uitab, RenderPacket* rp)
+void BuildNewSelectBar()
 {
 vec2 topright = {1255.0f, 695.0f};
 const unsigned int nblocks = getBlockCount();
@@ -95,17 +95,17 @@ for (int i = 0; i < nblocks; i++)
     BlockInfo bi = getBlockInfo((BLOCK)i);
     RenderInformation ri;
     ri.ssi = (SpriteSheetInfo){ bi.spfp, bi.nosp, bi.spr };
-    unsigned int entry = createUIElement(uitab, rp, position, 25.0f, UI_TYPE_BUTTON, ri);
-    assignButtonAction(uitab, entry, (GUI_ACTION_TRIGGER)0, &changeBlock);
+    unsigned int entry = createUIElement(&ui, &ui_rp, position, 25.0f, UI_TYPE_BUTTON, ri);
+    assignButtonAction(&ui, entry, (GUI_ACTION_TRIGGER)0, &changeBlock);
     if(ri.ssi.nosp > 1 && getBlockFromFilePath(bi.spfp) != BLOCK_IMMOVABLE_BLOCK)   // if there is more than one sprite and the block isn't the immovable type
         {
         RenderInformation tri;
         tri.meni = (GUI_MENU){(Array){NULL}, entry};
-        unsigned int menhead = createUIElement(uitab, rp, position, 25.0f, UI_TYPE_MENU, tri);
-        assignButtonAction(uitab, menhead, UI_TRIGGER_HOVER, &unfoldBlockOptions);
+        unsigned int menhead = createUIElement(&ui, &ui_rp, position, 25.0f, UI_TYPE_MENU, tri);
+        assignButtonAction(&ui, menhead, UI_TRIGGER_HOVER, &unfoldBlockOptions);
         
         printf("\nCreating the Menu");
-        OutputArray(uitab->data[0].meni.ui_ids);
+        OutputArray(ui.data[0].meni.ui_ids);
 
         /*
         for (int i = 2; i <= bi.nosp; i++)

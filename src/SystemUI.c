@@ -244,22 +244,15 @@ switch (type)   // doing the appropriate thing for each type
     case UI_TYPE_NULL:
         ui->data[index].rinf = (GUI_RENDER_INFO)0;
         ind = CreateBasicSquare(rp, pos, scale, NULL);  // creates the square
-        
-        unsigned int trsid = rp->drabs.trsids[ind]; // gets the transformation ID
-        ui->trsid[index] = trsid;   // sets the new transformation ID
         break;
     case UI_TYPE_BUTTON:
         ui->data[index].ssi = rendinf.ssi;
         unsigned int rid = CreateSpriteRenderable(&rp->rds, rendinf.ssi.spfp, rendinf.ssi.nosp, rendinf.ssi.spr);
-        trsid = AddTransformation(&rp->tds, pos, (vec2){scale, scale});
+        unsigned int trsid = AddTransformation(&rp->tds, pos, (vec2){scale, scale});
         ind = AddDrawable(&rp->drabs, trsid, rid);
-
-        ui->trsid[index] = trsid;
         break;
     case UI_TYPE_MENU:
         ui->data[index].meni = rendinf.meni;    // set the menu data
-        ui->data[index].meni.ui_ids.data = (unsigned int*)malloc(sizeof(unsigned int));
-        ui->data[index].meni.ui_ids.size = 0;
         printf("\nCreation");
 
         int tindex = findUIIDinTable(*ui, rendinf.meni.men_head_ui_id);
@@ -270,10 +263,8 @@ switch (type)   // doing the appropriate thing for each type
         break;
     }
 
-/*
 unsigned int trsid = rp->drabs.trsids[ind]; // gets the transformation ID
 ui->trsid[index] = trsid;   // sets the new transformation ID
-*/
 
 return ui->ui_id[index];    // returning the new UI ID
 }

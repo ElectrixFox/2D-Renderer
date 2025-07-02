@@ -64,7 +64,7 @@ void ApplyProjection(Camera cam, RenderDetails rds);
 
 #pragma region EditorUI
 
-void BuildNewSelectBar(UI_Table* uitab, RenderPacket* rp);
+void BuildNewSelectBar();
 
 /**
  * Builds the block selection bar
