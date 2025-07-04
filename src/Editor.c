@@ -48,14 +48,16 @@ if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu
     {
     if(prevuid != -1)
         {
-        GUI_MENU meni = getUIRenderInformation(ui, prevuid).meni;   // getting the render information
+        // GUI_MENU meni = getUIRenderInformation(ui, prevuid).meni;   // getting the render information
+        GUI_MENU* meni = &_getUIRenderInformation(&ui, prevuid)->meni;   // getting the render information
         printf("\nFolding %d", prevuid);
-        OutputArray(meni.ui_ids);
-        for (int i = 0; i < meni.ui_ids.size; i++)
+        OutputArray(meni->ui_ids);
+        for (int i = 0; i < meni->ui_ids.size; i++)
             {
-            printf("\nRemoving");
-            removeUIElement(&ui, &ui_rp, UI_TYPE_BUTTON, meni.ui_ids.data[i]); // remove each of the buttons
+            printf("\nRemoving %d", meni->ui_ids.data[i]);
+            removeUIElement(&ui, &ui_rp, UI_TYPE_BUTTON, meni->ui_ids.data[i]); // remove each of the buttons
             }
+        meni->ui_ids.size = 0;
         }
 
     printf("\nUnfolding %d", ui_id);

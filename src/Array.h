@@ -8,4 +8,8 @@ typedef struct Array
 
 void AppendToArray(Array* arr, unsigned int item);
 
+void RemoveFromArrayIndex(Array* arr, int index);
+
+void RemoveFromArray(Array* arr, unsigned int item);
+
 void OutputArray(Array arr);
