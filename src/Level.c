@@ -4,7 +4,7 @@ int getOccurences(const char* string, const char* substr)
 {
 int count = 0;
 const char* tmp = string;
-while(tmp = strstr(tmp, substr))
+while((tmp = strstr(tmp, substr)))
     {
     count++;
     tmp++;
@@ -67,20 +67,36 @@ for (int i = 1; i <= gridh; i++)
 *grid = tgrid;
 }
 
+void WriteLevel(const char* levelfp, const int w, const int h, const int grid[h][w])
+{
+char* output = (char*)malloc(w * h * sizeof(int) * sizeof(char));
+output[0] = '\0';   // setting the string as empty by setting the first character to be the end 
 
-void getLevel(RenderDetails rds, TransformationDetails tds, Drawables drabs, PressableDetails pds, int* w, int* h, int*** grid)
+for (int i = 0; i < h; i++)
+    {
+    for (int j = 0; j < w; j++)
+        {
+        char tmp[32];
+        sprintf(tmp, "%d ", grid[i][j]);    // convert the int to a string
+        strcat(output, tmp);    // append the string to the output
+        }
+    output[strlen(output) - 1] = '\n';  // set the last character of the line to be the new line instead of a space
+    }
+output[strlen(output) - 1] = '\0';  // set the last character of the output to be the null character (signalling the end of the string)
+
+writeFile(levelfp, output);
+}
+
+void getLevel(RenderDetails rds, TransformationDetails tds, Drawables drabs, int* w, int* h, int*** grid)
 {
 // find the bottom left and top right blocks (the extremes)
 float minx = 0, maxx = 0, miny = 0, maxy = 0;
 
-if(pds.size == 0)   // stop if there are no transforms
+if(tds.size == 0)   // stop if there are no transforms
     return;
 
 for (int i = 0; i < tds.size; i++)  // find the first deletable
     {
-    unsigned int tpid = pds.prid[findPressableTransfom(pds, tds.trsid[i])];
-    if(getPressableAction(pds, tpid) != BACT_DELETE) continue;  // if it isn't a placed block then continue
-
     minx = tds.pos[i].x;
     maxx = tds.pos[i].x;
     miny = tds.pos[i].y;
@@ -90,10 +106,6 @@ for (int i = 0; i < tds.size; i++)  // find the first deletable
 
 for (int i = 0; i < tds.size; i++)
     {
-    unsigned int tpid = pds.prid[findPressableTransfom(pds, tds.trsid[i])];
-    if(getPressableAction(pds, tpid) != BACT_DELETE) continue;  // if it isn't a placed block then continue
-
-
     // getting the extreme points
     if(tds.pos[i].x < minx)
         minx = tds.pos[i].x;
@@ -137,4 +149,23 @@ for (float y = maxy; miny <= y; y -= (float)grid_size)
     }
 
 *grid = tgrid;
+}
+
+void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, int w, int h, const int** grid)
+{
+for (int y = 0; y < h; y++)
+    {
+    vec2 pos = {0.0f, y * grid_size};
+    for (int x = 0; x < w; x++)
+        {
+        pos.x = x * grid_size;
+
+        int btype = grid[y][x];
+
+        if(btype != 0)
+            PlaceBlock(rds, tds, drabs, (BLOCK)(btype - 1), pos);
+        }
+    }
+
+
 }

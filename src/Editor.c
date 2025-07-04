@@ -1,46 +1,91 @@
 #include "Editor.h"
 
 static BLOCK curblock = BLOCK_PLAYER;
+static BlockInfo cblock = {"res/sprites/player_spritesheet.png", 2, 1};
 
 const int snap_to_grid = 1;
 const int grid_size = 50;
 
-unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, BLOCK block, vec2 position)
+extern UI_Table ui;
+extern RenderPacket ui_rp;
+
+#pragma region Main
+
+BlockInfo getActiveBlock() { return cblock; }
+
+void setActiveBlock(BlockInfo block) { cblock = block; }
+
+void SelectBlock(Drawables drabs, unsigned int trsid)
 {
-BlockInfo bi = getBlockInfo(block);
-unsigned int sprite = bi.spr;    // To-Do: write some function to find the sprite from the enum
-unsigned int nosprites = bi.nosp; // To-Do: write some function to find the number of sprites in the sheet
-
-if(snap_to_grid == 1)   // if should snap to grid
-    position = (vec2){roundf(position.x / grid_size) * grid_size, roundf(position.y / grid_size) * grid_size};  // snap it to the nearest grid spot
-
-unsigned int rd = CreateSpriteRenderable(rds, bi.spfp, nosprites, sprite);
-unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});
-
-AddDrawable(drabs, td, rd);
-AddPressable(prds, td, BACT_DELETE);
-AssignBlock(rd, block);
-
-return rd;
+/*
+int index = findDrawablesTransform(drabs, trsid); // find the drawable from the transform
+setActiveBlock(getBlockFromRenderID(drabs.rids[index]));    // sets the active block
+*/
 }
 
-void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, unsigned int rid)
+void ApplyCamera(Camera cam, RenderDetails rds) { _ApplyCamera(cam, rds.shader, rds.size); }
+
+void ApplyProjection(Camera cam, RenderDetails rds) { _ApplyProjection(cam, rds.shader, rds.size); }
+
+#pragma endregion
+
+#pragma region EditorUI
+
+static void changeBlock(int ui_id)
 {
-int index = findDrawablesRenderable(*drabs, rid); // finding the ID
-if(index == -1)
-    return; // if the index isn't found just quit
-
-unsigned int prid = prds->prid[findPressableTransfom(*prds, drabs->trsids[index])];
-
-if(getPressableAction(*prds, prid) != BACT_DELETE)  // if the block shouldn't be deleted don't delete it
-    return; 
-
-RemoveDrawable(drabs, rds, tds, drabs->trsids[index]); // remove the drawable
-RemovePressable(prds, prid);
-UnassignBlock(prid);
+RenderInformation ri = getUIRenderInformation(ui, ui_id);   // getting the render information
+BlockInfo bi = { ri.ssi.spfp, ri.ssi.nosp, ri.ssi.spr };
+// BLOCK block = getBlockFromFilePath(ri.ssi.spfp);    // getting the block
+setActiveBlock(bi);  // sets the active block
 }
 
-void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, Camera* cam)
+static void unfoldBlockOptions(int ui_id)
+{
+static int folded = 1;
+static int prevuid = -1;
+
+if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu is folded
+    {
+    if(prevuid != -1)
+        {
+        // GUI_MENU meni = getUIRenderInformation(ui, prevuid).meni;   // getting the render information
+        GUI_MENU* meni = &_getUIRenderInformation(&ui, prevuid)->meni;   // getting the render information
+        printf("\nFolding %d", prevuid);
+        OutputArray(meni->ui_ids);
+        for (int i = 0; i < meni->ui_ids.size; i++)
+            {
+            printf("\nRemoving %d", meni->ui_ids.data[i]);
+            removeUIElement(&ui, &ui_rp, UI_TYPE_BUTTON, meni->ui_ids.data[i]); // remove each of the buttons
+            }
+        meni->ui_ids.size = 0;
+        }
+
+    printf("\nUnfolding %d", ui_id);
+    GUI_MENU meni = getUIRenderInformation(ui, ui_id).meni;   // getting the render information
+    unsigned int head_id = meni.men_head_ui_id;
+    
+    SpriteSheetInfo ssi = getUIRenderInformation(ui, head_id).ssi;  // getting the sprite sheet info about the head
+    BLOCK block = getBlockFromFilePath(ssi.spfp);   // getting the block
+    BlockInfo bi = getBlockInfo(block);
+
+    for (int i = 2; i <= bi.nosp; i++)
+        {
+        RenderInformation ri;
+        ri.ssi = (SpriteSheetInfo){ bi.spfp, bi.nosp, i };
+        printf("\n%d", ui.size);
+        unsigned int menentry = addToMenu(&ui, &ui_rp, ui_id, UI_TYPE_BUTTON, ri);
+        printf("\n%d", ui.size);
+        OutputArray(getUIRenderInformation(ui, ui_id).meni.ui_ids);
+        OutputArray((Array){ui.ui_id, ui.size + 1});
+        assignButtonAction(&ui, menentry, UI_TRIGGER_PRESS, &changeBlock);
+        }
+
+    prevuid = ui_id;
+    folded = 0;
+    }
+}
+
+void BuildNewSelectBar()
 {
 vec2 topright = {1255.0f, 695.0f};
 const unsigned int nblocks = getBlockCount();
@@ -49,64 +94,97 @@ const float padding = 10.0f;
 for (int i = 0; i < nblocks; i++)
     {
     vec2 position = {topright.x, topright.y - (i * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
-    unsigned int rid = PlaceBlock(rds, tds, drabs, prds, (BLOCK)i, position);
-    int index = findPressableTransfom(*prds, drabs->trsids[findDrawablesRenderable(*drabs, rid)]);
-    SetPressableAction(prds, prds->prid[index], BACT_SWITCH);
-    }
-}
-
-BLOCK getActiveBlock() { return curblock; }
-
-void setActiveBlock(BLOCK block) { curblock = block; }
-
-void SelectBlock(PressableDetails prds, Drawables drabs, unsigned int prid)
-{
-int index = getPressableIDIndex(prds, prid);
-if(prds.pract[index] != BACT_SWITCH)    // if the pressed object isn't a switchable
-    return;
-
-index = findDrawablesTransform(drabs, prds.trsid[index]);   // find the drawable from the transform
-setActiveBlock(getBlockFromRenderID(drabs.rids[index]));
-}
-
-void ApplyCamera(Camera cam, PressableDetails prds, Drawables drabs, TransformationDetails trds, RenderDetails rds)
-{
-unsigned int* ttrsids = getPressablesTransformWithoutAction(prds, BACT_SWITCH);    // gets all of the transforms with the delete action
-unsigned int count = ttrsids[0];    // gets the count
-ttrsids = &ttrsids[1];  // moves the first item to be the second (shuffles the array back by one)
-unsigned int* trids = getRenderIDsFromTransformIDs(drabs, ttrsids, count);  // gets the transformation IDs
-unsigned int* progs = getRenderablePrograms(rds, trids, count); // gets the programs
-_ApplyCamera(cam, progs, count);    // setting the camera matrix
-ApplyProjection(cam, rds.shader, rds.size);
-}
-
-void ApplyStaticCamera(Camera cam, PressableDetails prds, Drawables drabs, TransformationDetails trds, RenderDetails rds)
-{
-unsigned int* sttrsids = getPressablesTransformWithAction(prds, BACT_SWITCH);    // gets all of the transforms with the delete action
-unsigned int count = sttrsids[0];    // gets the count
-sttrsids = &sttrsids[1];  // moves the first item to be the second (shuffles the array back by one)
-for (int i = 0; i < count; i++)
-    {
-    
-    applyTranslation(trds, sttrsids[i], ScalarMultVec2(cam.poscomponent, -1));
-    }
-}
-
-void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, int w, int h, const int** grid)
-{
-for (int y = 0; y < h; y++)
-    {
-    vec2 pos = {0.0f, y * grid_size};
-    for (int x = 0; x < w; x++)
+    BlockInfo bi = getBlockInfo((BLOCK)i);
+    RenderInformation ri;
+    ri.ssi = (SpriteSheetInfo){ bi.spfp, bi.nosp, bi.spr };
+    unsigned int entry = createUIElement(&ui, &ui_rp, position, 25.0f, UI_TYPE_BUTTON, ri);
+    assignButtonAction(&ui, entry, (GUI_ACTION_TRIGGER)0, &changeBlock);
+    if(ri.ssi.nosp > 1 && getBlockFromFilePath(bi.spfp) != BLOCK_IMMOVABLE_BLOCK)   // if there is more than one sprite and the block isn't the immovable type
         {
-        pos.x = x * grid_size;
+        RenderInformation tri;
+        tri.meni = (GUI_MENU){(Array){NULL}, entry};
+        unsigned int menhead = createUIElement(&ui, &ui_rp, position, 25.0f, UI_TYPE_MENU, tri);
+        assignButtonAction(&ui, menhead, UI_TRIGGER_HOVER, &unfoldBlockOptions);
+        
+        printf("\nCreating the Menu");
+        OutputArray(ui.data[0].meni.ui_ids);
 
-        int btype = grid[y][x];
-
-        if(btype != 0)
-            PlaceBlock(rds, tds, drabs, prds, (BLOCK)(btype - 1), pos);
+        /*
+        for (int i = 2; i <= bi.nosp; i++)
+            {
+            unsigned int menentry = addToMenu(&ui, &ui_rp, menhead, UI_TYPE_BUTTON, (RenderInformation){ bi.spfp, bi.nosp, i });
+            assignButtonAction(&ui, menentry, UI_TRIGGER_PRESS, &changeBlock);
+            }
+        */
         }
     }
+}
 
+void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs)
+{
+vec2 topright = {1255.0f, 695.0f};
+const unsigned int nblocks = getBlockCount();
+const float padding = 10.0f;
+
+for (int i = 0; i < nblocks; i++)
+    {
+    vec2 position = {topright.x, topright.y - (i * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
+    PlaceBlock(rds, tds, drabs, (BLOCK)i, position);
+    }
+}
+
+void FoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int* rids)
+{
+for (int i = 1; i < rids[0]; i++)
+    {
+    int index = findDrawablesRenderable(*drabs, rids[i]);
+
+    if(index == -1)
+        printf("\nNot found");
+
+    RemoveTransformation(tds, drabs->trsids[index]);
+    RemoveRenderDetail(tds, drabs->rids[index]);
+    RemoveDrawable(drabs, rds, tds, rids[i]);
+    }
 
 }
+
+static unsigned int* UnfoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid)
+{
+BLOCK block = getBlockFromRenderID(rid);
+BlockInfo bi = getBlockInfo(block);
+vec2 posi = tds->pos[getTransformationIDIndex(*tds, findDrawablesRenderable(*drabs, rid))];
+vec2 padding = {50.0f, 0.0f};
+
+unsigned int* rids = (unsigned int*)malloc((bi.nosp + 1) * sizeof(unsigned int));
+
+for (int spr = 1; spr < bi.nosp; spr++)
+    {
+    bi.spr += 1;
+    vec2 tpos = addVec2(posi, ScalarMultVec2(padding, -spr));
+    unsigned int trid = _PlaceBlockCustom(rds, tds, drabs, bi, tpos);   // setting the rid array to contain the correct details
+    rids[spr] = trid;
+    }
+rids[0] = bi.nosp;
+
+return rids;
+}
+
+void ToggleMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid)
+{
+static unsigned int prevrid = 100;
+static unsigned int* prids;
+
+if(prevrid == rid)
+    FoldMoreOptions(rds, tds, drabs, prids);  // fold the same one
+else
+    {
+    if(prevrid != 100)
+        FoldMoreOptions(rds, tds, drabs, prids);  // fold the previous
+    prids = UnfoldMoreOptions(rds, tds, drabs, rid);    // unfold the new
+    }
+
+prevrid = rid;
+}
+
+#pragma endregion

@@ -72,7 +72,18 @@ fclose(file);
 return res;
 }
 
-void writeFile(const char* filePath)
+void writeFile(const char* filePath, const char* data)
 {
-// To-Do
+FILE* fptr;
+
+fptr = fopen(filePath, "w");
+
+if(fptr == NULL)
+   {
+   printf("\nNULL FILE");
+   exit(1);
+   }
+
+fprintf(fptr, "%s", data);
+fclose(fptr);
 }

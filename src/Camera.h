@@ -7,13 +7,23 @@ struct Camera
     {
     unsigned int camid; // i.e. entity ID
     vec2 poscomponent;  // i.e. pos
-    vec2 zoomcomponent; // i.e. scale
+    vec2 zoomcomponent; // i.e. scaled
     int* scrspx;    // screen dimension y
     int* scrspy;    // screen dimension x
     };
 typedef struct Camera Camera;
 
 Camera CreateCamera(vec2 pos, vec2 scale, int* scrwid, int* srchig);
+
+/**
+ * Gets the relative cursor position of the cursor compared to the camera
+ * 
+ * @param cam The camera
+ * 
+ * @returns The position of the cursor relative to the camera
+ */
+vec2 GetCursorPositionRelative(Camera cam);
+
 
 m4 getCameraMatrix(Camera cam);
 
@@ -42,7 +52,7 @@ int MoveCamera(Camera* cam);
  * @param progs The array of shader programs
  * @param size The number of programs
  */
-void ApplyProjection(Camera cam, unsigned int* progs, unsigned int size);
+void _ApplyProjection(Camera cam, unsigned int* progs, unsigned int size);
 
 /**
  * Applies the view matrix to the program

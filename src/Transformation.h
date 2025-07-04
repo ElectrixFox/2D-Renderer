@@ -7,8 +7,6 @@ struct TransformationDetails
     vec2* pos;
     vec2* scale;
     unsigned int size;
-    int width;
-    int height;
     };
 typedef struct TransformationDetails TransformationDetails;
 
@@ -20,7 +18,7 @@ typedef struct TransformationDetails TransformationDetails;
  * 
  * @returns Newly initialised TransformationDetails object
  */
-TransformationDetails InitialiseTransformationDetails(unsigned int width, unsigned int height);
+TransformationDetails InitialiseTransformationDetails();
 
 /**
  * Returns the index of the transformation

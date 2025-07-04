@@ -39,16 +39,6 @@ void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned in
 void ExpandByOne(void** arr, const unsigned int size, unsigned int elesize);
 
 /**
- * Appends an element to an array
- * 
- * @param arr The actual array
- * @param size The size of the array
- * @param item The item to add
- * @param elesize The size of the element to add
- */
-void AppendToArray(void** arr, unsigned int size, void** item, unsigned int elesize);
-
-/**
  * Multiplies a vec2 by a scalar
  * 
  * @param v The vector to multiply

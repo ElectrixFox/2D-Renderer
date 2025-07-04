@@ -126,36 +126,33 @@ int _CheckPressed(vec2* poses, vec2* scales, vec2 cursorpos, unsigned int eid);
 /**
  * Checks if no objects have been pressed pressed
  * 
- * @param prds The pressables table
  * @param trds The transformations table
  * @param curpos The position of the cursor
  * 
  * @returns 1 if anything is pressed, 0 if not
  */
-int PressedNothing(PressableDetails prds, TransformationDetails trds, vec2 curpos);
+int PressedNothing(TransformationDetails trds, vec2 curpos);
 
 /**
  * Checks if multiple objects have pressed at once
  * 
- * @param prds The pressables table
  * @param trds The transformations table
  * @param curpos The position of the cursor
  * 
  * @returns 1 if something else is pressed too, 0 if not
  */
-int PressedAnother(PressableDetails prds, TransformationDetails trds, vec2 curpos);
+int PressedAnother(TransformationDetails trds, vec2 curpos);
 
 /**
  * Checks if there is a block which will overlap the given range
  * 
- * @param prds The pressables table
  * @param trds The transformations table
  * @param curpos The position of the cursor
  * @param range The range to check
  * 
  * @returns 1 if the area is not empty, 0 if it is empty
  */
-int PressedArea(PressableDetails prds, TransformationDetails trds, vec2 curpos, float range);
+int PressedArea(TransformationDetails trds, vec2 curpos, float range);
 
 /**
  * Checks if there is a block (with a given action) which will overlap the given range
@@ -173,15 +170,14 @@ int PressedAreaAction(PressableDetails prds, TransformationDetails trds, vec2 cu
 /**
  * Gets the pressed block
  * 
- * @param prds The pressables table
  * @param trds The transformation table
  * @param curpos The position of the cursor
  * 
- * @returns The pressable ID of the pressed item
+ * @returns The transform ID of the pressed item
  * 
  * @warning Does not verify that a block has been pressed and hence should be only used when one has been pressed
  */
-unsigned int getPressedBlock(PressableDetails prds, TransformationDetails trds, vec2 curpos);
+unsigned int getPressedBlock(TransformationDetails trds, vec2 curpos);
 
 /**
  * Gets all of the pressed blocks in a given area

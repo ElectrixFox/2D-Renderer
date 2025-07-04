@@ -1,13 +1,20 @@
 #pragma once
 #include "MathsOperations.h"
+#include "SpriteShapes.h"
 
 #pragma region Block Object
+
+/**
+ * Could subdivide the block enum into:
+ * 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ * Sprite | Block
+ */
 
 enum BLOCK {
     BLOCK_PLAYER = 0,
     BLOCK_MOVABLE_BARRIER = 1,
     BLOCK_MOVABLE_BLOCK = 2,
-    BLOCK_IMMOVABLE_BLOCK_ALONE,
+    BLOCK_IMMOVABLE_BLOCK,
     BLOCK_COUNT,
 };
 typedef enum BLOCK BLOCK;
@@ -27,6 +34,25 @@ struct BlockDetails
     unsigned int size;
     };
 typedef struct BlockDetails BlockDetails;
+
+/**
+ * Sets the active sprite of the block
+ * 
+ * @param block A pointer to the block variable
+ * @param spr The sprite to set the block
+ */
+void setBlockSprite(unsigned int* block, unsigned int spr);
+
+unsigned int getBlockSprite(unsigned int block);
+
+void setBlockSpriteCount(unsigned int* block, unsigned int nospr);
+
+unsigned int getBlockSpriteCount(unsigned int block);
+
+void setBlockType(unsigned int* block, unsigned int type);
+
+unsigned int getBlockType(unsigned int block);
+
 
 /**
  * Initialises the block details to enable assigning of blocks to drawables
@@ -95,5 +121,23 @@ typedef enum BLOCK_IM_STATE BLOCK_IM_STATE;
  * @returns The block information
  */
 BlockInfo getImmovableBlock(BLOCK_IM_STATE state);
+
+/**
+ * Gets the sprite count of the passed block
+ * 
+ * @param block The block to get
+ * 
+ * @returns The block info
+ */
+int getSpriteCount(BLOCK block);
+
+/**
+ * Finds the block from the path to its sprite sheet
+ * 
+ * @param fp The file path to the sprite sheet
+ * 
+ * @returns The block of the sprite
+ */
+BLOCK getBlockFromFilePath(const char* fp);
 
 #pragma endregion

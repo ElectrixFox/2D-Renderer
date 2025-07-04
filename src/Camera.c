@@ -5,6 +5,8 @@ Camera CreateCamera(vec2 pos, vec2 scale, int* scrwid, int* srchig)
 return (Camera){0, pos, scale, scrwid, srchig};
 }
 
+vec2 GetCursorPositionRelative(Camera cam) { return addVec2(getCursorPosition(), ScalarMultVec2(cam.poscomponent, -1)); }
+
 m4 getCameraMatrix(Camera cam)
 {
 //  the camera matrix is effectively a projection matrix with a position component
@@ -34,7 +36,7 @@ else
 return 1;
 }
 
-void ApplyProjection(Camera cam, unsigned int* progs, unsigned int size)
+void _ApplyProjection(Camera cam, unsigned int* progs, unsigned int size)
 {
 m4 proj = getProjectionMatrix(cam);
 

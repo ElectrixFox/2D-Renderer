@@ -2,6 +2,18 @@
 
 static BlockDetails blds;
 
+void setBlockSprite(unsigned int* block, unsigned int spr) { SetActiveSprite(block, spr); }
+
+unsigned int getBlockSprite(unsigned int block) { return GetActiveSprite(block); }
+
+void setBlockSpriteCount(unsigned int *block, unsigned int nospr) { SetNumberOfSprites(block, nospr); }
+
+unsigned int getBlockSpriteCount(unsigned int block) { return GetNumberOfSprites(block); }
+
+void setBlockType(unsigned int *block, unsigned int type) { SetActiveShape(block, type); }
+
+unsigned int getBlockType(unsigned int block) { return GetActiveShape(block); }
+
 void InitialiseBlockDetails()
 {
 blds.size = 0;
@@ -74,7 +86,7 @@ BlockInfo getBlockInfo(BLOCK block)
 switch (block)
     {
     case BLOCK_PLAYER:
-        return (BlockInfo){"res/sprites/player_sprite.png", 1, 1};
+        return (BlockInfo){"res/sprites/player_spritesheet.png", 2, 1};
         break;
     case BLOCK_MOVABLE_BARRIER:
         return (BlockInfo){"res/sprites/movable_barrier_tilesheet.png", 1, 1};
@@ -82,7 +94,7 @@ switch (block)
     case BLOCK_MOVABLE_BLOCK:
         return (BlockInfo){"res/sprites/movable_spritesheet.png", 2, 1};
         break;
-    case BLOCK_IMMOVABLE_BLOCK_ALONE:
+    case BLOCK_IMMOVABLE_BLOCK:
         return (BlockInfo){"res/sprites/immovable_tilesheet_short.png", 6, 1};
         break;
     default:
@@ -118,4 +130,17 @@ switch (state)
         return (BlockInfo){NULL};
         break;
     }
+}
+
+int getSpriteCount(BLOCK block) { return getBlockInfo(block).nosp; }
+
+BLOCK getBlockFromFilePath(const char* fp)
+{
+for (int i = 0; i < getBlockCount(); i++)
+    {
+    if(strcmp(getBlockInfo(i).spfp, fp) == 0)   // if they are the same file path they have the same base block
+        return (BLOCK)i;
+    }
+
+return -1;
 }

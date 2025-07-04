@@ -1,7 +1,10 @@
+#pragma once
 #include "Drawable.h"
 #include "Block.h"
-#include "Level.h"
+#include "BlockOperations.h"
 #include "Camera.h"
+#include "Level.h"
+#include "SystemUI.h"
 
 #pragma region Main
 
@@ -15,27 +18,53 @@
  */
 
 /**
- * Creates a block at the position with default scale (25x25)
+ * Gets the currently selected block (the block to be placed)
  * 
- * @param rds The rendering table
- * @param tds The transform table
- * @param prds The pressables table
- * @param block The block to create
- * @param position Where to create the block
- * 
- * @returns The render ID for the new block
+ * @returns The block type to be created
  */
-unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, BLOCK block, vec2 position);
+BlockInfo getActiveBlock();
 
 /**
- * Removes a block at the position
+ * Sets the block to be created
  * 
- * @param rds The rendering table
- * @param tds The transform table
- * @param prds The pressable table
- * @param prid The render ID of the block to remove
+ * @param block The block which should be used when blocks are created
  */
-void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, unsigned int rid);
+void setActiveBlock(BlockInfo block);
+
+/**
+ * Selects the block type to be placed
+ * 
+ * @param drabs The drawable objects table
+ * @param trsid The transformation ID of the object
+ */
+void SelectBlock(Drawables drabs, unsigned int trsid);
+
+/**
+ * Applies the view matrix to all render details in the given table
+ * 
+ * @param cam The camera to apply
+ * @param rds The render details containing the shaders
+ * 
+ * @warning Make sure the right render detail table is passed otherwise things can go very wrong very quickly
+ */
+void ApplyCamera(Camera cam, RenderDetails rds);
+
+/**
+ * Applies the projection matrix to all render details in the given table
+ * 
+ * @param cam The camera to apply
+ * @param rds The render details containing the shaders
+ * 
+ * @warning Make sure the right render detail table is passed otherwise things can go very wrong very quickly
+ */
+void ApplyProjection(Camera cam, RenderDetails rds);
+
+#pragma endregion
+
+
+#pragma region EditorUI
+
+void BuildNewSelectBar();
 
 /**
  * Builds the block selection bar
@@ -43,58 +72,29 @@ void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drab
  * @param rds A pointer to the rendering details
  * @param tds A pointer to the transformation details
  * @param drabs A pointer to the drawable details
- * @param prds A pointer to the pressable details
  */
-void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, Camera* cam);
+void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs);
 
 /**
- * Gets the currently selected block (the block to be placed)
+ * Unfolds the options for the sprite
  * 
- * @returns The block type to be created
- */
-BLOCK getActiveBlock();
-
-/**
- * Sets the block to be created
- * 
- * @param block The block which should be used when blocks are created
- */
-void setActiveBlock(BLOCK block);
-
-/**
- * Selects the block type to be placed
- * 
- * @param prds The pressable details table
- * @param drabs The drawable objects table
- */
-void SelectBlock(PressableDetails prds, Drawables drabs, unsigned int prid);
-
-
-void ApplyCamera(Camera cam, PressableDetails prds, Drawables drabs, TransformationDetails trds, RenderDetails rds);
-
-void ApplyStaticCamera(Camera cam, PressableDetails prds, Drawables drabs, TransformationDetails trds, RenderDetails rds);
-
-void SetSprite(RenderDetails* rd, unsigned int rid);
-
-#pragma endregion
-
-#pragma region Levels
-
-#ifndef LEVELS
-
-/**
- * Draws the level to the screen
- * 
- * @param rds The rendering table
+ * @param rds The render table
  * @param tds The transform table
- * @param drabs The drawables table
- * @param prds The pressables table
- * @param w The width of the grid
- * @param h The height of the grid
- * @param grid The actual grid (a 2D array of integers)
+ * @param drabs The drawables
+ * 
+ * @param rid The render ID of the block to unfold sprites for
  */
-void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, PressableDetails* prds, int w, int h, const int** grid);
+// void UnfoldMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
 
-#endif
+
+
+/**
+ * Toggles the menu for the sprite
+ * 
+ * @param rp The render packet with all of the details for rendering
+ * @param rid The render ID of the block to unfold sprites for
+ */
+void ToggleMoreOptions(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
+
 
 #pragma endregion

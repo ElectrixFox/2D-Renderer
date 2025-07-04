@@ -10,7 +10,16 @@ typedef struct Drawables Drawables;
 
 Drawables InitialiseDrawables();
 
-void AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid);
+/**
+ * Adds an entry to the drawables links
+ * 
+ * @param drabs A pointer to the drawables table
+ * @param trid The transform ID to add
+ * @param rid The render ID to add
+ * 
+ * @returns The index that the record was added at
+ */
+int AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid);
 
 /**
  * Finds the index of the given transform ID in the drawables table
@@ -55,3 +64,32 @@ void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs
  * @param drabs The table of drawables
  */
 void OutputDrawables(Drawables drabs);
+
+struct RenderPacket
+    {
+    Drawables drabs;
+    RenderDetails rds;
+    TransformationDetails tds;
+    };
+typedef struct RenderPacket RenderPacket;
+
+RenderPacket InitialiseRenderPacket();
+
+/**
+ * Creates a basic square at the given position with the given colour and scale
+ * 
+ * @param rp A pointer to the render packet
+ * @param position The position to create the square at
+ * @param scale The scale factor at which the square should be scaled
+ * @param incol The colour to set the square (can be NULL as has a default value)
+ * 
+ * @returns The index of the renderable in the drawables
+ */
+int CreateBasicSquare(RenderPacket* rp, vec2 position, float scale, vec4 incol);
+
+/**
+ * Draws all of the items in the render packet
+ * 
+ * @param rp The render packet of the things to draw
+ */
+void DrawRenderPacket(RenderPacket rp);

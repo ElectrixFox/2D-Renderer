@@ -23,6 +23,9 @@
         "block.h": "c",
         "transformation.h": "c",
         "drawable.h": "c",
-        "input.h": "c"
+        "input.h": "c",
+        "menuui.h": "c",
+        "cstdlib": "c",
+        "array.h": "c"
     }
 }
