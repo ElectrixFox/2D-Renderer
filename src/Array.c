@@ -1,6 +1,6 @@
 #include "Array.h"
 
-static void swap(int* x, int* y)
+static void swap(unsigned int* x, unsigned int* y)
 {
 if(*x == *y) return;    // if they are the same then return
 

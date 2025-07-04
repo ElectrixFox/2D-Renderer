@@ -5,6 +5,25 @@ void OutputVec2(vec2 v)
 printf("(%.2f, %.2f)", v.x, v.y);
 }
 
+void OutputVecn(int n, const float* v)
+{
+printf("(%.2f", v[0]);
+for (int i = 1; i < n; i++)
+    {
+    printf(", %.2f", v[i]);
+    }
+printf(")");
+}
+
+void OutputMatn(int n, int m, const float** A)
+{
+for (int i = 0; i < n; i++)
+    {
+    OutputVecn(m, A[i]);
+    printf("\n");
+    }
+}
+
 /**
  * Increases the size of the passed array to the new size
  * 
@@ -30,6 +49,8 @@ void ExpandByOne(void **arr, const unsigned int size, unsigned int elesize) { Ex
 
 vec2 ScalarMultVec2(vec2 v, float a) { return (vec2){a * v.x, a * v.y}; }
 
+vec3 ScalarMultVec3(vec3 v, float a) { return (vec3){a * v.x, a * v.y, a * v.x}; }
+
 vec2 addVec2(vec2 u, vec2 v) { return (vec2){u.x + v.x, u.y + v.y}; }
 
 vec2 LeftCornerFromCentre(vec2 centre, vec2 scale)
@@ -54,6 +75,28 @@ return 0;
 }
 
 int SquareTouchesSquare(vec2 p1, vec2 s1, vec2 p2, vec2 s2) { return (getDistance(p1, p2) < getMagnitude(s1) + getMagnitude(s2)) ? 0 : 1; }
+
+static int equivVec3(vec3 u, vec3 v)
+{
+return !(u.x != v.x || u.y != v.y || u.z != v.z);
+}
+
+int equivMat3(mat3 A, mat3 B)
+{
+for (int i = 0; i < 3; i++)
+    if(!equivVec3(A.mat[i], B.mat[i]))
+        return 0;
+return 1;
+}
+
+mat3 ScalarMultMat3(mat3 A, float a)
+{
+mat3 res;
+for (int i = 0; i < 3; i++)
+    res.mat[i] = ScalarMultVec3(A.mat[i], a);
+
+return res;
+}
 
 float generalisedDot(float u[], float v[], unsigned int n)
 {

@@ -20,6 +20,23 @@ typedef struct m4 { vec4 mat[4]; } m4;
 void OutputVec2(vec2 v);
 
 /**
+ * Outputs a vecn
+ * 
+ * @param n The number of elements
+ * @param v The vector to output
+ */
+void OutputVecn(int n, const float* v);
+
+/**
+ * Outputs a matn
+ * 
+ * @param n The number of rows
+ * @param m The number of columns
+ * @param A The matrix to output
+ */
+void OutputMatn(int n, int m, const float** A);
+
+/**
  * Expands an array
  * 
  * @param arr The actual array
@@ -47,6 +64,16 @@ void ExpandByOne(void** arr, const unsigned int size, unsigned int elesize);
  * @returns The result of the multiplication
  */
 vec2 ScalarMultVec2(vec2 v, float a);
+
+/**
+ * Multiplies a vec3 by a scalar
+ * 
+ * @param v The vector to multiply
+ * @param a The scalar to multiply
+ * 
+ * @returns The result of the multiplication
+ */
+vec3 ScalarMultVec3(vec3 v, float a);
 
 /**
  * Adds the first vector to the second
@@ -101,6 +128,26 @@ int PointInSquare(vec2 point, vec2 pos, vec2 scale);
  * @returns 1 if they touch, 0 if they don't
  */
 int SquareTouchesSquare(vec2 p1, vec2 s1, vec2 p2, vec2 s2);
+
+/**
+ * Tests to see if A and B are equivalent
+ * 
+ * @param A Matrix A
+ * @param B Matrix B
+ * 
+ * @returns 1 if they are the same, 0 if not
+ */
+int equivMat3(mat3 A, mat3 B);
+
+/**
+ * Multiplies a mat3 by a scalar
+ * 
+ * @param A The matrix to multiply
+ * @param a The scalar to multiply
+ * 
+ * @returns The result of the multiplication
+ */
+mat3 ScalarMultMat3(mat3 A, float a);
 
 float generalisedDot(float u[], float v[], unsigned int n);
 float dotprod(vec3 u, vec3 v);

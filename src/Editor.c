@@ -1,6 +1,5 @@
 #include "Editor.h"
 
-static BLOCK curblock = BLOCK_PLAYER;
 static BlockInfo cblock = {"res/sprites/player_spritesheet.png", 2, 1};
 
 const int snap_to_grid = 1;
@@ -41,17 +40,14 @@ setActiveBlock(bi);  // sets the active block
 
 static void unfoldBlockOptions(int ui_id)
 {
-static int folded = 1;
 static int prevuid = -1;
 
 if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu is folded
     {
     if(prevuid != -1)
         {
-        // GUI_MENU meni = getUIRenderInformation(ui, prevuid).meni;   // getting the render information
         GUI_MENU* meni = &_getUIRenderInformation(&ui, prevuid)->meni;   // getting the render information
         printf("\nFolding %d", prevuid);
-        OutputArray(meni->ui_ids);
         for (int i = 0; i < meni->ui_ids.size; i++)
             {
             printf("\nRemoving %d", meni->ui_ids.data[i]);
@@ -72,16 +68,11 @@ if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu
         {
         RenderInformation ri;
         ri.ssi = (SpriteSheetInfo){ bi.spfp, bi.nosp, i };
-        printf("\n%d", ui.size);
         unsigned int menentry = addToMenu(&ui, &ui_rp, ui_id, UI_TYPE_BUTTON, ri);
-        printf("\n%d", ui.size);
-        OutputArray(getUIRenderInformation(ui, ui_id).meni.ui_ids);
-        OutputArray((Array){ui.ui_id, ui.size + 1});
         assignButtonAction(&ui, menentry, UI_TRIGGER_PRESS, &changeBlock);
         }
 
     prevuid = ui_id;
-    folded = 0;
     }
 }
 

@@ -26,6 +26,60 @@ AssignBlock(rd, bltype);
 return rd;
 }
 
+unsigned int PlaceImmovableBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BlockInfo block, vec2 position)
+{
+return 0;
+}
+
+static BLOCK_IM_STATE getImmovableType(const int w, const int h, const int grid[h][w], vec2 pos)
+{
+int x = pos.x, y = pos.y;
+
+int ly = 0 <= y - 1 ? y - 1 : 0;
+int hy = y + 1 <= h ? y + 1 : 0;
+
+int lx = 0 <= x - 1 ? x - 1 : 0;
+int hx = x + 1 <= w ? x + 1 : 0;
+
+mat3 scope = {
+    (vec3){grid[hy][lx], grid[hy][x], grid[hy][hx]},
+    (vec3){grid[y][lx], grid[y][x], grid[y][hx]},
+    (vec3){grid[ly][lx], grid[ly][x], grid[ly][hx]}
+};
+OutputMatn(3, 3, scope.mat);
+
+mat3 curve = {
+    (vec3){0, 1.0f, 1.0f},
+    (vec3){0, 0, 1.0f},
+    (vec3){0, 0, 0}
+};
+ScalarMultMat3(curve, 4);
+
+if(equivMat3(scope, curve))
+    return BLOCK_IM_STATE_CORNER;
+
+return BLOCK_IM_STATE_ALONE;
+}
+
+unsigned int UpdateImmovableBlocks(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, const int w, const int h, const int** grid)
+{
+printf("\n\n\nImmovables update");
+for (int i = 0; i < h; i++)
+    {
+    for (int j = 0; j < w; j++)
+        {
+        printf("\nChecking (%d, %d) -> %d", i, j, grid[i][j]);
+        if(grid[i][j] == (int)BLOCK_IMMOVABLE_BLOCK + 1) // if there is an immovable block there
+            {
+            BLOCK_IM_STATE imstate = getImmovableType(w, h, grid, (vec2){j, i});
+            printf("\n%d", imstate);
+            }
+        }
+    }
+
+return 0;
+}
+
 /*
 unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BLOCK block, vec2 position)
 {

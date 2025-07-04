@@ -219,16 +219,6 @@ if(index == -1)
 assignUITriggerAction(&ui->actions[trigger], ui_id, action);
 }
 
-static void unfoldMenuAction(UI_Table* ui, RenderPacket* rp, unsigned int ui_id)
-{
-
-}
-
-static void unfoldMenu(int ui_id)
-{
-// printf("\nDoing menu thing for %d", ui_id);
-}
-
 unsigned int createUIElement(UI_Table* ui, RenderPacket* rp, vec2 pos, float scale, UI_ELEMENT_TYPE type, RenderInformation rendinf)
 {
 static unsigned int ui_id = 0;
@@ -256,7 +246,6 @@ switch (type)   // doing the appropriate thing for each type
         ui->data[n].meni = rendinf.meni;    // set the menu data
         int tindex = findUIIDinTable(*ui, rendinf.meni.men_head_ui_id);
         ind = findDrawablesTransform(rp->drabs, ui->trsid[tindex]);
-        assignButtonAction(ui, rendinf.meni.men_head_ui_id, UI_TRIGGER_HOVER, &unfoldMenu);    // setting the menu action
         break;
     default:
         break;
@@ -309,8 +298,6 @@ ui->size--; // decrease the size so it is effectively not there
 
 void removeUIElement(UI_Table* ui, RenderPacket* rp, UI_ELEMENT_TYPE type, unsigned int ui_id)
 {
-int index = findUIIDinTable(*ui, ui_id);    // finding the ID in the UI table
-
 switch (type)   // doing the appropriate thing for each type
     {
     case UI_TYPE_NULL:

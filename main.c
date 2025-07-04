@@ -115,6 +115,7 @@ while(!glfwWindowShouldClose(window))   // main loop
         getLevel(block_rds, block_tds, block_drabs, &w, &h, &grid);
         OutputLevel(grid, w, h);
         glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
+        UpdateImmovableBlocks(&block_rds, &block_tds, &block_rds, w, h, grid);
         }
 
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)

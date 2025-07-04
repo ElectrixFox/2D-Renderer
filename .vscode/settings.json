@@ -27,5 +27,6 @@
         "menuui.h": "c",
         "cstdlib": "c",
         "array.h": "c"
-    }
+    },
+    "C_Cpp.errorSquiggles": "enabledIfIncludesResolve"
 }
