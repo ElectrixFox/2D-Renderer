@@ -153,7 +153,29 @@ unsigned int createUIElement(UI_Table* ui, RenderPacket* rp, vec2 pos, float sca
  */
 void removeUIElement(UI_Table* ui, RenderPacket* rp, UI_ELEMENT_TYPE type, unsigned int ui_id);
 
+/**
+ * Adds an element to the menu
+ * 
+ * @param ui A pointer to the UI table
+ * @param rp A pointer to the render packet
+ * @param ui_id The ID of the menu UI element
+ * @param type The type of the new element to create
+ * @param rendinf The render information of the new element to create
+ * 
+ * @returns The UI ID of the new element created
+ */
 unsigned int addToMenu(UI_Table* ui, RenderPacket* rp, unsigned int ui_id, UI_ELEMENT_TYPE type, RenderInformation rendinf);
+
+/**
+ * Removes the given UI element from the menu
+ * 
+ * @param ui A pointer to the UI table
+ * @param rp A pointer to the render packet
+ * @param menid The ID of the menu element
+ * @param ui_id The ID of the element to remove
+ */
+void removeFromMenu(UI_Table* ui, RenderPacket* rp, unsigned int menid, unsigned int ui_id);
+
 
 /**
  * removes the button with the given id from the table

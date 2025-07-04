@@ -236,8 +236,6 @@ const unsigned int n = ui->size;
 
 expandUITable(ui);
 
-printf("\nUI Size: %d", ui->size);
-
 ui->ui_id[n] = ui_id++;    // set and increase the ID
 
 int ind = -1;
@@ -256,8 +254,6 @@ switch (type)   // doing the appropriate thing for each type
         break;
     case UI_TYPE_MENU:
         ui->data[n].meni = rendinf.meni;    // set the menu data
-        printf("\nCreation");
-
         int tindex = findUIIDinTable(*ui, rendinf.meni.men_head_ui_id);
         ind = findDrawablesTransform(rp->drabs, ui->trsid[tindex]);
         assignButtonAction(ui, rendinf.meni.men_head_ui_id, UI_TRIGGER_HOVER, &unfoldMenu);    // setting the menu action
@@ -338,6 +334,24 @@ switch (type)   // doing the appropriate thing for each type
 
 }
 
+/**
+ * Checks if the UI ID is in the menu
+ * 
+ * @param menu The menu
+ * @param ui_id The ID of the UI element to check
+ * 
+ * @returns 1 if it is in there, 0 if not
+ */
+static int isInMenu(GUI_MENU menu, unsigned int ui_id);
+
+static int isInMenu(GUI_MENU menu, unsigned int ui_id)
+{
+for (int i = 0; i < menu.ui_ids.size; i++)
+    if(menu.ui_ids.data[i] == ui_id)
+        return 1;
+return 0;
+}
+
 unsigned int addToMenu(UI_Table* ui, RenderPacket* rp, unsigned int ui_id, UI_ELEMENT_TYPE type, RenderInformation rendinf)
 {
 const float padding = 10.0f;
@@ -345,14 +359,8 @@ int index = findUIIDinTable(*ui, ui_id);    // getting the UI element in the UI 
 vec2 pos = getPosition(rp->tds, ui->trsid[index]); // getting the position
 vec2 scale = getScale(rp->tds, ui->trsid[index]); // getting the scale
 
-printf("\nMenu head location: ");
-OutputVec2(pos);
-
 RenderInformation ri = getUIRenderInformation(*ui, ui_id);  // getting the render information
 int mensize = ri.meni.ui_ids.size;  // getting the size of the menu
-
-printf("\nAdding to menu");
-OutputArray(ri.meni.ui_ids);
 
 pos = (vec2){pos.x - ((mensize + 1) * 50.0f + padding), pos.y};   // getting the new position
 
@@ -360,23 +368,21 @@ unsigned int nui_id = createUIElement(ui, rp, pos, scale.x, type, rendinf); // c
 
 AppendToArray(&ui->data[index].meni.ui_ids, nui_id);    // adding the new ID to the array
 
-printf("\nMenu entry location: ");
-OutputVec2(pos);
-
 return nui_id;
 }
 
 void removeFromMenu(UI_Table* ui, RenderPacket* rp, unsigned int menid, unsigned int ui_id)
 {
-const float padding = 10.0f;
-int men_index = findUIIDinTable(*ui, menid);    // getting the menu ID
-int index = findUIIDinTable(*ui, ui_id);    // getting the UI element in the UI table
+GUI_MENU* meni = _getUIRenderInformation(ui, menid);
+if(!isInMenu(*meni, ui_id)) // quick bit of error checking
+    {
+    printf("\nError: %d is not in the menu", ui_id);
+    return;
+    }
 
-GUI_MENU meni = ui->data[men_index].meni;   // getting the menu
-
-
-
-ui->data[men_index].meni.ui_ids.size--; // decrease the size
+// To-Do: Type?
+removeUIElement(ui, rp, UI_TYPE_BUTTON, ui_id); // remove each of the buttons
+RemoveFromArray(&meni->ui_ids, ui_id);  // remove it from the element array
 }
 
 

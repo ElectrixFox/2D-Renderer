@@ -93,20 +93,6 @@ InitialiseBlockDetails();
 
 BuildNewSelectBar();
 
-/*
-unsigned int buid1 = createUIElement(&ui, &ui_rp, (vec2){500.0f, 500.0f}, 25.0f, UI_TYPE_NULL, (RenderInformation){NULL});
-unsigned int buid2 = createUIElement(&ui, &ui_rp, (vec2){500.0f, 400.0f}, 25.0f, UI_TYPE_NULL, (RenderInformation){NULL});
-assignButtonAction(&ui, buid1, (GUI_ACTION_TRIGGER)0, &output);
-assignButtonAction(&ui, buid2, (GUI_ACTION_TRIGGER)0, &output);
-
-unsigned int buid3 = createUIElement(&ui, &ui_rp, (vec2){700.0f, 500.0f}, 25.0f, UI_TYPE_NULL, (RenderInformation){NULL});
-RenderInformation ri;
-ri.meni = (GUI_MENU){(Array){NULL}, buid3};
-unsigned int menid1 = createUIElement(&ui, &ui_rp, (vec2){700.0f, 500.0f}, 25.0f, UI_TYPE_MENU, ri);
-unsigned int entid1 = addToMenu(&ui, &ui_rp, menid1, UI_TYPE_NULL, (RenderInformation){NULL});
-assignButtonAction(&ui, entid1, (GUI_ACTION_TRIGGER)0, &output);
-*/
-
 int** grid;
 int w, h;
 ReadLevel("res/levels/level1.txt", &w, &h, &grid);
@@ -158,14 +144,12 @@ while(!glfwWindowShouldClose(window))   // main loop
     MoveCamera(&cam);
     ApplyCamera(cam, block_rds);
     ApplyProjection(cam, block_rds);
-    // ApplyProjection(cam, ui_rds);
     ApplyProjection(cam, ui_rp.rds);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
     DrawDrawables(block_rds, block_tds, block_drabs);
-    // DrawDrawables(ui_rds, ui_tds, ui_drabs);
     DrawRenderPacket(ui_rp);
     
     glfwSwapBuffers(window);
