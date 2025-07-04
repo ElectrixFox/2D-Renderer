@@ -37,6 +37,15 @@ void OutputVecn(int n, const float* v);
 void OutputMatn(int n, int m, const float** A);
 
 /**
+ * Outputs a matn
+ * 
+ * @param n The number of rows
+ * @param m The number of columns
+ * @param A The matrix to output
+ */
+void OutputMat3(mat3 A);
+
+/**
  * Expands an array
  * 
  * @param arr The actual array

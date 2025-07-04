@@ -31,31 +31,71 @@ unsigned int PlaceImmovableBlock(RenderDetails* rds, TransformationDetails* tds,
 return 0;
 }
 
-static BLOCK_IM_STATE getImmovableType(const int w, const int h, const int grid[h][w], vec2 pos)
+static int scopeEquiv(int scope[3][3], int test[3][3])
+{
+for (int i = 0; i < 3; i++)
+    for (int j = 0; j < 3; j++)
+        if(scope[i][j] != test[i][j])
+            return 0;
+return 1;
+}
+
+static BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos)
 {
 int x = pos.x, y = pos.y;
 
-int ly = 0 <= y - 1 ? y - 1 : 0;
-int hy = y + 1 <= h ? y + 1 : 0;
+int ly = 0 <= y - 1 ? y - 1 : -1;
+int hy = y + 1 <= h ? y + 1 : -1;
 
-int lx = 0 <= x - 1 ? x - 1 : 0;
-int hx = x + 1 <= w ? x + 1 : 0;
+int lx = 0 <= x - 1 ? x - 1 : -1;
+int hx = x + 1 <= w ? x + 1 : -1;
 
-mat3 scope = {
-    (vec3){grid[hy][lx], grid[hy][x], grid[hy][hx]},
-    (vec3){grid[y][lx], grid[y][x], grid[y][hx]},
-    (vec3){grid[ly][lx], grid[ly][x], grid[ly][hx]}
+int scope[3][3] = {
+    0, 0, 0,
+    0, 0, 0,
+    0, 0, 0
 };
-OutputMatn(3, 3, scope.mat);
 
-mat3 curve = {
-    (vec3){0, 1.0f, 1.0f},
-    (vec3){0, 0, 1.0f},
-    (vec3){0, 0, 0}
+for (int j = y - 1; j <= y + 1; j++)
+    {
+    if(j < 0 || h <= j)
+        {
+        for (int i = 0; i < 3; i++)
+            scope[j - y + 1][i] = 0;
+        continue;
+        }
+
+    for (int i = x - 1; i <= x + 1; i++)
+        {
+        if(i < 0 || w <= i)
+            {
+            scope[j - y + 1][i - x + 1] = 0;
+            continue;
+            }
+        scope[j - y + 1][i - x + 1] = grid[j][i];
+        }
+    }
+
+
+printf("\n");
+for (int i = 0; i < 3; i++)
+    {
+    for (int j = 0; j < 3; j++)
+        printf("%d ", scope[i][j]);
+    printf("\n");
+    }
+
+int curve[3][3] = {
+    {0, 1, 1},
+    {0, 0, 1},
+    {0, 0, 0}
 };
-ScalarMultMat3(curve, 4);
 
-if(equivMat3(scope, curve))
+for (int i = 0; i < 3; i++)
+    for (int j = 0; j < 3; j++)
+        curve[i][j] *= 4;
+
+if(scopeEquiv(scope, curve))
     return BLOCK_IM_STATE_CORNER;
 
 return BLOCK_IM_STATE_ALONE;

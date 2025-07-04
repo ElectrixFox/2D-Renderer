@@ -24,6 +24,14 @@ for (int i = 0; i < n; i++)
     }
 }
 
+void OutputMat3(mat3 A)
+{
+for (int i = 0; i < 3; i++)
+    {
+    printf("\n%.2f %.2f %.2f", A.mat[i].x, A.mat[i].y, A.mat[i].z);
+    }
+}
+
 /**
  * Increases the size of the passed array to the new size
  * 
