@@ -26,99 +26,6 @@ AssignBlock(rd, bltype);
 return rd;
 }
 
-unsigned int PlaceImmovableBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BlockInfo block, vec2 position)
-{
-return 0;
-}
-
-static int scopeEquiv(int scope[3][3], int test[3][3])
-{
-for (int i = 0; i < 3; i++)
-    for (int j = 0; j < 3; j++)
-        if(scope[i][j] != test[i][j])
-            return 0;
-return 1;
-}
-
-static BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos)
-{
-int x = pos.x, y = pos.y;
-
-int ly = 0 <= y - 1 ? y - 1 : -1;
-int hy = y + 1 <= h ? y + 1 : -1;
-
-int lx = 0 <= x - 1 ? x - 1 : -1;
-int hx = x + 1 <= w ? x + 1 : -1;
-
-int scope[3][3] = {
-    0, 0, 0,
-    0, 0, 0,
-    0, 0, 0
-};
-
-for (int j = y - 1; j <= y + 1; j++)
-    {
-    if(j < 0 || h <= j)
-        {
-        for (int i = 0; i < 3; i++)
-            scope[j - y + 1][i] = 0;
-        continue;
-        }
-
-    for (int i = x - 1; i <= x + 1; i++)
-        {
-        if(i < 0 || w <= i)
-            {
-            scope[j - y + 1][i - x + 1] = 0;
-            continue;
-            }
-        scope[j - y + 1][i - x + 1] = grid[j][i];
-        }
-    }
-
-
-printf("\n");
-for (int i = 0; i < 3; i++)
-    {
-    for (int j = 0; j < 3; j++)
-        printf("%d ", scope[i][j]);
-    printf("\n");
-    }
-
-int curve[3][3] = {
-    {0, 1, 1},
-    {0, 0, 1},
-    {0, 0, 0}
-};
-
-for (int i = 0; i < 3; i++)
-    for (int j = 0; j < 3; j++)
-        curve[i][j] *= 4;
-
-if(scopeEquiv(scope, curve))
-    return BLOCK_IM_STATE_CORNER;
-
-return BLOCK_IM_STATE_ALONE;
-}
-
-unsigned int UpdateImmovableBlocks(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, const int w, const int h, const int** grid)
-{
-printf("\n\n\nImmovables update");
-for (int i = 0; i < h; i++)
-    {
-    for (int j = 0; j < w; j++)
-        {
-        printf("\nChecking (%d, %d) -> %d", i, j, grid[i][j]);
-        if(grid[i][j] == (int)BLOCK_IMMOVABLE_BLOCK + 1) // if there is an immovable block there
-            {
-            BLOCK_IM_STATE imstate = getImmovableType(w, h, grid, (vec2){j, i});
-            printf("\n%d", imstate);
-            }
-        }
-    }
-
-return 0;
-}
 
 /*
 unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BLOCK block, vec2 position)
@@ -147,4 +54,189 @@ if(index == -1)
 
 RemoveDrawable(drabs, rds, tds, drabs->trsids[index]); // remove the drawable
 UnassignBlock(rid);
+}
+
+unsigned int PlaceImmovableBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BlockInfo block, vec2 position)
+{
+return 0;
+}
+
+static int scopeEquiv(const int w, const int h, const int** scope, const int test[h][w])
+{
+for (int i = 0; i < h; i++)
+    for (int j = 0; j < w; j++)
+        if(scope[i][j] != test[i][j])
+            return 0;
+return 1;
+}
+
+static void getScope(const int w, const int h, const int** grid, vec2 pos, const int scpesc, int*** scope)
+{
+int x = pos.x, y = pos.y;
+
+*scope = (int**)malloc(sizeof(int) * pow(scpesc, 2));
+int** tscope = (int**)malloc(sizeof(int*) * scpesc);
+
+if(scpesc % 2 == 1)
+    {
+    int interv = (scpesc - 1) / 2;
+    for (int j = y - interv; j <= y + interv; j++)
+        {
+        int jind = j - (y - interv);    // the actual j from 0 to scpesc
+        tscope[jind] = (int*)malloc(sizeof(scpesc));
+        
+        if(j < 0 || h <= j)
+            {
+            for (int i = 0; i < scpesc; i++)
+                tscope[jind][i] = 0;
+            continue;
+            }
+
+        for (int i = x - scpesc; i <= x + scpesc; i++)
+            {
+            int iind = i - (x - interv);    // the actual i from 0 to scpesc
+
+            if(i < 0 || w <= i)
+                {
+                tscope[jind][iind] = 0;
+                continue;
+                }
+            tscope[jind][iind] = grid[j][i];
+            }
+        }
+    }
+else
+    {
+    int interv = scpesc / 2;
+    for (int j = y - interv; j < y + interv; j++)
+        {
+        int jind = j - (y - interv);    // the actual j from 0 to scpesc
+        tscope[jind] = (int*)malloc(sizeof(scpesc));
+        
+        if(j < 0 || h <= j)
+            {
+            for (int i = 0; i < scpesc; i++)
+                tscope[jind][i] = 0;
+            continue;
+            }
+
+        for (int i = x - interv; i < x + interv; i++)
+            {
+            int iind = i - (x - interv);    // the actual i from 0 to scpesc
+
+            if(i < 0 || w <= i)
+                {
+                tscope[jind][iind] = 0;
+                continue;
+                }
+            tscope[jind][iind] = grid[j][i];
+            }
+        }
+    }
+memcpy(*scope, tscope, sizeof(int) * scpesc * scpesc);
+}
+
+static void outputScope(const int scale, const int** scope)
+{
+printf("\n");
+for (int i = 0; i < scale; i++)
+    {
+    for (int j = 0; j < scale; j++)
+        printf("%d ", scope[i][j]);
+    printf("\n");
+    }
+}
+
+static void mulGrid(const int w, const int h, int (*grd)[h][w])
+{
+for (int i = 0; i < h; i++)
+    for (int j = 0; j < w; j++)
+        (*grd)[i][j] *= 4;
+}
+
+static BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos)
+{
+int x = pos.x, y = pos.y;
+
+int** scope;
+
+const int scpesze = 2;
+getScope(w, h, grid, pos, scpesze, &scope);
+
+int curve[4][2][2] = {
+    {
+    {0, 1},
+    {1, 1}
+    },
+    {
+    {1, 0},
+    {1, 1}
+    },
+    {
+    {1, 1},
+    {0, 1}
+    },
+    {
+    {1, 1},
+    {1, 0}
+    }
+};
+
+int ncurves = 4;
+for (int k = 0; k < ncurves; k++)
+    mulGrid(2, 2, &curve[k]);
+
+/*
+All of the 3x3 scopes must be checked first as they are more likely to have 2x2 equivalent subscopes
+*/
+for (int i = 0; i < ncurves; i++)
+    {
+    if(scopeEquiv(scpesze, scpesze, scope, curve[i]))
+        {
+        outputScope(scpesze, scope);
+        return BLOCK_IM_STATE_CORNER;
+        }
+    }
+
+
+return BLOCK_IM_STATE_ALONE;
+}
+
+int getBlockAtPosition(TransformationDetails tds, vec2 pos)
+{
+for (int i = 0; i < tds.size; i++)
+    if(tds.pos[i].x == pos.x && tds.pos[i].y == pos.y)
+        return tds.trsid[i];
+return -1;
+}
+
+unsigned int UpdateImmovableBlocks(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, const int w, const int h, const int** grid)
+{
+printf("\n\n\nImmovables update");
+BlockInfo bi = getBlockInfo(BLOCK_IMMOVABLE_BLOCK);
+for (int i = 0; i < h; i++)
+    {
+    for (int j = 0; j < w; j++)
+        {
+        printf("\nChecking (%d, %d) -> %d", i, j, grid[i][j]);
+        if(grid[i][j] == (int)BLOCK_IMMOVABLE_BLOCK + 1) // if there is an immovable block there
+            {
+            BLOCK_IM_STATE imstate = getImmovableType(w, h, grid, (vec2){j, i});
+            printf(" -> %d", imstate);
+            vec2 posi = {j * grid_size, i * grid_size};
+            int trsid = getBlockAtPosition(*tds, posi);
+            printf("\n%d", trsid);
+            printf("\n%d", trsid);
+            if(trsid != -1)
+                {
+                unsigned int rid = drabs->rids[findDrawablesTransform(*drabs, trsid)];
+                RemoveBlock(rds, tds, drabs, rid);
+                _PlaceBlockCustom(rds, tds, drabs, (BlockInfo){ bi.spfp, bi.nosp, bi.spr + BLOCK_IM_STATE_CORNER }, posi);
+                }
+            
+            }
+        }
+    }
+
+return 0;
 }
