@@ -154,50 +154,85 @@ for (int i = 0; i < h; i++)
         (*grd)[i][j] *= 4;
 }
 
+static int getFullLineCount(const int scpscale, int** scope)
+{
+int x = (scpscale - 1) / 2, y = (scpscale - 1) / 2; // the x, y coordinate of the centre
+const int imblk = 4;    // the immovable block tag
+
+int lft = (scope[y][x - 1] == imblk);   // checking the left
+int rgt = (scope[y][x + 1] == imblk);   // checking the right
+
+int tpt = (scope[y + 1][x] == imblk);   // checking the top
+int btt = (scope[y - 1][x] == imblk);   // checking the bottom
+
+return (lft + rgt + tpt + btt);
+}
+
+// the layout goes top, right, down, up
+static void getLineLayout(const int scpscale, const int** scope, int (*layout)[4])
+{
+int x = (scpscale - 1) / 2, y = (scpscale - 1) / 2; // the x, y coordinate of the centre
+const int imblk = 4;    // the immovable block tag
+
+int lft = (scope[y][x - 1] == imblk);   // checking the left
+int rgt = (scope[y][x + 1] == imblk);   // checking the right
+
+int tpt = (scope[y + 1][x] == imblk);   // checking the top
+int btt = (scope[y - 1][x] == imblk);   // checking the bottom
+
+*layout[0] = tpt;
+*layout[1] = rgt;
+*layout[2] = btt;
+*layout[3] = lft;
+}
+
 static BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos)
 {
 int x = pos.x, y = pos.y;
 
 int** scope;
+/**
+ * If a block has somthing to one side then it is an end line
+ *  If the end line has something to the other side it is a full line
+ *  If the end line has something perpendicular to its side line it is a corner
+ *      If the corner is also a full line it is a 3 way intersection
+ *      If the three way intersection is also a 
+ * If the line has something 
+ */
 
-const int scpesze = 2;
-getScope(w, h, grid, pos, scpesze, &scope);
+getScope(w, h, grid, pos, 3, &scope);
+int lnecnt = getFullLineCount(3, scope);
 
-int curve[4][2][2] = {
+switch (lnecnt)
     {
-    {0, 1},
-    {1, 1}
-    },
-    {
-    {1, 0},
-    {1, 1}
-    },
-    {
-    {1, 1},
-    {0, 1}
-    },
-    {
-    {1, 1},
-    {1, 0}
+    case 0: // if it is zero then it is on its own
+        return BLOCK_IM_STATE_ALONE;
+        break;
+    case 1: // if it is 1 then it is an end line
+        return BLOCK_IM_STATE_LINE_END;
+        break;
+    case 2: // if it is 2 then it is either a corner or a full line
+        int layout[4] = {0, 0, 0, 0};
+        getLineLayout(3, scope, &layout);   // getting the layout to test if it is a corner or a full line
+        if((layout[0] && layout[2]) || (layout[1] && layout[3]))  // a full line
+            {
+            return BLOCK_IM_STATE_LINE_STRAIGHT;
+            }
+        else if((layout[0] || layout[2]) && (layout[1] || layout[3]))   // then it is a corner
+            {
+            return BLOCK_IM_STATE_CORNER;
+            }
+
+        break;
+    case 3: // if it is 3 then it is a three intersection
+        return BLOCK_IM_STATE_THREE_INTERSECT;
+        break;
+    case 4: // if it is 4 then it is a four way intersection
+        return BLOCK_IM_STATE_FOUR_INTERSECT;
+        break;
+    default:
+        break;
     }
-};
-
-int ncurves = 4;
-for (int k = 0; k < ncurves; k++)
-    mulGrid(2, 2, &curve[k]);
-
-/*
-All of the 3x3 scopes must be checked first as they are more likely to have 2x2 equivalent subscopes
-*/
-for (int i = 0; i < ncurves; i++)
-    {
-    if(scopeEquiv(scpesze, scpesze, scope, curve[i]))
-        {
-        outputScope(scpesze, scope);
-        return BLOCK_IM_STATE_CORNER;
-        }
-    }
-
 
 return BLOCK_IM_STATE_ALONE;
 }
@@ -218,20 +253,20 @@ for (int i = 0; i < h; i++)
     {
     for (int j = 0; j < w; j++)
         {
-        printf("\nChecking (%d, %d) -> %d", i, j, grid[i][j]);
+        // printf("\nChecking (%d, %d) -> %d", i, j, grid[i][j]);
         if(grid[i][j] == (int)BLOCK_IMMOVABLE_BLOCK + 1) // if there is an immovable block there
             {
             BLOCK_IM_STATE imstate = getImmovableType(w, h, grid, (vec2){j, i});
-            printf(" -> %d", imstate);
+            // printf(" -> %d", imstate);
             vec2 posi = {j * grid_size, i * grid_size};
             int trsid = getBlockAtPosition(*tds, posi);
-            printf("\n%d", trsid);
-            printf("\n%d", trsid);
+            // printf("\n%d", trsid);
+            // printf("\n%d", trsid);
             if(trsid != -1)
                 {
                 unsigned int rid = drabs->rids[findDrawablesTransform(*drabs, trsid)];
                 RemoveBlock(rds, tds, drabs, rid);
-                _PlaceBlockCustom(rds, tds, drabs, (BlockInfo){ bi.spfp, bi.nosp, bi.spr + BLOCK_IM_STATE_CORNER }, posi);
+                _PlaceBlockCustom(rds, tds, drabs, (BlockInfo){ bi.spfp, bi.nosp, bi.spr + imstate }, posi);
                 }
             
             }
