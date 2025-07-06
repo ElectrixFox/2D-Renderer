@@ -169,7 +169,7 @@ return (lft + rgt + tpt + btt);
 }
 
 // the layout goes top, right, down, up
-static void getLineLayout(const int scpscale, const int** scope, int (*layout)[4])
+static void getLineLayout(const int scpscale, const int** scope, int* layout[4])
 {
 int x = (scpscale - 1) / 2, y = (scpscale - 1) / 2; // the x, y coordinate of the centre
 const int imblk = 4;    // the immovable block tag
@@ -180,10 +180,13 @@ int rgt = (scope[y][x + 1] == imblk);   // checking the right
 int tpt = (scope[y + 1][x] == imblk);   // checking the top
 int btt = (scope[y - 1][x] == imblk);   // checking the bottom
 
-*layout[0] = tpt;
-*layout[1] = rgt;
-*layout[2] = btt;
-*layout[3] = lft;
+
+int lay[4] = {tpt, rgt, btt, lft};
+
+printf("\n");
+outputScope(3, scope);
+printf("\n%d %d %d %d", lay[0], lay[1], lay[2], lay[3]);
+*layout = lay;
 }
 
 static BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos)
@@ -258,15 +261,14 @@ for (int i = 0; i < h; i++)
             {
             BLOCK_IM_STATE imstate = getImmovableType(w, h, grid, (vec2){j, i});
             // printf(" -> %d", imstate);
-            vec2 posi = {j * grid_size, i * grid_size};
+            vec2 posi = {j * grid_size, (h - i) * grid_size};
             int trsid = getBlockAtPosition(*tds, posi);
             // printf("\n%d", trsid);
             // printf("\n%d", trsid);
             if(trsid != -1)
                 {
                 unsigned int rid = drabs->rids[findDrawablesTransform(*drabs, trsid)];
-                RemoveBlock(rds, tds, drabs, rid);
-                _PlaceBlockCustom(rds, tds, drabs, (BlockInfo){ bi.spfp, bi.nosp, bi.spr + imstate }, posi);
+                _PlaceBlockCustom(rds, tds, drabs, getImmovableBlock(imstate), posi);
                 }
             
             }

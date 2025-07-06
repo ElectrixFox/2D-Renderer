@@ -104,6 +104,7 @@ void UnassignBlock(unsigned int rid);
 BlockInfo getBlockInfo(BLOCK block);
 
 enum BLOCK_IM_STATE {
+    BLOCK_NULL,
     BLOCK_IM_STATE_ALONE,
     BLOCK_IM_STATE_LINE_END,
     BLOCK_IM_STATE_LINE_STRAIGHT,
