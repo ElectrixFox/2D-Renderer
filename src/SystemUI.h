@@ -176,6 +176,14 @@ unsigned int addToMenu(UI_Table* ui, RenderPacket* rp, unsigned int ui_id, UI_EL
  */
 void removeFromMenu(UI_Table* ui, RenderPacket* rp, unsigned int menid, unsigned int ui_id);
 
+/**
+ * Removes the all of the entries from the menu
+ * 
+ * @param ui A pointer to the UI table
+ * @param rp A pointer to the render packet
+ * @param menid The ID of the menu element
+ */
+void clearMenu(UI_Table* ui, RenderPacket* rp, unsigned int menid);
 
 /**
  * removes the button with the given id from the table

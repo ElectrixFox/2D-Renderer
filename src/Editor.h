@@ -64,16 +64,11 @@ void ApplyProjection(Camera cam, RenderDetails rds);
 
 #pragma region EditorUI
 
-void BuildNewSelectBar();
 
 /**
  * Builds the block selection bar
- * 
- * @param rds A pointer to the rendering details
- * @param tds A pointer to the transformation details
- * @param drabs A pointer to the drawable details
  */
-void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs);
+void BuildSelectBar();
 
 /**
  * Unfolds the options for the sprite

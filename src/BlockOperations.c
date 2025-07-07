@@ -251,6 +251,42 @@ switch (lnecnt)
 return BLOCK_IM_STATE_ALONE;
 }
 
+static vec2 getMinimumPosition(TransformationDetails tds)
+{
+// find the bottom left and top right blocks (the extremes)
+float minx = 0, maxx = 0, miny = 0, maxy = 0;
+
+if(tds.size == 0)   // stop if there are no transforms
+    return;
+
+for (int i = 0; i < tds.size; i++)  // find the first deletable
+    {
+    minx = tds.pos[i].x;
+    maxx = tds.pos[i].x;
+    miny = tds.pos[i].y;
+    maxy = tds.pos[i].y;
+    }
+
+
+for (int i = 0; i < tds.size; i++)
+    {
+    // getting the extreme points
+    if(tds.pos[i].x < minx)
+        minx = tds.pos[i].x;
+
+    if(maxx < tds.pos[i].x)
+        maxx = tds.pos[i].x;
+    
+    if(tds.pos[i].y < miny)
+        miny = tds.pos[i].y;
+    
+    if(maxy < tds.pos[i].y)
+        maxy = tds.pos[i].y;
+    }
+
+return (vec2){minx, miny};
+}
+
 int getBlockAtPosition(TransformationDetails tds, vec2 pos)
 {
 for (int i = 0; i < tds.size; i++)
@@ -263,6 +299,7 @@ unsigned int UpdateImmovableBlocks(RenderDetails* rds, TransformationDetails* td
 {
 printf("\n\n\nImmovables update");
 BlockInfo bi = getBlockInfo(BLOCK_IMMOVABLE_BLOCK);
+vec2 minpos = getMinimumPosition(*tds);
 for (int i = 0; i < h; i++)
     {
     for (int j = 0; j < w; j++)
@@ -272,7 +309,7 @@ for (int i = 0; i < h; i++)
             {
             BLOCK_IM_STATE imstate = getImmovableType(w, h, grid, (vec2){j, i});
             // printf(" -> %d", imstate);
-            vec2 posi = {j * grid_size, (h - i) * grid_size};
+            vec2 posi = {minpos.x + j * grid_size, minpos.y + (h - i) * grid_size};
             int trsid = getBlockAtPosition(*tds, posi);
             // printf("\n%d", trsid);
             // printf("\n%d", trsid);

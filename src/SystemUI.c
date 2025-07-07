@@ -269,7 +269,6 @@ if(index == -1)
 
 const int size = ui->size;
 
-
 for (int i = 0; i < UI_NO_TRIGGERS; i++)    // removes all the possible actions
     removeUITriggerAction(&ui->actions[i], ui_id);   // removes the actions
 
@@ -370,6 +369,16 @@ if(!isInMenu(*meni, ui_id)) // quick bit of error checking
 // To-Do: Type?
 removeUIElement(ui, rp, UI_TYPE_BUTTON, ui_id); // remove each of the buttons
 RemoveFromArray(&meni->ui_ids, ui_id);  // remove it from the element array
+}
+
+void clearMenu(UI_Table* ui, RenderPacket* rp, unsigned int menid)
+{
+GUI_MENU* meni = _getUIRenderInformation(ui, menid);
+const Array uids = meni->ui_ids;
+for (int i = 0; i < uids.size; i++)
+    removeFromMenu(ui, rp, menid, uids.data[i]);
+
+OutputArray(meni->ui_ids);
 }
 
 

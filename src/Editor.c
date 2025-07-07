@@ -46,14 +46,8 @@ if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu
     {
     if(prevuid != -1)
         {
-        GUI_MENU* meni = &_getUIRenderInformation(&ui, prevuid)->meni;   // getting the render information
         printf("\nFolding %d", prevuid);
-        for (int i = 0; i < meni->ui_ids.size; i++)
-            {
-            printf("\nRemoving %d", meni->ui_ids.data[i]);
-            removeUIElement(&ui, &ui_rp, UI_TYPE_BUTTON, meni->ui_ids.data[i]); // remove each of the buttons
-            }
-        meni->ui_ids.size = 0;
+        clearMenu(&ui, &ui_rp, prevuid);
         }
 
     printf("\nUnfolding %d", ui_id);
@@ -76,7 +70,7 @@ if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu
     }
 }
 
-void BuildNewSelectBar()
+void BuildSelectBar()
 {
 vec2 topright = {1255.0f, 695.0f};
 const unsigned int nblocks = getBlockCount();
@@ -93,34 +87,14 @@ for (int i = 0; i < nblocks; i++)
     if(ri.ssi.nosp > 1 && getBlockFromFilePath(bi.spfp) != BLOCK_IMMOVABLE_BLOCK)   // if there is more than one sprite and the block isn't the immovable type
         {
         RenderInformation tri;
-        tri.meni = (GUI_MENU){(Array){NULL}, entry};
+        tri.meni = (GUI_MENU){(Array){NULL, 0}, entry};
         unsigned int menhead = createUIElement(&ui, &ui_rp, position, 25.0f, UI_TYPE_MENU, tri);
         assignButtonAction(&ui, menhead, UI_TRIGGER_HOVER, &unfoldBlockOptions);
-        
+        RenderInformation ntri = getUIRenderInformation(ui, menhead);
+
         printf("\nCreating the Menu");
-        OutputArray(ui.data[0].meni.ui_ids);
-
-        /*
-        for (int i = 2; i <= bi.nosp; i++)
-            {
-            unsigned int menentry = addToMenu(&ui, &ui_rp, menhead, UI_TYPE_BUTTON, (RenderInformation){ bi.spfp, bi.nosp, i });
-            assignButtonAction(&ui, menentry, UI_TRIGGER_PRESS, &changeBlock);
-            }
-        */
+        OutputArray(ntri.meni.ui_ids);
         }
-    }
-}
-
-void BuildSelectBar(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs)
-{
-vec2 topright = {1255.0f, 695.0f};
-const unsigned int nblocks = getBlockCount();
-const float padding = 10.0f;
-
-for (int i = 0; i < nblocks; i++)
-    {
-    vec2 position = {topright.x, topright.y - (i * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
-    PlaceBlock(rds, tds, drabs, (BLOCK)i, position);
     }
 }
 

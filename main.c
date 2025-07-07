@@ -248,6 +248,8 @@ return 0;
 unsigned int width = gwid;
 unsigned int height = ghig;
 
+setbuf(stdout, NULL);   // MUST REMOVE!!!
+
 glfwInit();
 // glfwWindowHint(GLFW_DECORATED, GLFW_FALSE); // change to borederless
 GLFWwindow* window = glfwCreateWindow(width, height, "Title", 0, 0); // creates the window of size width x height
@@ -273,8 +275,10 @@ Drawables block_drabs = InitialiseDrawables();
 
 InitialiseBlockDetails();
 
-BuildNewSelectBar();
+BuildSelectBar();
 
+OutputDrawables(ui_rp.drabs);
+OutputTransformations(ui_rp.tds);
 /*
 int** grid;
 int w, h;
@@ -298,7 +302,6 @@ while(!glfwWindowShouldClose(window))   // main loop
         int w = 0, h = 0;
         getLevel(block_rds, block_tds, block_drabs, &w, &h, &grid);
         OutputLevel(grid, w, h);
-        glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         UpdateImmovableBlocks(&block_rds, &block_tds, &block_drabs, w, h, grid);
         }
 
@@ -310,21 +313,22 @@ while(!glfwWindowShouldClose(window))   // main loop
         if(!PressedArea(block_tds, cpos, 50.0f) && !PressedArea(ui_rp.tds, ncpos, 50.0f))
             {
             _PlaceBlockCustom(&block_rds, &block_tds, &block_drabs, getActiveBlock(), cpos);
-            glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
             }
-        glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPositionRelative(cam);
         if(PressedAnother(block_tds, cpos))
             {
+            printf("\nTrying to remove");
             unsigned int ttrsid = getPressedBlock(block_tds, cpos);
             unsigned int trid = block_drabs.rids[findDrawablesTransform(block_drabs, ttrsid)];
             RemoveBlock(&block_rds, &block_tds, &block_drabs, trid);
+            OutputDrawables(ui_rp.drabs);
+            OutputTransformations(ui_rp.tds);
             }
-        glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
         }
+    glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
 
     MoveCamera(&cam);
     ApplyCamera(cam, block_rds);
