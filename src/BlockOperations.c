@@ -188,10 +188,8 @@ printf("\n");
 outputScope(3, scope);
 printf("\n%d %d %d %d", lay[0], lay[1], lay[2], lay[3]);
 */
-layout[0] = lay[0];
-layout[1] = lay[1];
-layout[2] = lay[2];
-layout[3] = lay[3];
+for (int i = 0; i < 3; i++) // setting the output layout
+    layout[i] = lay[i];
 }
 
 BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos)
@@ -229,7 +227,7 @@ switch (lnecnt)
     case 2: // if it is 2 then it is either a corner or a full line
         int layout[4] = {0, 0, 0, 0};
         getLineLayout(3, scope, layout);   // getting the layout to test if it is a corner or a full line
-        printf("\n%d %d %d %d", layout[0], layout[1], layout[2], layout[3]);
+        // printf("\n%d %d %d %d", layout[0], layout[1], layout[2], layout[3]);
         if((layout[0] && layout[2]) || (layout[1] && layout[3]))  // a full line
             {
             return BLOCK_IM_STATE_LINE_STRAIGHT;

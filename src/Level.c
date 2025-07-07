@@ -51,15 +51,15 @@ for(int i = 0; fline != NULL; i++)
     fline = strtok(NULL, "\n");
     }
 
-for (int i = 1; i <= gridh; i++)
+for (int i = 0; i < gridh; i++)
     {
-    tgrid[gridh - i] = (int*)calloc(gridw, sizeof(int));    // allocate the memory for the row
-    char* tstr = strtok(lines[i - 1], " ");
+    tgrid[i] = (int*)calloc(gridw, sizeof(int));    // allocate the memory for the row
+    char* tstr = strtok(lines[i], " "); // getting the next line part
     int j = 0;
     while(tstr != NULL)
         {
-        tgrid[gridh - i][j] = atoi(tstr);
-        tstr = strtok(NULL, " ");
+        tgrid[i][j] = atoi(tstr);   // changing the current grid entry to an integer
+        tstr = strtok(NULL, " ");   // getting the next bit of the line
         j++;
         }
     }

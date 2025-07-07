@@ -216,6 +216,7 @@ switch (lnecnt)
 
 int main()
 {
+/*
 int** grid;
 int w, h;
 int** tgrid;
@@ -242,6 +243,7 @@ printf("\n%d -> %d", grid[(int)tpos.y][(int)tpos.x], tst);
 
 OutputLevel(tgrid, w, h);
 return 0;
+*/
 
 unsigned int width = gwid;
 unsigned int height = ghig;
