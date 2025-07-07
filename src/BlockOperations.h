@@ -38,6 +38,8 @@ unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawable
  */
 void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
 
+BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos);
+
 unsigned int PlaceImmovableBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BlockInfo block, vec2 position);
 
 unsigned int UpdateImmovableBlocks(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, const int w, const int h, const int** grid);

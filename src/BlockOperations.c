@@ -169,7 +169,7 @@ return (lft + rgt + tpt + btt);
 }
 
 // the layout goes top, right, down, up
-static void getLineLayout(const int scpscale, const int** scope, int* layout[4])
+static void getLineLayout(const int scpscale, const int** scope, int* layout)
 {
 int x = (scpscale - 1) / 2, y = (scpscale - 1) / 2; // the x, y coordinate of the centre
 const int imblk = 4;    // the immovable block tag
@@ -183,15 +183,21 @@ int btt = (scope[y - 1][x] == imblk);   // checking the bottom
 
 int lay[4] = {tpt, rgt, btt, lft};
 
+/*
 printf("\n");
 outputScope(3, scope);
 printf("\n%d %d %d %d", lay[0], lay[1], lay[2], lay[3]);
-*layout = lay;
+*/
+layout[0] = lay[0];
+layout[1] = lay[1];
+layout[2] = lay[2];
+layout[3] = lay[3];
 }
 
-static BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos)
+BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos)
 {
 int x = pos.x, y = pos.y;
+const int imblk = 4;    // the immovable block tag
 
 int** scope;
 /**
@@ -203,7 +209,13 @@ int** scope;
  * If the line has something 
  */
 
-getScope(w, h, grid, pos, 3, &scope);
+if(grid[y][x] != imblk)
+    {
+    printf("\nError: Trying to find type for non-immovable");
+    return -1;
+    }
+
+getScope(w, h, grid, pos, 3, &scope);   // gets the scope
 int lnecnt = getFullLineCount(3, scope);
 
 switch (lnecnt)
@@ -216,7 +228,8 @@ switch (lnecnt)
         break;
     case 2: // if it is 2 then it is either a corner or a full line
         int layout[4] = {0, 0, 0, 0};
-        getLineLayout(3, scope, &layout);   // getting the layout to test if it is a corner or a full line
+        getLineLayout(3, scope, layout);   // getting the layout to test if it is a corner or a full line
+        printf("\n%d %d %d %d", layout[0], layout[1], layout[2], layout[3]);
         if((layout[0] && layout[2]) || (layout[1] && layout[3]))  // a full line
             {
             return BLOCK_IM_STATE_LINE_STRAIGHT;

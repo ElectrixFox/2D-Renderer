@@ -216,15 +216,32 @@ switch (lnecnt)
 
 int main()
 {
-/*
 int** grid;
 int w, h;
+int** tgrid;
 ReadLevel("res/levels/level1.txt", &w, &h, &grid);
 
-getImmovablesState(w, h, &grid);
+ReadLevel("res/levels/level1.txt", &w, &h, &tgrid);
+OutputLevel(grid, w, h);
 
+for (int i = 0; i < h; i++)
+    {
+    for (int j = 0; j < w; j++)
+        {
+        if(grid[i][j] == (int)BLOCK_IMMOVABLE_BLOCK + 1) // if there is an immovable block there
+            {
+            BLOCK_IM_STATE imstate = getImmovableType(w, h, grid, (vec2){j, i});
+            tgrid[i][j] = -(int)imstate;
+            }
+        }
+    }
+
+vec2 tpos = {1.0f, 1.0f};
+BLOCK_IM_STATE tst = getImmovableType(w, h, grid, tpos);
+printf("\n%d -> %d", grid[(int)tpos.y][(int)tpos.x], tst);
+
+OutputLevel(tgrid, w, h);
 return 0;
-*/
 
 unsigned int width = gwid;
 unsigned int height = ghig;
