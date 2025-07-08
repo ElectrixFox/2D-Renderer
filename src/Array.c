@@ -10,6 +10,21 @@ if(*x == *y) return;    // if they are the same then return
 *x ^= *y;
 }
 
+static int findInArray(Array arr, unsigned int item)
+{
+for (int i = 0; i < arr.size; i++) // finding the element
+    if(arr.data[i] == item)
+        return i;
+return -1;
+}
+
+Array InitialiseArray()
+{
+Array arr;
+arr.size = 0;
+arr.data = (unsigned int*)malloc(sizeof(unsigned int));
+}
+
 void AppendToArray(Array* arr, unsigned int item)
 {
 if(arr->size == 0)
@@ -28,17 +43,12 @@ arr->size--;
 
 void RemoveFromArray(Array* arr, unsigned int item)
 {
-int index = -1;
-const int n = arr->size;
-for (int i = 0; i < n; i++) // finding the element
-    if(arr->data[i] == item)
-        {
-        index = i;
-        break;
-        }
+int index = findInArray(*arr, item);
 
 if(index != -1)
     RemoveFromArrayIndex(arr, index);
+else
+    printf("\nError: Cannot find item %d in the array", item);
 }
 
 void OutputArray(Array arr)

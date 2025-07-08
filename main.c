@@ -279,13 +279,13 @@ BuildSelectBar();
 
 OutputDrawables(ui_rp.drabs);
 OutputTransformations(ui_rp.tds);
-/*
+
 int** grid;
 int w, h;
 ReadLevel("res/levels/level1.txt", &w, &h, &grid);
 OutputLevel(grid, w, h);
 DrawLevel(&block_rds, &block_tds, &block_drabs, w, h, grid);
-*/
+
 
 while(!glfwWindowShouldClose(window))   // main loop
     {
@@ -302,7 +302,7 @@ while(!glfwWindowShouldClose(window))   // main loop
         int w = 0, h = 0;
         getLevel(block_rds, block_tds, block_drabs, &w, &h, &grid);
         OutputLevel(grid, w, h);
-        UpdateImmovableBlocks(&block_rds, &block_tds, &block_drabs, w, h, grid);
+        // UpdateImmovableBlocks(&block_rds, &block_tds, &block_drabs, w, h, grid);
         }
 
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)

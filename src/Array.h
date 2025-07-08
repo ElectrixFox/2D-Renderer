@@ -6,6 +6,8 @@ typedef struct Array
     unsigned int size;
     } Array;
 
+Array InitialiseArray();
+
 void AppendToArray(Array* arr, unsigned int item);
 
 void RemoveFromArrayIndex(Array* arr, int index);

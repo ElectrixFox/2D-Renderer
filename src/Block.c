@@ -97,6 +97,9 @@ switch (block)
     case BLOCK_IMMOVABLE_BLOCK:
         return (BlockInfo){"res/sprites/immovable_tilesheet_short.png", 6, 1};
         break;
+    case BLOCK_COUNTABLE_BLOCK:
+        return (BlockInfo){"res/sprites/countable_movable_spritesheet_short.png", 3, 1};
+        break;
     default:
         break;
     }

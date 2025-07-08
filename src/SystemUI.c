@@ -359,7 +359,9 @@ return nui_id;
 
 void removeFromMenu(UI_Table* ui, RenderPacket* rp, unsigned int menid, unsigned int ui_id)
 {
-GUI_MENU* meni = _getUIRenderInformation(ui, menid);
+int index = findUIIDinTable(*ui, ui_id);
+printf("\n%d", index);
+GUI_MENU* meni = &ui->data[index].meni;
 if(!isInMenu(*meni, ui_id)) // quick bit of error checking
     {
     printf("\nError: %d is not in the menu", ui_id);
@@ -373,12 +375,16 @@ RemoveFromArray(&meni->ui_ids, ui_id);  // remove it from the element array
 
 void clearMenu(UI_Table* ui, RenderPacket* rp, unsigned int menid)
 {
-GUI_MENU* meni = _getUIRenderInformation(ui, menid);
-const Array uids = meni->ui_ids;
-for (int i = 0; i < uids.size; i++)
-    removeFromMenu(ui, rp, menid, uids.data[i]);
+GUI_MENU meni = getUIRenderInformation(*ui, menid).meni;
+Array uids = meni.ui_ids;
+OutputArray(uids);
 
-OutputArray(meni->ui_ids);
+for (int i = 0; i < uids.size; i++)
+    {
+    removeFromMenu(ui, rp, menid, uids.data[i]);
+    }
+
+// OutputArray(meni->ui_ids);
 }
 
 

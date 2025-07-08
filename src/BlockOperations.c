@@ -61,15 +61,6 @@ unsigned int PlaceImmovableBlock(RenderDetails* rds, TransformationDetails* tds,
 return 0;
 }
 
-static int scopeEquiv(const int w, const int h, const int** scope, const int test[h][w])
-{
-for (int i = 0; i < h; i++)
-    for (int j = 0; j < w; j++)
-        if(scope[i][j] != test[i][j])
-            return 0;
-return 1;
-}
-
 static void getScope(const int w, const int h, const int** grid, vec2 pos, const int scpesc, int*** scope)
 {
 int x = pos.x, y = pos.y;
@@ -145,13 +136,6 @@ for (int i = 0; i < scale; i++)
         printf("%d ", scope[i][j]);
     printf("\n");
     }
-}
-
-static void mulGrid(const int w, const int h, int (*grd)[h][w])
-{
-for (int i = 0; i < h; i++)
-    for (int j = 0; j < w; j++)
-        (*grd)[i][j] *= 4;
 }
 
 static int getFullLineCount(const int scpscale, int** scope)
@@ -257,7 +241,7 @@ static vec2 getMinimumPosition(TransformationDetails tds)
 float minx = 0, maxx = 0, miny = 0, maxy = 0;
 
 if(tds.size == 0)   // stop if there are no transforms
-    return;
+    return (vec2){-1.0f, -1.0f};
 
 for (int i = 0; i < tds.size; i++)  // find the first deletable
     {
@@ -298,24 +282,19 @@ return -1;
 unsigned int UpdateImmovableBlocks(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, const int w, const int h, const int** grid)
 {
 printf("\n\n\nImmovables update");
-BlockInfo bi = getBlockInfo(BLOCK_IMMOVABLE_BLOCK);
 vec2 minpos = getMinimumPosition(*tds);
 for (int i = 0; i < h; i++)
     {
     for (int j = 0; j < w; j++)
         {
-        // printf("\nChecking (%d, %d) -> %d", i, j, grid[i][j]);
         if(grid[i][j] == (int)BLOCK_IMMOVABLE_BLOCK + 1) // if there is an immovable block there
             {
             BLOCK_IM_STATE imstate = getImmovableType(w, h, grid, (vec2){j, i});
-            // printf(" -> %d", imstate);
             vec2 posi = {minpos.x + j * grid_size, minpos.y + (h - i) * grid_size};
             int trsid = getBlockAtPosition(*tds, posi);
-            // printf("\n%d", trsid);
-            // printf("\n%d", trsid);
             if(trsid != -1)
                 {
-                unsigned int rid = drabs->rids[findDrawablesTransform(*drabs, trsid)];
+                // unsigned int rid = drabs->rids[findDrawablesTransform(*drabs, trsid)];
                 _PlaceBlockCustom(rds, tds, drabs, getImmovableBlock(imstate), posi);
                 }
             

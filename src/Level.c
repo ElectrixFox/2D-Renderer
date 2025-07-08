@@ -153,14 +153,14 @@ for (float y = maxy; miny <= y; y -= (float)grid_size)
 
 void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, int w, int h, const int** grid)
 {
-for (int y = 0; y < h; y++)
+for (int y = h; 0 < y; y--)
     {
-    vec2 pos = {0.0f, y * grid_size};
+    vec2 pos = {0.0f, (y - 1) * grid_size};
     for (int x = 0; x < w; x++)
         {
         pos.x = x * grid_size;
 
-        int btype = grid[y][x];
+        int btype = grid[h - y][x];
 
         if(btype != 0)
             PlaceBlock(rds, tds, drabs, (BLOCK)(btype - 1), pos);
