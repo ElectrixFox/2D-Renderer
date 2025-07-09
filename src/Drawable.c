@@ -128,7 +128,7 @@ int CreateBasicSquare(RenderPacket* rp, vec2 position, float scale, vec4 incol)
 {
 vec2 scle = (vec2){scale, scale};
 
-unsigned int trsid = AddTransformation(&rp->tds, position, scle);   // creates the transform
+unsigned int trsid = AddTransformation(&rp->tds, position, scle, 0.0f);   // creates the transform
 unsigned int rid = CreatePlainSquareRenderable(&rp->rds);   // creates the render element
 unsigned int prog = rp->rds.shader[getRenderDetailsIDIndex(rp->rds, rid)];  // finds the program
 

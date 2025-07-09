@@ -12,6 +12,8 @@ typedef struct mat3 { vec3 mat[3]; } mat3;
 typedef float vec4[4];
 typedef struct m4 { vec4 mat[4]; } m4;
 
+# define M_PI          3.141592653589793238462643383279502884L
+
 /**
  * Outputs a vec2
  * 
@@ -203,9 +205,11 @@ m4 getProjection(unsigned int wid, unsigned int hig, unsigned int transformed);
  * 
  * @param pos The centre of the entity
  * @param scale The scale vector of the entity
+ * @param theta The angle of the object
+ * 
  * @note This also gets the bottom left corner of the square within the function
  */
-m4 GetModelMatrix(vec2 pos, vec2 scale);
+m4 GetModelMatrix(vec2 pos, vec2 scale, float theta);
 
 m4 getM4ID();
 

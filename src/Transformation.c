@@ -10,6 +10,7 @@ tds.size = 0;  // setting the size to 0
 tds.trsid = (unsigned int*)malloc(sizeof(unsigned int));
 tds.pos = (vec2*)malloc(sizeof(vec2));
 tds.scale = (vec2*)malloc(sizeof(vec2));
+tds.angle = (float*)malloc(sizeof(float));
 
 return tds;
 }
@@ -26,7 +27,7 @@ for (int i = 0; i < tds.size; i++)  // simple linear search
 return -1;
 }
 
-unsigned int AddTransformation(TransformationDetails *tds, vec2 pos, vec2 scale)
+unsigned int AddTransformation(TransformationDetails *tds, vec2 pos, vec2 scale, float theta)
 {
 // static unsigned int id = 0; // a static incrementing counter to set the new ID as
 const unsigned int n = tds->size;
@@ -36,12 +37,14 @@ unsigned int id = findNextIDAvailable(tds->trsid, tds->size);
 ExpandByOne(&tds->trsid, n, sizeof(unsigned int));
 ExpandByOne(&tds->pos, n, sizeof(vec2));
 ExpandByOne(&tds->scale, n, sizeof(vec2));
+ExpandByOne(&tds->angle, n, sizeof(float));
 
 
 // setting all the new details
 tds->trsid[n] = id;
 tds->pos[n] = pos;
 tds->scale[n] = scale;
+tds->angle[n] = theta;
 
 tds->size++;    // increase the number of transforms
 
@@ -98,11 +101,18 @@ tds.scale[index] = newscale;    // setting the new scale
 
 vec2 getScale(TransformationDetails tds, unsigned int trsid) { return tds.scale[getTransformationIDIndex(tds, trsid)]; }
 
+void setRotation(TransformationDetails tds, unsigned int trsid, float theta)
+{
+int index = getTransformationIDIndex(tds, trsid);   // find the ID
+if(index == -1) return; // if not found return
+tds.angle[index] = theta;   // setting the new angle
+}
+
 m4 getTransformModelMatrix(TransformationDetails tds, unsigned int tid)
 {
 int index = getTransformationIDIndex(tds, tid); // find the transformation ID
 if(index != -1)
-    return GetModelMatrix(tds.pos[index], tds.scale[index]);    // get the model matrix
+    return GetModelMatrix(tds.pos[index], tds.scale[index], tds.angle[index]);    // get the model matrix
 
 return getM4ID();   // return the identity so nothing bad goes on
 }
@@ -113,7 +123,7 @@ const int n = tds.size; // for ease of use
 models = (m4*)malloc(n * sizeof(m4));   // allocating the memory to be used
 
 for (int i = 0; i < n; i++)
-    models[i] = GetModelMatrix(tds.pos[i], tds.scale[i]);   // doing the calculation and setting the value
+    models[i] = GetModelMatrix(tds.pos[i], tds.scale[i], tds.angle[i]);   // doing the calculation and setting the value
 }
 
 int CheckPressed(TransformationDetails tds, unsigned int tid, vec2 cursorpos)

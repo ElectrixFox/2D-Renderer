@@ -6,6 +6,7 @@ struct TransformationDetails
     unsigned int* trsid;
     vec2* pos;
     vec2* scale;
+    float* angle;
     unsigned int size;
     };
 typedef struct TransformationDetails TransformationDetails;
@@ -36,10 +37,11 @@ int getTransformationIDIndex(TransformationDetails tds, unsigned int trsid);
  * @param tds A pointer to the details
  * @param pos The new position to add
  * @param scale The new scale to add
+ * @param theta The angle (in degrees) to rotate
  * 
  * @returns The ID of the newly added transformation
  */
-unsigned int AddTransformation(TransformationDetails* tds, vec2 pos, vec2 scale);
+unsigned int AddTransformation(TransformationDetails* tds, vec2 pos, vec2 scale, float theta);
 
 /**
  * Removes a transformation from the details
@@ -97,6 +99,15 @@ void setScale(TransformationDetails tds, unsigned int trsid, vec2 newscale);
  * @returns The scale of the transform
  */
 vec2 getScale(TransformationDetails tds, unsigned int trsid);
+
+/**
+ * Sets the rotation of the transform
+ * 
+ * @param tds The transformation array
+ * @param trsid The transformaion ID
+ * @param theta The angle (in radians)
+ */
+void setRotation(TransformationDetails tds, unsigned int trsid, float theta);
 
 /**
  * Gets the model matrix for the transformation

@@ -43,7 +43,7 @@ void RemoveBlock(RenderPacket* rp, unsigned int rid);
  * 
  * @param rp A pointer to the render packet
  * @param rid The render ID for the block to rotate
- * @param theta The angle (in degrees) to rotate the block by
+ * @param theta The angle (in radians) to rotate the block by
  */
 void RotateBlock(RenderPacket* rp, unsigned int rid, float theta);
 

@@ -193,7 +193,7 @@ else if(rendinf.ssi.spfp != NULL)   // if there is a file path
     {
     ui->data[index].ssi = rendinf.ssi;
     unsigned int rid = CreateSpriteRenderable(&rp->rds, rendinf.ssi.spfp, rendinf.ssi.nosp, rendinf.ssi.spr);
-    unsigned int trsid = AddTransformation(&rp->tds, pos, (vec2){scale, scale});
+    unsigned int trsid = AddTransformation(&rp->tds, pos, (vec2){scale, scale}, 0.0f);
     ind = AddDrawable(&rp->drabs, trsid, rid);
     }
 else if(rendinf.meni.ui_ids.size != 0)  // if there are some IDs in the menu
@@ -239,7 +239,7 @@ switch (type)   // doing the appropriate thing for each type
     case UI_TYPE_BUTTON:
         ui->data[n].ssi = rendinf.ssi;
         unsigned int rid = CreateSpriteRenderable(&rp->rds, rendinf.ssi.spfp, rendinf.ssi.nosp, rendinf.ssi.spr);
-        unsigned int trsid = AddTransformation(&rp->tds, pos, (vec2){scale, scale});
+        unsigned int trsid = AddTransformation(&rp->tds, pos, (vec2){scale, scale}, 0.0f);
         ind = AddDrawable(&rp->drabs, trsid, rid);
         break;
     case UI_TYPE_MENU:

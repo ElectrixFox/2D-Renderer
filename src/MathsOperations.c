@@ -246,12 +246,12 @@ return
     };
 }
 
-m4 GetModelMatrix(vec2 pos, vec2 scale)
+m4 GetModelMatrix(vec2 pos, vec2 scale, float theta)
 {
 vec2 transformed = LeftCornerFromCentre(pos, scale);
 return (m4){
-        scale.x, 0.0f, 0.0f, transformed.x,
-        0.0f, scale.y, 0.0f, transformed.y,
+        scale.x * cos(theta), scale.x * -sin(theta), 0.0f, transformed.x,
+        scale.y * sin(theta), scale.y * cos(theta), 0.0f, transformed.y,
         0.0f, 0.0f, 1.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
 };

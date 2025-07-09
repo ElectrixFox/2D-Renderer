@@ -18,7 +18,7 @@ BLOCK bltype = getBlockFromFilePath(bi.spfp);   // gets the block type
 position = snap_to_grid ? snapOperation(position) : position;   // do the snap operation if should snap to grid and if not don't
 
 unsigned int rd = CreateSpriteRenderable(&rp->rds, bi.spfp, nosprites, sprite);
-unsigned int td = AddTransformation(&rp->tds, position, (vec2){25.0f, 25.0f});
+unsigned int td = AddTransformation(&rp->tds, position, (vec2){25.0f, 25.0f}, 0.0f);
 
 AddDrawable(&rp->drabs, td, rd);
 AssignBlock(rd, bltype);
