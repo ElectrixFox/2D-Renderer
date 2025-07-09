@@ -168,11 +168,11 @@ static void getLineLayout(const int scpscale, const int** scope, int* layout)
 int x = (scpscale - 1) / 2, y = (scpscale - 1) / 2; // the x, y coordinate of the centre
 const int imblk = 4;    // the immovable block tag
 
-int lft = (scope[y][x - 1] == imblk);   // checking the left
+int tpt = (scope[y - 1][x] == imblk);   // checking the top
 int rgt = (scope[y][x + 1] == imblk);   // checking the right
 
-int tpt = (scope[y + 1][x] == imblk);   // checking the top
-int btt = (scope[y - 1][x] == imblk);   // checking the bottom
+int btt = (scope[y + 1][x] == imblk);   // checking the bottom
+int lft = (scope[y][x - 1] == imblk);   // checking the left
 
 int lay[4] = {tpt, rgt, btt, lft};
 
@@ -197,28 +197,58 @@ getScope(w, h, grid, pos, 3, &scope);   // gets the scope
 int lnecnt = getFullLineCount(3, scope);
 *angle = 0;
 
+// {tpt, rgt, btt, lft};
+int layout[4] = {0, 0, 0, 0};
 switch (lnecnt)
     {
     case 0: // if it is zero then it is on its own
         return BLOCK_IM_STATE_ALONE;
         break;
     case 1: // if it is 1 then it is an end line
+        getLineLayout(3, scope, layout);   // getting the layout to test if it is a corner or a full line
+        if(layout[0])   // if there is a block above
+            *angle = 0 * M_PI / 180;
+        else if(layout[1])  // if there is a block to the right
+            *angle = 270 * M_PI / 180;
+        else if(layout[2])  // if there is a block below
+            *angle = 180 * M_PI / 180;
+        else if(layout[3])  // if there is a block to the left
+            *angle = 90 * M_PI / 180;
         return BLOCK_IM_STATE_LINE_END;
         break;
     case 2: // if it is 2 then it is either a corner or a full line
-        int layout[4] = {0, 0, 0, 0};
         getLineLayout(3, scope, layout);   // getting the layout to test if it is a corner or a full line
         if((layout[0] && layout[2]) || (layout[1] && layout[3]))  // a full line
             {
             if(layout[1])   // if there is a block to the left or right rotate
-                {
                 *angle = 90 * M_PI / 180;
-                printf("\nRotate");
-                }
+            
             return BLOCK_IM_STATE_LINE_STRAIGHT;
             }
         else if((layout[0] || layout[2]) && (layout[1] || layout[3]))   // then it is a corner
             {
+            outputLayout(layout);
+            if(layout[0] && layout[1])  // top and right
+                {
+                printf("\nTop right");
+                *angle = 90 * M_PI / 180;
+                }
+            else if(layout[0] && layout[3]) // top and left
+                {
+                printf("\nTop left");
+                *angle = 180 * M_PI / 180;
+                }
+            else if(layout[2] && layout[3]) // bottom and left
+                {
+                printf("\nBottom left");
+                *angle = 270 * M_PI / 180;
+                }
+            else if(layout[2] && layout[1]) // bottom and right
+                {
+                printf("\nBottom right");
+                *angle = 0 * M_PI / 180;
+                }
+
             return BLOCK_IM_STATE_CORNER;
             }
 
