@@ -293,11 +293,7 @@ while(!glfwWindowShouldClose(window))   // main loop
 
     if(isPressedSingle(GLFW_KEY_TAB))
         {
-        /*
-        OutputTransformations(block_rp.tds);
-        OutputDrawables(block_rp.drabs);
-        */
-        // OutputRenderPacketDetails(block_rp);
+        OutputRenderPacketDetails(block_rp);
         OutputRenderPacketDetails(ui_rp);
 
         int** grid;
