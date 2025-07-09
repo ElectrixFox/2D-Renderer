@@ -6,6 +6,8 @@ static int cmods = 0;   // current mod keys
 
 GLFWwindow* wind;
 
+extern InputTable ip;
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 wind = window;
@@ -26,6 +28,27 @@ InputPacket getCurrentInputInformation()
 return (InputPacket){ckey, caction, cmods};
 }
 
+void handle_input(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+for (int i = 0; i < ip.size; i++)
+    {
+    ip.inpfuncs[i](window, key, scancode, action, mods);
+    }
+}
+
+InputTable InitialiseInputTable(GLFWwindow* window)
+{
+InputTable ipt;
+
+ipt.size = 0;
+ipt.inpfuncs = (GLFWkeyfun*)malloc(sizeof(GLFWkeyfun));
+
+glfwSetKeyCallback(window, handle_input);   // setting up the callback
+wind = window;
+
+return ipt;
+}
+
 void resetInputPacket()
 {
 ckey = -1;
@@ -37,22 +60,17 @@ int isPressedSingle(int key)
 {
 static int pkey = 0;
 InputPacket ip = getCurrentInputInformation();
-if(ip.key == key && pkey != key)
+
+if(glfwGetKey(getWindow(), key) == GLFW_PRESS)
     {
-    if(ip.action == GLFW_PRESS)
-        {
-        pkey = key;
-        return 1;
-        }
-    else if(ip.action == GLFW_RELEASE)
-        {
-        resetInputPacket();
-        pkey = 0;
-        return 0;
-        }
+    glfwWaitEventsTimeout(0.1f);
+    return 1;
     }
-else if(ip.action == GLFW_RELEASE)
-    pkey = 0;
+else
+    {
+    return 0;
+    }
+
 return 0;
 }
 
