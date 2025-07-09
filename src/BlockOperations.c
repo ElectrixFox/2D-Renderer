@@ -254,6 +254,15 @@ switch (lnecnt)
 
         break;
     case 3: // if it is 3 then it is a three intersection
+        getLineLayout(3, scope, layout);    // gets the layout
+        if(layout[0] && layout[3] && layout[2]) // if there is up-down-left 
+            *angle = 0 * M_PI / 180;
+        else if(layout[0] && layout[1] && layout[2])    // if there is up-down-right
+            *angle = 180 * M_PI / 180;
+        else if(layout[0] && layout[1] && layout[3])    // if there is up-left-right
+            *angle = 270 * M_PI / 180;
+        else if(layout[2] && layout[1] && layout[3])    // if there is down-left-right
+            *angle = 90 * M_PI / 180;
         return BLOCK_IM_STATE_THREE_INTERSECT;
         break;
     case 4: // if it is 4 then it is a four way intersection
