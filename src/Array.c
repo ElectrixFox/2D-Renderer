@@ -37,7 +37,7 @@ arr->size++;    // increasing the array size
 
 void RemoveFromArrayIndex(Array* arr, int index)
 {
-swap(&arr->data[index], &arr->data[arr->size]); // swapping the two
+swap(&arr->data[index], &arr->data[arr->size - 1]); // swapping the two
 arr->size--;
 }
 
