@@ -38,6 +38,15 @@ unsigned int PlaceBlock(RenderPacket* rp, BLOCK block, vec2 position);
  */
 void RemoveBlock(RenderPacket* rp, unsigned int rid);
 
+/**
+ * Rotates a given block by theta degrees
+ * 
+ * @param rp A pointer to the render packet
+ * @param rid The render ID for the block to rotate
+ * @param theta The angle (in degrees) to rotate the block by
+ */
+void RotateBlock(RenderPacket* rp, unsigned int rid, float theta);
+
 BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos);
 
 unsigned int PlaceImmovableBlock(RenderPacket* rp, BlockInfo block, vec2 position);

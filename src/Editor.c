@@ -46,11 +46,11 @@ if(prevuid != ui_id) // if the previous ID isn't the menu to unfold and the menu
     {
     if(prevuid != -1)
         {
-        printf("\nFolding %d", prevuid);
+        // printf("\nFolding %d", prevuid);
         clearMenu(&ui, &ui_rp, prevuid);
         }
 
-    printf("\nUnfolding %d", ui_id);
+    // printf("\nUnfolding %d", ui_id);
     GUI_MENU meni = getUIRenderInformation(ui, ui_id).meni;   // getting the render information
     unsigned int head_id = meni.men_head_ui_id;
     

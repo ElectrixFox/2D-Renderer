@@ -376,7 +376,7 @@ void clearMenu(UI_Table* ui, RenderPacket* rp, unsigned int menid)
 {
 GUI_MENU meni = getUIRenderInformation(*ui, menid).meni;
 Array uids = meni.ui_ids;
-printf("\nClearing menu:");
+// printf("\nClearing menu:");
 int size = getUIRenderInformation(*ui, menid).meni.ui_ids.size;
 do
     {
