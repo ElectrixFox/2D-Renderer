@@ -317,7 +317,7 @@ while(!glfwWindowShouldClose(window))   // main loop
         if(!PressedArea(block_rp.tds, cpos, 50.0f) && !PressedArea(ui_rp.tds, ncpos, 50.0f))
             {
             printf("\nPlacing block");
-            _PlaceBlockCustom(&block_rp, getActiveBlock(), cpos);
+            _PlaceBlockCustom(&block_rp, getActiveBlock(), cpos, 0.0f);
             }
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)

@@ -12,10 +12,11 @@
  * @param tds The transform table
  * @param block The block information of the block to create
  * @param position Where to create the block
+ * @param theta The angle of the block to be placed
  * 
  * @returns The render ID for the new block
  */
-unsigned int _PlaceBlockCustom(RenderPacket* rp, BlockInfo block, vec2 position);
+unsigned int _PlaceBlockCustom(RenderPacket* rp, BlockInfo block, vec2 position, float theta);
 
 /**
  * Creates a block at the position with default scale (25x25)
@@ -47,7 +48,18 @@ void RemoveBlock(RenderPacket* rp, unsigned int rid);
  */
 void RotateBlock(RenderPacket* rp, unsigned int rid, float theta);
 
-BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos);
+/**
+ * Gets the type of the immovable block
+ * 
+ * @param w The width of the grid
+ * @param h The height of the grid
+ * @param grid A constant grid
+ * @param pos The position of the block in the grid to get the type of
+ * @param angle A pointer to the angle to be changed if there is an angle
+ * 
+ * @returns The state of the immovable state
+ */
+BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos, float* angle);
 
 unsigned int PlaceImmovableBlock(RenderPacket* rp, BlockInfo block, vec2 position);
 

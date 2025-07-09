@@ -64,16 +64,19 @@ if(index == tds->size - 1) goto end;   // hehe the naughty goto
 unsigned int tmpid = tds->trsid[index];
 vec2 tpos = tds->pos[index];
 vec2 tscale = tds->scale[index];
+float tangle = tds->angle[index];
 
 // setting the to delete to the end values
 tds->trsid[index] = tds->trsid[tds->size - 1];
 tds->pos[index] = tds->pos[tds->size - 1];
 tds->scale[index] = tds->scale[tds->size - 1];
+tds->angle[index] = tds->angle[tds->size - 1];
 
 // setting the end to the thing to delete
 tds->trsid[tds->size - 1] = tmpid;
 tds->pos[tds->size - 1] = tpos;
 tds->scale[tds->size - 1] = tscale;
+tds->angle[tds->size - 1] = tangle;
 
 end:
 tds->size--;    // decrease the size so it is effectively not there
