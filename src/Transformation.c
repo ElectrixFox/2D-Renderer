@@ -28,8 +28,9 @@ return -1;
 
 unsigned int AddTransformation(TransformationDetails *tds, vec2 pos, vec2 scale)
 {
-static unsigned int id = 0; // a static incrementing counter to set the new ID as
+// static unsigned int id = 0; // a static incrementing counter to set the new ID as
 const unsigned int n = tds->size;
+unsigned int id = findNextIDAvailable(tds->trsid, tds->size);
 
 // make all the arrays bigger by one to accomodate for the new element
 ExpandByOne(&tds->trsid, n, sizeof(unsigned int));
@@ -38,7 +39,7 @@ ExpandByOne(&tds->scale, n, sizeof(vec2));
 
 
 // setting all the new details
-tds->trsid[n] = id++;   // increment the ID counter too
+tds->trsid[n] = id;
 tds->pos[n] = pos;
 tds->scale[n] = scale;
 

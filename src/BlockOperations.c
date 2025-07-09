@@ -164,7 +164,8 @@ int rgt = (scope[y][x + 1] == imblk);   // checking the right
 int tpt = (scope[y + 1][x] == imblk);   // checking the top
 int btt = (scope[y - 1][x] == imblk);   // checking the bottom
 
-
+outputScope(3, scope);
+printf("\nTop: %d", tpt);
 int lay[4] = {tpt, rgt, btt, lft};
 
 /*
@@ -176,20 +177,17 @@ for (int i = 0; i < 3; i++) // setting the output layout
     layout[i] = lay[i];
 }
 
+static void outputLayout(int* layout)
+{
+printf("\n%d %d %d %d", layout[0], layout[1], layout[2], layout[3]);
+}
+
 BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos)
 {
 int x = pos.x, y = pos.y;
 const int imblk = 4;    // the immovable block tag
 
 int** scope;
-/**
- * If a block has somthing to one side then it is an end line
- *  If the end line has something to the other side it is a full line
- *  If the end line has something perpendicular to its side line it is a corner
- *      If the corner is also a full line it is a 3 way intersection
- *      If the three way intersection is also a 
- * If the line has something 
- */
 
 if(grid[y][x] != imblk)
     {
@@ -198,6 +196,7 @@ if(grid[y][x] != imblk)
     }
 
 getScope(w, h, grid, pos, 3, &scope);   // gets the scope
+// outputScope(3, scope);
 int lnecnt = getFullLineCount(3, scope);
 
 switch (lnecnt)
@@ -211,6 +210,7 @@ switch (lnecnt)
     case 2: // if it is 2 then it is either a corner or a full line
         int layout[4] = {0, 0, 0, 0};
         getLineLayout(3, scope, layout);   // getting the layout to test if it is a corner or a full line
+        // outputLayout(layout);
         // printf("\n%d %d %d %d", layout[0], layout[1], layout[2], layout[3]);
         if((layout[0] && layout[2]) || (layout[1] && layout[3]))  // a full line
             {
@@ -283,6 +283,8 @@ unsigned int UpdateImmovableBlocks(RenderPacket* rp, const int w, const int h, c
 {
 printf("\n\n\nImmovables update");
 vec2 minpos = getMinimumPosition(rp->tds);
+printf("\nMinimum position: ");
+OutputVec2(minpos);
 for (int i = 0; i < h; i++)
     {
     for (int j = 0; j < w; j++)
@@ -294,7 +296,8 @@ for (int i = 0; i < h; i++)
             int trsid = getBlockAtPosition(rp->tds, posi);
             if(trsid != -1)
                 {
-                // unsigned int rid = drabs->rids[findDrawablesTransform(*drabs, trsid)];
+                unsigned int rid = rp->drabs.rids[findDrawablesTransform(rp->drabs, trsid)];
+                RemoveBlock(rp, rid);
                 _PlaceBlockCustom(rp, getImmovableBlock(imstate), posi);
                 }
             

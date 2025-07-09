@@ -300,7 +300,13 @@ while(!glfwWindowShouldClose(window))   // main loop
         int w = 0, h = 0;
         getLevel(block_rp, &w, &h, &grid);
         OutputLevel(grid, w, h);
-        // UpdateImmovableBlocks(&block_rds, &block_tds, &block_drabs, w, h, grid);
+        }
+    else if(isPressedSingle(GLFW_KEY_0))
+        {
+        int** grid;
+        int w = 0, h = 0;
+        getLevel(block_rp, &w, &h, &grid);
+        UpdateImmovableBlocks(&block_rp, w, h, grid);
         }
 
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
