@@ -360,31 +360,16 @@ return nui_id;
 void removeFromMenu(UI_Table* ui, RenderPacket* rp, unsigned int menid, unsigned int ui_id)
 {
 int index = findUIIDinTable(*ui, menid);
-OutputArray(ui->data[index].meni.ui_ids);
-// printf("\n%d", index);
 GUI_MENU* meni = &ui->data[index].meni;
 if(!isInMenu(*meni, ui_id)) // quick bit of error checking
     {
     printf("\nError: %d is not in the menu", ui_id);
     return;
     }
-// OutputArray(ui->data[index].meni.ui_ids);
+
 // To-Do: Type?
 removeUIElement(ui, rp, UI_TYPE_BUTTON, ui_id); // remove each of the buttons
 RemoveFromArray(&meni->ui_ids, ui_id);  // remove it from the element array
-}
-
-static void _removeFromMenu(UI_Table* ui, RenderPacket* rp, GUI_MENU* gmenu, unsigned int ui_id)
-{
-if(!isInMenu(*gmenu, ui_id)) // quick bit of error checking
-    {
-    printf("\nError: %d is not in the menu", ui_id);
-    return;
-    }
-// OutputArray(ui->data[index].meni.ui_ids);
-// To-Do: Type?
-removeUIElement(ui, rp, UI_TYPE_BUTTON, ui_id); // remove each of the buttons
-RemoveFromArray(&gmenu->ui_ids, ui_id);  // remove it from the element array
 }
 
 void clearMenu(UI_Table* ui, RenderPacket* rp, unsigned int menid)
@@ -398,11 +383,7 @@ do
     removeFromMenu(ui, rp, menid, uids.data[0]);
     size = getUIRenderInformation(*ui, menid).meni.ui_ids.size;
     } while (size != 0);
-
-// OutputArray(meni->ui_ids);
 }
-
-
 
 void removeButton(UI_Table* ui, RenderPacket* rp, unsigned int ui_id)
 {
@@ -455,8 +436,6 @@ return pressedInRectangle(pos, scale);
 void checkUI(UI_Table ui, RenderPacket rp)
 {
 GLFWwindow* window = getWindow();
-
-
 
 for (int i = 0; i < ui.size; i++)
     {

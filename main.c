@@ -280,11 +280,13 @@ BuildSelectBar();
 OutputDrawables(ui_rp.drabs);
 OutputTransformations(ui_rp.tds);
 
+/*
 int** grid;
 int w, h;
 ReadLevel("res/levels/level1.txt", &w, &h, &grid);
 OutputLevel(grid, w, h);
 DrawLevel(&block_rds, &block_tds, &block_drabs, w, h, grid);
+*/
 
 
 while(!glfwWindowShouldClose(window))   // main loop
