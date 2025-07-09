@@ -32,28 +32,56 @@ for (int i = 0; i < 3; i++)
     }
 }
 
-/**
- * Increases the size of the passed array to the new size
- * 
- * @param arr A pointer to the array to expand
- * @param osize The current size of the array
- * @param nsize The new size of the array
- * @param elesize The size of an element in the array
- * 
- * @warning Remember to pass the array as a pointer not just an array
- */
 void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize) { *arr = realloc(*arr, elesize * nsize); }
 
-/**
- * Increases the size of the passed array by one
- * 
- * @param arr A pointer to the array to expand
- * @param size The size of the array
- * @param elesize The size of an element in the array
- * 
- * @warning Remember to pass the array as a pointer not just an array
- */
 void ExpandByOne(void **arr, const unsigned int size, unsigned int elesize) { ExpandArray(arr, size, size + 1, elesize); }
+
+static unsigned int findArrMin(unsigned int* arr, int size)
+{
+unsigned int min = arr[0];
+for (int i = 0; i < size; i++)
+    if(arr[i] < min)
+        min = arr[i];
+return min;
+}
+
+static unsigned int findArrMax(unsigned int* arr, int size)
+{
+unsigned int max = arr[0];
+for (int i = 0; i < size; i++)
+    if(arr[i] > max)
+        max = arr[i];
+return max;
+}
+
+static int isInArr(unsigned int* arr, int size, unsigned int tofind)
+{
+for (int i = 0; i < size; i++)
+    if(arr[i] == tofind)
+        return 1;
+return 0;
+}
+
+int findNextIDAvailable(unsigned int* arr, int size)
+{
+int nid = -1;
+
+for (int i = 0; i <= size; i++)
+    {
+    if(!isInArr(arr, size, i))
+        {
+        nid = i;
+        break;
+        }
+    }
+
+if(nid == -1)
+    {
+    printf("Error: Cannot find a new ID");
+    exit(1);
+    }
+return nid;
+}
 
 vec2 ScalarMultVec2(vec2 v, float a) { return (vec2){a * v.x, a * v.y}; }
 

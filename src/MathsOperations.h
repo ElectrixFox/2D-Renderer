@@ -46,23 +46,37 @@ void OutputMatn(int n, int m, const float** A);
 void OutputMat3(mat3 A);
 
 /**
- * Expands an array
+ * Increases the size of the passed array to the new size
  * 
- * @param arr The actual array
- * @param osize The old size
- * @param nsize The new size to resize to
- * @param elesize Sizeof an element in the array, e.g. if it was an array of integers elesize would be sizeof(int)
+ * @param arr A pointer to the array to expand
+ * @param osize The current size of the array
+ * @param nsize The new size of the array
+ * @param elesize The size of an element in the array
+ * 
+ * @warning Remember to pass the array as a pointer not just an array
  */
 void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize);
 
 /**
- * Expanda an array by one
+ * Increases the size of the passed array by one
+ * 
+ * @param arr A pointer to the array to expand
+ * @param size The size of the array
+ * @param elesize The size of an element in the array
+ * 
+ * @warning Remember to pass the array as a pointer not just an array
+ */
+void ExpandByOne(void** arr, const unsigned int size, unsigned int elesize);
+
+/**
+ * Finds the next free ID slot starting from 0
  * 
  * @param arr The array
  * @param size The size of the array
- * @param elesize The size of an element in the array
+ * 
+ * @returns The lowest ID which is not used
  */
-void ExpandByOne(void** arr, const unsigned int size, unsigned int elesize);
+int findNextIDAvailable(unsigned int* arr, int size);
 
 /**
  * Multiplies a vec2 by a scalar

@@ -103,6 +103,7 @@ for (int i = 0; i < drabs.size; i++)
 
 void OutputDrawables(Drawables drabs)
 {
+printf("\nSize: %d", drabs.size);
 printf("\n\n%20s", "Drawables Table");
 printf("\n%-14s%-14s", "Transform ID", "Render ID");
 for (int i = 0; i < drabs.size; i++)

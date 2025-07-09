@@ -29,14 +29,12 @@ return -1;
 
 unsigned int AddRenderDetail(RenderDetails *rd, unsigned int vao, unsigned int shader, unsigned int texture)
 {
-static unsigned int id = 0; // a static incrementing counter to set the new ID as
+// static unsigned int id = 0; // a static incrementing counter to set the new ID as
 const unsigned int n = rd->size;
+unsigned int id = findNextIDAvailable(rd->rid, n);
 
-if(n == 0)   // if the size is 0 then just set the ID to 0
-    {
-    id = 0;
+if(n == 0)   // if the size is 0 then just reinitialise the render details
     *rd = InitialiseRenderDetails(); // reinitialise the render details
-    }
 
 SetUniformM4(shader, "view", getM4ID());
 
@@ -47,7 +45,7 @@ ExpandByOne(&rd->shader, n, sizeof(unsigned int));
 ExpandByOne(&rd->texture, n, sizeof(unsigned int));
 
 // setting all the new details
-rd->rid[n] = id++;  // increment the ID counter too
+rd->rid[n] = id;
 rd->vao[n] = vao;
 rd->shader[n] = shader;
 rd->texture[n] = texture;
@@ -174,6 +172,7 @@ return progs;
 
 void OutputRenderDetails(RenderDetails rds)
 {
+printf("\nSize: %d", rds.size);
 printf("\n\n%32s", "Render Details Table");
 printf("\n%-10s%-20s%-13s%-13s\t", "ID", "VAO", "Shader", "Texture");
 for (int i = 0; i < rds.size; i++)
