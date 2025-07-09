@@ -88,4 +88,11 @@ void DrawRenderable(RenderDetails rds, unsigned int rid);
  */
 unsigned int* getRenderablePrograms(RenderDetails rds, unsigned int* rids, int size);
 
+/**
+ * Outputs the render details
+ * 
+ * @param rds The rendering table
+ */
+void OutputRenderDetails(RenderDetails rds);
+
 #pragma endregion

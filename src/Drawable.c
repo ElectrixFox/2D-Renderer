@@ -142,3 +142,12 @@ return index;
 }
 
 void DrawRenderPacket(RenderPacket rp) { DrawDrawables(rp.rds, rp.tds, rp.drabs); }
+
+void OutputRenderPacketDetails(RenderPacket rp)
+{
+printf("\n\nOutputting Render Packet");
+OutputTransformations(rp.tds);
+OutputRenderDetails(rp.rds);
+OutputDrawables(rp.drabs);
+printf("\n\n");
+}

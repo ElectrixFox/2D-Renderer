@@ -23,6 +23,7 @@ Array InitialiseArray()
 Array arr;
 arr.size = 0;
 arr.data = (unsigned int*)malloc(sizeof(unsigned int));
+return arr;
 }
 
 void AppendToArray(Array* arr, unsigned int item)

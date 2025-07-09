@@ -171,3 +171,18 @@ for (int i = 0; i < size; i++)
 
 return progs;
 }
+
+void OutputRenderDetails(RenderDetails rds)
+{
+printf("\n\n%32s", "Render Details Table");
+printf("\n%-10s%-20s%-13s%-13s\t", "ID", "VAO", "Shader", "Texture");
+for (int i = 0; i < rds.size; i++)
+    {
+    printf("\n%-10d%-20d%-13d%-13d",
+        rds.rid[i],
+        rds.vao[i],
+        rds.shader[i],
+        rds.texture[i]
+        );
+    }
+}

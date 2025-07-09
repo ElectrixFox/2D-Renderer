@@ -93,3 +93,10 @@ int CreateBasicSquare(RenderPacket* rp, vec2 position, float scale, vec4 incol);
  * @param rp The render packet of the things to draw
  */
 void DrawRenderPacket(RenderPacket rp);
+
+/**
+ * Outputs all of the render packet details
+ * 
+ * @param rp The render packet
+ */
+void OutputRenderPacketDetails(RenderPacket rp);

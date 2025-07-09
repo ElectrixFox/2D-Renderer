@@ -269,16 +269,11 @@ Camera cam = CreateCamera((vec2){0, 0}, (vec2){gwid, ghig}, &gwid, &ghig);
 ui = InitialiseUI();
 ui_rp = InitialiseRenderPacket();
 
-RenderDetails block_rds = InitialiseRenderDetails();
-TransformationDetails block_tds = InitialiseTransformationDetails();
-Drawables block_drabs = InitialiseDrawables();
+RenderPacket block_rp = InitialiseRenderPacket();
 
 InitialiseBlockDetails();
 
 BuildSelectBar();
-
-OutputDrawables(ui_rp.drabs);
-OutputTransformations(ui_rp.tds);
 
 /*
 int** grid;
@@ -298,11 +293,16 @@ while(!glfwWindowShouldClose(window))   // main loop
 
     if(isPressedSingle(GLFW_KEY_TAB))
         {
-        OutputTransformations(block_tds);
-        OutputDrawables(block_drabs);
+        /*
+        OutputTransformations(block_rp.tds);
+        OutputDrawables(block_rp.drabs);
+        */
+        // OutputRenderPacketDetails(block_rp);
+        OutputRenderPacketDetails(ui_rp);
+
         int** grid;
         int w = 0, h = 0;
-        getLevel(block_rds, block_tds, block_drabs, &w, &h, &grid);
+        getLevel(block_rp, &w, &h, &grid);
         OutputLevel(grid, w, h);
         // UpdateImmovableBlocks(&block_rds, &block_tds, &block_drabs, w, h, grid);
         }
@@ -312,35 +312,34 @@ while(!glfwWindowShouldClose(window))   // main loop
         vec2 cpos = GetCursorPositionRelative(cam);
         vec2 ncpos = getCursorPosition();
 
-        if(!PressedArea(block_tds, cpos, 50.0f) && !PressedArea(ui_rp.tds, ncpos, 50.0f))
+        if(!PressedArea(block_rp.tds, cpos, 50.0f) && !PressedArea(ui_rp.tds, ncpos, 50.0f))
             {
-            _PlaceBlockCustom(&block_rds, &block_tds, &block_drabs, getActiveBlock(), cpos);
+            printf("\nPlacing block");
+            _PlaceBlockCustom(&block_rp, getActiveBlock(), cpos);
             }
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
         {
         vec2 cpos = GetCursorPositionRelative(cam);
-        if(PressedAnother(block_tds, cpos))
+        if(PressedAnother(block_rp.tds, cpos))
             {
             printf("\nTrying to remove");
-            unsigned int ttrsid = getPressedBlock(block_tds, cpos);
-            unsigned int trid = block_drabs.rids[findDrawablesTransform(block_drabs, ttrsid)];
-            RemoveBlock(&block_rds, &block_tds, &block_drabs, trid);
-            OutputDrawables(ui_rp.drabs);
-            OutputTransformations(ui_rp.tds);
+            unsigned int ttrsid = getPressedBlock(block_rp.tds, cpos);
+            unsigned int trid = block_rp.drabs.rids[findDrawablesTransform(block_rp.drabs, ttrsid)];
+            RemoveBlock(&block_rp, trid);
             }
         }
     glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
 
     MoveCamera(&cam);
-    ApplyCamera(cam, block_rds);
-    ApplyProjection(cam, block_rds);
+    ApplyCamera(cam, block_rp.rds);
+    ApplyProjection(cam, block_rp.rds);
     ApplyProjection(cam, ui_rp.rds);
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);   // setting the background colour
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
-    DrawDrawables(block_rds, block_tds, block_drabs);
+    DrawRenderPacket(block_rp);
     DrawRenderPacket(ui_rp);
     
     glfwSwapBuffers(window);

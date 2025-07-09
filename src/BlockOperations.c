@@ -8,7 +8,7 @@ static vec2 snapOperation(vec2 pos)
 return (vec2){roundf(pos.x / grid_size) * grid_size, roundf(pos.y / grid_size) * grid_size};    // snap it to the nearest grid spot
 }
 
-unsigned int _PlaceBlockCustom(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BlockInfo block, vec2 position)
+unsigned int _PlaceBlockCustom(RenderPacket* rp, BlockInfo block, vec2 position)
 {
 const BlockInfo bi = block; // renaming
 unsigned int sprite = bi.spr;
@@ -17,10 +17,10 @@ BLOCK bltype = getBlockFromFilePath(bi.spfp);   // gets the block type
 
 position = snap_to_grid ? snapOperation(position) : position;   // do the snap operation if should snap to grid and if not don't
 
-unsigned int rd = CreateSpriteRenderable(rds, bi.spfp, nosprites, sprite);
-unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});
+unsigned int rd = CreateSpriteRenderable(&rp->rds, bi.spfp, nosprites, sprite);
+unsigned int td = AddTransformation(&rp->tds, position, (vec2){25.0f, 25.0f});
 
-AddDrawable(drabs, td, rd);
+AddDrawable(&rp->drabs, td, rd);
 AssignBlock(rd, bltype);
 
 return rd;
@@ -44,19 +44,19 @@ return rd;
 }
 */
 
-unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BLOCK block, vec2 position) { return _PlaceBlockCustom(rds, tds, drabs, getBlockInfo(block), position); }
+unsigned int PlaceBlock(RenderPacket* rp, BLOCK block, vec2 position) { return _PlaceBlockCustom(rp, getBlockInfo(block), position); }
 
-void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid)
+void RemoveBlock(RenderPacket* rp, unsigned int rid)
 {
-int index = findDrawablesRenderable(*drabs, rid); // finding the ID
+int index = findDrawablesRenderable(rp->drabs, rid); // finding the ID
 if(index == -1)
     return; // if the index isn't found just quit
 
-RemoveDrawable(drabs, rds, tds, drabs->trsids[index]); // remove the drawable
+RemoveDrawable(&rp->drabs, &rp->rds, &rp->tds, rp->drabs.trsids[index]); // remove the drawable
 UnassignBlock(rid);
 }
 
-unsigned int PlaceImmovableBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BlockInfo block, vec2 position)
+unsigned int PlaceImmovableBlock(RenderPacket* rp, BlockInfo block, vec2 position)
 {
 return 0;
 }
@@ -279,10 +279,10 @@ for (int i = 0; i < tds.size; i++)
 return -1;
 }
 
-unsigned int UpdateImmovableBlocks(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, const int w, const int h, const int** grid)
+unsigned int UpdateImmovableBlocks(RenderPacket* rp, const int w, const int h, const int** grid)
 {
 printf("\n\n\nImmovables update");
-vec2 minpos = getMinimumPosition(*tds);
+vec2 minpos = getMinimumPosition(rp->tds);
 for (int i = 0; i < h; i++)
     {
     for (int j = 0; j < w; j++)
@@ -291,11 +291,11 @@ for (int i = 0; i < h; i++)
             {
             BLOCK_IM_STATE imstate = getImmovableType(w, h, grid, (vec2){j, i});
             vec2 posi = {minpos.x + j * grid_size, minpos.y + (h - i) * grid_size};
-            int trsid = getBlockAtPosition(*tds, posi);
+            int trsid = getBlockAtPosition(rp->tds, posi);
             if(trsid != -1)
                 {
                 // unsigned int rid = drabs->rids[findDrawablesTransform(*drabs, trsid)];
-                _PlaceBlockCustom(rds, tds, drabs, getImmovableBlock(imstate), posi);
+                _PlaceBlockCustom(rp, getImmovableBlock(imstate), posi);
                 }
             
             }

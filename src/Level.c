@@ -87,37 +87,37 @@ output[strlen(output) - 1] = '\0';  // set the last character of the output to b
 writeFile(levelfp, output);
 }
 
-void getLevel(RenderDetails rds, TransformationDetails tds, Drawables drabs, int* w, int* h, int*** grid)
+void getLevel(const RenderPacket rp, int* w, int* h, int*** grid)
 {
 // find the bottom left and top right blocks (the extremes)
 float minx = 0, maxx = 0, miny = 0, maxy = 0;
 
-if(tds.size == 0)   // stop if there are no transforms
+if(rp.tds.size == 0)   // stop if there are no transforms
     return;
 
-for (int i = 0; i < tds.size; i++)  // find the first deletable
+for (int i = 0; i < rp.tds.size; i++)  // find the first deletable
     {
-    minx = tds.pos[i].x;
-    maxx = tds.pos[i].x;
-    miny = tds.pos[i].y;
-    maxy = tds.pos[i].y;
+    minx = rp.tds.pos[i].x;
+    maxx = rp.tds.pos[i].x;
+    miny = rp.tds.pos[i].y;
+    maxy = rp.tds.pos[i].y;
     }
 
 
-for (int i = 0; i < tds.size; i++)
+for (int i = 0; i < rp.tds.size; i++)
     {
     // getting the extreme points
-    if(tds.pos[i].x < minx)
-        minx = tds.pos[i].x;
+    if(rp.tds.pos[i].x < minx)
+        minx = rp.tds.pos[i].x;
 
-    if(maxx < tds.pos[i].x)
-        maxx = tds.pos[i].x;
+    if(maxx < rp.tds.pos[i].x)
+        maxx = rp.tds.pos[i].x;
     
-    if(tds.pos[i].y < miny)
-        miny = tds.pos[i].y;
+    if(rp.tds.pos[i].y < miny)
+        miny = rp.tds.pos[i].y;
     
-    if(maxy < tds.pos[i].y)
-        maxy = tds.pos[i].y;
+    if(maxy < rp.tds.pos[i].y)
+        maxy = rp.tds.pos[i].y;
     }
 
 int gridw = (maxx - minx) / grid_size + 1;  // one longer as we include the final position too
@@ -139,10 +139,10 @@ for (float y = maxy; miny <= y; y -= (float)grid_size)
         {
         int xgrid = (int)((x - minx) / grid_size);
         vec2 tpos = (vec2){x, y};   // the temporary position
-        int tid = getTransformAt(tds, tpos);    // get the transform at the position to check
+        int tid = getTransformAt(rp.tds, tpos);    // get the transform at the position to check
         if(tid == -1)   // if nothing is found then go to the next grid coordinate to check
             continue;
-        unsigned int trid = drabs.rids[findDrawablesTransform(drabs, tid)]; // gets the render ID from the renderables
+        unsigned int trid = rp.drabs.rids[findDrawablesTransform(rp.drabs, tid)]; // gets the render ID from the renderables
         int btype = (int)getBlockFromRenderID(trid) + 1;  // finding the type of block and adding 1
         tgrid[ygrid][xgrid] = btype;    // setting the block
         }
@@ -151,7 +151,7 @@ for (float y = maxy; miny <= y; y -= (float)grid_size)
 *grid = tgrid;
 }
 
-void DrawLevel(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, int w, int h, const int** grid)
+void DrawLevel(RenderPacket* rp, int w, int h, const int** grid)
 {
 for (int y = h; 0 < y; y--)
     {
@@ -163,7 +163,7 @@ for (int y = h; 0 < y; y--)
         int btype = grid[h - y][x];
 
         if(btype != 0)
-            PlaceBlock(rds, tds, drabs, (BLOCK)(btype - 1), pos);
+            PlaceBlock(rp, (BLOCK)(btype - 1), pos);
         }
     }
 

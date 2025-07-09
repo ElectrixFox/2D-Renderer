@@ -15,7 +15,7 @@
  * 
  * @returns The render ID for the new block
  */
-unsigned int _PlaceBlockCustom(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BlockInfo block, vec2 position);
+unsigned int _PlaceBlockCustom(RenderPacket* rp, BlockInfo block, vec2 position);
 
 /**
  * Creates a block at the position with default scale (25x25)
@@ -27,7 +27,7 @@ unsigned int _PlaceBlockCustom(RenderDetails* rds, TransformationDetails* tds, D
  * 
  * @returns The render ID for the new block
  */
-unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BLOCK block, vec2 position);
+unsigned int PlaceBlock(RenderPacket* rp, BLOCK block, vec2 position);
 
 /**
  * Removes a block at the position
@@ -36,12 +36,12 @@ unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawable
  * @param tds The transform table
  * @param rid The render ID of the block to remove
  */
-void RemoveBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, unsigned int rid);
+void RemoveBlock(RenderPacket* rp, unsigned int rid);
 
 BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2 pos);
 
-unsigned int PlaceImmovableBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BlockInfo block, vec2 position);
+unsigned int PlaceImmovableBlock(RenderPacket* rp, BlockInfo block, vec2 position);
 
-unsigned int UpdateImmovableBlocks(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, const int w, const int h, const int** grid);
+unsigned int UpdateImmovableBlocks(RenderPacket* rp, const int w, const int h, const int** grid);
 
 #endif
