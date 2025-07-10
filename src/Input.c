@@ -6,8 +6,6 @@ static int cmods = 0;   // current mod keys
 
 GLFWwindow* wind;
 
-extern InputTable ip;
-
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 wind = window;
@@ -26,27 +24,6 @@ wind = window;
 InputPacket getCurrentInputInformation()
 {
 return (InputPacket){ckey, caction, cmods};
-}
-
-void handle_input(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-for (int i = 0; i < ip.size; i++)
-    {
-    ip.inpfuncs[i](window, key, scancode, action, mods);
-    }
-}
-
-InputTable InitialiseInputTable(GLFWwindow* window)
-{
-InputTable ipt;
-
-ipt.size = 0;
-ipt.inpfuncs = (GLFWkeyfun*)malloc(sizeof(GLFWkeyfun));
-
-glfwSetKeyCallback(window, handle_input);   // setting up the callback
-wind = window;
-
-return ipt;
 }
 
 void resetInputPacket()
@@ -162,3 +139,85 @@ return _getPressedArea(poses, size, getCursorPosition(), range);
 }
 
 GLFWwindow* getWindow() { return wind; }
+
+#pragma region Input Table
+
+extern InputTable ip;
+
+void handle_input(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+if(action == GLFW_PRESS)
+    ip.keys[key] = 1;
+else if(action == GLFW_RELEASE)
+    ip.keys[key] = 0;
+
+ip.action = action;
+ip.mods = 0x1111 ^ mods;
+}
+
+
+InputTable InitialiseInputTable(GLFWwindow* window)
+{
+InputTable ipt;
+
+// initialising all of the arrays to 0
+calloc(ipt.keys, 1024);
+ipt.action = 0;
+ipt.mods = 0;
+
+glfwSetKeyCallback(window, handle_input);   // setting up the callback
+wind = window;
+
+return ipt;
+}
+
+
+void addToInputTable(InputTable* ipt, int key, int mods, int action)
+{
+
+}
+
+int checkInput(int key, int mods, int action)
+{
+return (ip.keys[key] == 1 && (ip.mods & mods) != 0 && ip.action == action);
+}
+
+int isPressedSingleKey(int key)
+{
+static int pkey = 0;
+
+if(ip.keys[key] == 1 && ip.keys[pkey] == 0)
+    {
+    printf("\nPressed");
+    pkey = key;
+    return 1;
+    }
+else if(ip.keys[key] == 0)
+    {
+    printf("\nReleased");
+    pkey = key;
+    return 0;
+    }
+
+/*
+if(ip.keys[key] == 1)
+    {
+    if(ip.action == GLFW_PRESS)
+        {
+        printf("\nPressed");
+        pkey = key;
+        return 1;
+        }
+    else if(ip.action == GLFW_RELEASE)
+        {
+        printf("\nReleased");
+        pkey = -1;
+        return 0;
+        }
+    }
+*/
+
+return 0;
+}
+
+#pragma endregion

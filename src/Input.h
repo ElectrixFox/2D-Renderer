@@ -17,13 +17,12 @@ typedef struct InputPacket
 
 typedef struct
     {
-    GLFWkeyfun* inpfuncs;
-    int size;
+    int keys[1024]; // the list of keys
+    int action;
+    int mods;
     } InputTable;
 
 void InitialiseInput(GLFWwindow* window);
-
-InputTable InitialiseInputTable(GLFWwindow* window);
 
 InputPacket getCurrentInputInformation();
 void resetInputPacket();
@@ -113,3 +112,15 @@ int* getPressedArea(vec2* poses, int size, float range);
  * @warning This should not be used unless there are extreme circumstances
  */
 GLFWwindow* getWindow();
+
+#pragma region Input Table
+
+InputTable InitialiseInputTable(GLFWwindow* window);
+
+void addToInputTable(InputTable* ipt, int key, int mods, int action);
+
+int checkInput(int key, int mods, int action);
+
+int isPressedSingleKey(int key);
+
+#pragma endregion

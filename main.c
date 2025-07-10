@@ -62,17 +62,27 @@ void menoutput(int l)
 printf("\nI the menu have been pressed %d", l);
 }
 
+void saveEditor(RenderPacket* block_rp)
+{
+printf("\nSaving");
+int** grid;
+int w = 0, h = 0;
+getLevel(*block_rp, &w, &h, &grid);
+WriteLevel("res/levels/level2.txt", w, h, grid);
+}
+
 static void closeWindow(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 if((GLFW_KEY_ESCAPE))
     glfwSetWindowShouldClose(window, 1);
 }
 
-
 int main()
 {
 unsigned int width = gwid;
 unsigned int height = ghig;
+
+void (*inphand)(GLFWwindow*, int, int, int, int);
 
 setbuf(stdout, NULL);   // MUST REMOVE!!!
 
@@ -112,6 +122,7 @@ while(!glfwWindowShouldClose(window))   // main loop
     {
     checkUI(ui, ui_rp);
 
+    /*
     if(isPressedSingle(GLFW_KEY_S))
         {
         printf("\nSaving");
@@ -120,11 +131,16 @@ while(!glfwWindowShouldClose(window))   // main loop
         getLevel(block_rp, &w, &h, &grid);
         WriteLevel("res/levels/level2.txt", w, h, grid);
         }
+    */
+   if(checkInput(GLFW_KEY_S, GLFW_MOD_CONTROL, GLFW_PRESS) == 1)
+        {
+        saveEditor(&block_rp);
+        }
     
     if(isPressedSingle(GLFW_KEY_ESCAPE))
         glfwSetWindowShouldClose(window, 1);
 
-    if(isPressedSingle(GLFW_KEY_TAB))
+    if(isPressedSingleKey(GLFW_KEY_TAB))
         {
         OutputRenderPacketDetails(block_rp);
         OutputRenderPacketDetails(ui_rp);
@@ -164,9 +180,10 @@ while(!glfwWindowShouldClose(window))   // main loop
             RemoveBlock(&block_rp, trid);
             }
         }
-    glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
+    // glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
 
     MoveCamera(&cam);
+    glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
     ApplyCamera(cam, block_rp.rds);
     ApplyProjection(cam, block_rp.rds);
     ApplyProjection(cam, ui_rp.rds);
