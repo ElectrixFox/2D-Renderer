@@ -103,6 +103,7 @@ OutputLevel(grid, w, h);
 DrawLevel(&block_rp, w, h, grid);
 UpdateImmovableBlocks(&block_rp, w, h, grid);
 
+
 while(!glfwWindowShouldClose(window))   // main loop
     {
     checkUI(ui, ui_rp);
