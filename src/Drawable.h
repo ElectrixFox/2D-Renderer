@@ -1,6 +1,5 @@
 #pragma once
-#include "RenderObject.h"
-#include "Transformation.h"
+#include "Entity.h"
 
 struct Drawables {
     unsigned int* trsids;

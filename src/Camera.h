@@ -1,6 +1,6 @@
 #pragma once
 #include "MathsOperations.h"
-#include "InputManager.h"
+#include "Input.h"
 #include "Shader.h"
 
 struct Camera

@@ -138,38 +138,6 @@ if(PointInSquare(cursorpos, tds.pos[index], tds.scale[index]))
 return 0;
 }
 
-static int hasPressedN(TransformationDetails trds, vec2 curpos, unsigned int n)
-{
-int total = 0;  // total things pressed
-for (int i = 0; i < trds.size; i++)
-    if(CheckPressed(trds, trds.trsid[i], curpos)) // checking if anything has been pressed
-        total++;
-
-return (total == n) ? 1 : 0;
-}
-
-int PressedNothing(TransformationDetails trds, vec2 curpos) { return hasPressedN(trds, curpos, 0); }
-
-int PressedAnother(TransformationDetails trds, vec2 curpos) { return hasPressedN(trds, curpos, 1); }
-
-int PressedArea(TransformationDetails trds, vec2 curpos, float range)
-{
-for (int i = 0; i < trds.size; i++)
-    if(abs(trds.pos[i].x - curpos.x) < range && abs(trds.pos[i].y - curpos.y) < range)
-        return 1; // if the current transformation has a horizontal and vertical distance is less than the range then it is in the square area
-
-return 0;
-}
-
-unsigned int getPressedBlock(TransformationDetails trds, vec2 curpos)
-{
-for (int i = 0; i < trds.size; i++)
-    if(CheckPressed(trds, trds.trsid[i], curpos)) // checking if anything has been pressed
-        return trds.trsid[i];
-return 0;
-}
-
-
 int getTransformAt(TransformationDetails tds, vec2 pos)
 {
 for (int i = 0; i < tds.size; i++)  // loop through all of the transforms

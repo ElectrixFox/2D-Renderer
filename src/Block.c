@@ -92,7 +92,7 @@ switch (block)
         return (BlockInfo){"res/sprites/movable_barrier_tilesheet.png", 1, 1};
         break;
     case BLOCK_MOVABLE_BLOCK:
-        return (BlockInfo){"res/sprites/movable_spritesheet_short.png", 2, 1};
+        return (BlockInfo){"res/sprites/movable_spritesheet.png", 2, 1};
         break;
     case BLOCK_IMMOVABLE_BLOCK:
         return (BlockInfo){"res/sprites/immovable_tilesheet_short.png", 6, 1};

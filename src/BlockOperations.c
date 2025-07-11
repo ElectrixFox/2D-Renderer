@@ -21,8 +21,6 @@ unsigned int rd = CreateSpriteRenderable(&rp->rds, bi.spfp, nosprites, sprite);
 unsigned int td = AddTransformation(&rp->tds, position, (vec2){25.0f, 25.0f}, theta);
 
 AddDrawable(&rp->drabs, td, rd);
-
-// setBlockSprite(&bltype, sprite);
 AssignBlock(rd, bltype);
 
 return rd;
@@ -46,7 +44,7 @@ return rd;
 }
 */
 
-unsigned int PlaceBlock(RenderPacket* rp, BLOCK block, vec2 position) { return _PlaceBlockCustom(rp, getBlockInfo(getBlockType(block)), position, 0.0f); }
+unsigned int PlaceBlock(RenderPacket* rp, BLOCK block, vec2 position) { return _PlaceBlockCustom(rp, getBlockInfo(block), position, 0.0f); }
 
 void RemoveBlock(RenderPacket* rp, unsigned int rid)
 {
@@ -231,25 +229,13 @@ switch (lnecnt)
             {
             outputLayout(layout);
             if(layout[0] && layout[1])  // top and right
-                {
-                printf("\nTop right");
                 *angle = 90 * M_PI / 180;
-                }
             else if(layout[0] && layout[3]) // top and left
-                {
-                printf("\nTop left");
                 *angle = 180 * M_PI / 180;
-                }
             else if(layout[2] && layout[3]) // bottom and left
-                {
-                printf("\nBottom left");
                 *angle = 270 * M_PI / 180;
-                }
             else if(layout[2] && layout[1]) // bottom and right
-                {
-                printf("\nBottom right");
                 *angle = 0 * M_PI / 180;
-                }
 
             return BLOCK_IM_STATE_CORNER;
             }

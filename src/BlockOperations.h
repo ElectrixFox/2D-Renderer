@@ -63,14 +63,6 @@ BLOCK_IM_STATE getImmovableType(const int w, const int h, const int** grid, vec2
 
 unsigned int PlaceImmovableBlock(RenderPacket* rp, BlockInfo block, vec2 position);
 
-/**
- * Updates the immovable blocks in the grid
- * 
- * @param rp A pointer to the render packet
- * @param w The width of the grid
- * @param h The height of the grid
- * @param grid The actual grid
- */
 unsigned int UpdateImmovableBlocks(RenderPacket* rp, const int w, const int h, const int** grid);
 
 #endif

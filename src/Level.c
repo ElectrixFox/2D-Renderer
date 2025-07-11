@@ -67,7 +67,7 @@ for (int i = 0; i < gridh; i++)
 *grid = tgrid;
 }
 
-void WriteLevel(const char* levelfp, const int w, const int h, const int** grid)
+void WriteLevel(const char* levelfp, const int w, const int h, const int grid[h][w])
 {
 char* output = (char*)malloc(w * h * sizeof(int) * sizeof(char));
 output[0] = '\0';   // setting the string as empty by setting the first character to be the end 
@@ -83,7 +83,6 @@ for (int i = 0; i < h; i++)
     output[strlen(output) - 1] = '\n';  // set the last character of the line to be the new line instead of a space
     }
 output[strlen(output) - 1] = '\0';  // set the last character of the output to be the null character (signalling the end of the string)
-
 
 writeFile(levelfp, output);
 }

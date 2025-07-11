@@ -33,7 +33,7 @@ void ReadLevel(const char* levelfp, int* w, int* h, int*** grid);
  * @param h The height of the level grid
  * @param grid The actual grid
  */
-void WriteLevel(const char* levelfp, const int w, const int h, const int** grid);
+void WriteLevel(const char* levelfp, const int w, const int h, const int grid[h][w]);
 
 /**
  * Gets the information of where the blocks are
