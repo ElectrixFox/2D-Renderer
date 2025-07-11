@@ -108,9 +108,20 @@ DrawLevel(&block_rds, &block_tds, &block_drabs, w, h, grid);
 while(!glfwWindowShouldClose(window))   // main loop
     {
     checkUI(ui, ui_rp);
+
+    glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
     
     if(isPressed(GLFW_KEY_ESCAPE))
         glfwSetWindowShouldClose(window, 1);
+    
+    if(isHeldDown(GLFW_KEY_LEFT_CONTROL) && isPressedSingle(GLFW_KEY_S))
+        {
+        printf("\nSaving");
+        int** grid;
+        int w = 0, h = 0;
+        getLevel(block_rp, &w, &h, &grid);
+        WriteLevel("res/levels/level2.txt", w, h, grid);
+        }
 
     if(isPressed(GLFW_KEY_TAB))
         {
@@ -152,7 +163,6 @@ while(!glfwWindowShouldClose(window))   // main loop
             RemoveBlock(&block_rp, trid);
             }
         }
-    glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
 
     MoveCamera(&cam);
     ApplyCamera(cam, block_rp.rds);

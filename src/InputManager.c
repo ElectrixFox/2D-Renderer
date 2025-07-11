@@ -46,18 +46,31 @@ return (inpman.keys[key] == 1) ? 1 : 0;
 int isPressedSingle(int key)
 {
 static int pkey = -1;
+int action = glfwGetKey(inpman.window, key);
 
-if(pkey != key && inpman.keys[key] == 1)
+if(pkey != key && action == GLFW_PRESS)
     {
     pkey = key;
     return 1;
     }
-else if(pkey == key && inpman.keys[key] == 0)
+else if(pkey == key && action == GLFW_RELEASE)
     {
     pkey = -1;
     }
 
 return 0;
+}
+
+int isHeldDown(int key)
+{
+if(inpman.keys[key] == 2)
+    {
+    return 1;
+    }
+else
+    {
+    return 0;
+    }
 }
 
 int* _getPressedArea(vec2* poses, int size, vec2 curpos, float range)

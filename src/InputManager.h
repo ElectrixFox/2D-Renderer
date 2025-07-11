@@ -33,6 +33,8 @@ int isPressed(int key);
 
 int isPressedSingle(int key);
 
+int isHeldDown(int key);
+
 /**
  * Gets the indices of the positions which are in the area
  * 
