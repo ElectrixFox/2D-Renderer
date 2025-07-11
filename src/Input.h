@@ -1,3 +1,4 @@
+#ifdef INPUT_H
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
@@ -105,3 +106,4 @@ int* getPressedArea(vec2* poses, int size, float range);
  * @warning This should not be used unless there are extreme circumstances
  */
 GLFWwindow* getWindow();
+#endif

@@ -1,3 +1,4 @@
+#ifdef INPUT_H
 #include "Input.h"
 
 static int ckey = 0;    // current key
@@ -144,3 +145,4 @@ return _getPressedArea(poses, size, getCursorPosition(), range);
 }
 
 GLFWwindow* getWindow() { return wind; }
+#endif
