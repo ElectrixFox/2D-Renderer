@@ -11,7 +11,7 @@
 #include "src/RenderObject.h"
 
 #include "src/Camera.h"
-#include "src/Input.h"
+#include "src/InputManager.h"
 #include "src/Drawable.h"
 #include "src/Editor.h"
 #include "src/SystemUI.h"
@@ -42,7 +42,7 @@ printf("\n%dx%d", gwid, ghig);
 
 UI_Table ui;
 RenderPacket ui_rp;
-InputTable ip;
+InputManager inpman;
 
 void output(int ui_id)
 {
@@ -62,27 +62,10 @@ void menoutput(int l)
 printf("\nI the menu have been pressed %d", l);
 }
 
-void saveEditor(RenderPacket* block_rp)
-{
-printf("\nSaving");
-int** grid;
-int w = 0, h = 0;
-getLevel(*block_rp, &w, &h, &grid);
-WriteLevel("res/levels/level2.txt", w, h, grid);
-}
-
-static void closeWindow(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-if((GLFW_KEY_ESCAPE))
-    glfwSetWindowShouldClose(window, 1);
-}
-
 int main()
 {
 unsigned int width = gwid;
 unsigned int height = ghig;
-
-void (*inphand)(GLFWwindow*, int, int, int, int);
 
 setbuf(stdout, NULL);   // MUST REMOVE!!!
 
@@ -95,16 +78,17 @@ glViewport(0, 0, gwid, ghig);
 glfwMakeContextCurrent(window); // sets the context of the window
 
 glfwSetWindowSizeCallback(window, on_window_resize);
+glfwSetKeyCallback(window, updateInput);
 
 glewInit();
 glEnable(GL_BLEND);
 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 // InitialiseInput(window);
-ip = InitialiseInputTable(window);
 Camera cam = CreateCamera((vec2){0, 0}, (vec2){gwid, ghig}, &gwid, &ghig);
 ui = InitialiseUI();
 ui_rp = InitialiseRenderPacket();
+InitialiseInputManager(window);
 
 RenderPacket block_rp = InitialiseRenderPacket();
 
@@ -114,53 +98,44 @@ BuildSelectBar();
 
 int** grid;
 int w, h;
-ReadLevel("res/levels/level1.txt", &w, &h, &grid);
+ReadLevel("res/levels/level2.txt", &w, &h, &grid);
 OutputLevel(grid, w, h);
 DrawLevel(&block_rp, w, h, grid);
-
+UpdateImmovableBlocks(&block_rp, w, h, grid);
 
 while(!glfwWindowShouldClose(window))   // main loop
     {
     checkUI(ui, ui_rp);
 
-    /*
-    if(isPressedSingle(GLFW_KEY_S))
+    glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
+    
+    if(isPressed(GLFW_KEY_ESCAPE))
+        glfwSetWindowShouldClose(window, 1);
+    
+    if(isHeldDown(GLFW_KEY_LEFT_CONTROL) && isPressedSingle(GLFW_KEY_S))
         {
         printf("\nSaving");
-        int** grid;
-        int w = 0, h = 0;
         getLevel(block_rp, &w, &h, &grid);
         WriteLevel("res/levels/level2.txt", w, h, grid);
         }
-    */
-   if(checkInput(GLFW_KEY_S, GLFW_MOD_CONTROL, GLFW_PRESS) == 1)
-        {
-        saveEditor(&block_rp);
-        }
-    
-    if(isPressedSingle(GLFW_KEY_ESCAPE))
-        glfwSetWindowShouldClose(window, 1);
 
-    if(isPressedSingleKey(GLFW_KEY_TAB))
+    if(isPressed(GLFW_KEY_TAB))
         {
         OutputRenderPacketDetails(block_rp);
         OutputRenderPacketDetails(ui_rp);
 
-        int** grid;
-        int w = 0, h = 0;
         getLevel(block_rp, &w, &h, &grid);
         OutputLevel(grid, w, h);
         }
-    else if(isPressedSingle(GLFW_KEY_0))
+    else if(isPressed(GLFW_KEY_0))
         {
-        int** grid;
-        int w = 0, h = 0;
         getLevel(block_rp, &w, &h, &grid);
-        UpdateImmovableBlocks(&block_rp, w, h, grid);
         }
 
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
+        getLevel(block_rp, &w, &h, &grid);
+        UpdateImmovableBlocks(&block_rp, w, h, grid);
         vec2 cpos = GetCursorPositionRelative(cam);
         vec2 ncpos = getCursorPosition();
 
@@ -172,6 +147,8 @@ while(!glfwWindowShouldClose(window))   // main loop
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
         {
+        getLevel(block_rp, &w, &h, &grid);
+        UpdateImmovableBlocks(&block_rp, w, h, grid);
         vec2 cpos = GetCursorPositionRelative(cam);
         if(PressedAnother(block_rp.tds, cpos))
             {
@@ -181,10 +158,8 @@ while(!glfwWindowShouldClose(window))   // main loop
             RemoveBlock(&block_rp, trid);
             }
         }
-    // glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
 
     MoveCamera(&cam);
-    glfwWaitEventsTimeout(0.1); // wait for a short time to prevent multiple placements
     ApplyCamera(cam, block_rp.rds);
     ApplyProjection(cam, block_rp.rds);
     ApplyProjection(cam, ui_rp.rds);

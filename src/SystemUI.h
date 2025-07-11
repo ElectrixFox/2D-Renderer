@@ -3,7 +3,7 @@
 
 #pragma once
 #include "Drawable.h"
-#include "Input.h"
+#include "InputManager.h"
 #include "Array.h"
 
 typedef enum
