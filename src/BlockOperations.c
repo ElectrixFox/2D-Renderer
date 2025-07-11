@@ -21,6 +21,8 @@ unsigned int rd = CreateSpriteRenderable(&rp->rds, bi.spfp, nosprites, sprite);
 unsigned int td = AddTransformation(&rp->tds, position, (vec2){25.0f, 25.0f}, theta);
 
 AddDrawable(&rp->drabs, td, rd);
+
+// setBlockSprite(&bltype, sprite);
 AssignBlock(rd, bltype);
 
 return rd;
@@ -44,7 +46,7 @@ return rd;
 }
 */
 
-unsigned int PlaceBlock(RenderPacket* rp, BLOCK block, vec2 position) { return _PlaceBlockCustom(rp, getBlockInfo(block), position, 0.0f); }
+unsigned int PlaceBlock(RenderPacket* rp, BLOCK block, vec2 position) { return _PlaceBlockCustom(rp, getBlockInfo(getBlockType(block)), position, 0.0f); }
 
 void RemoveBlock(RenderPacket* rp, unsigned int rid)
 {

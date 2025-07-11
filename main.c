@@ -96,14 +96,12 @@ InitialiseBlockDetails();
 
 BuildSelectBar();
 
-/*
 int** grid;
 int w, h;
-ReadLevel("res/levels/level1.txt", &w, &h, &grid);
+ReadLevel("res/levels/level2.txt", &w, &h, &grid);
 OutputLevel(grid, w, h);
-DrawLevel(&block_rds, &block_tds, &block_drabs, w, h, grid);
-*/
-
+DrawLevel(&block_rp, w, h, grid);
+UpdateImmovableBlocks(&block_rp, w, h, grid);
 
 while(!glfwWindowShouldClose(window))   // main loop
     {
@@ -117,8 +115,6 @@ while(!glfwWindowShouldClose(window))   // main loop
     if(isHeldDown(GLFW_KEY_LEFT_CONTROL) && isPressedSingle(GLFW_KEY_S))
         {
         printf("\nSaving");
-        int** grid;
-        int w = 0, h = 0;
         getLevel(block_rp, &w, &h, &grid);
         WriteLevel("res/levels/level2.txt", w, h, grid);
         }
@@ -128,21 +124,18 @@ while(!glfwWindowShouldClose(window))   // main loop
         OutputRenderPacketDetails(block_rp);
         OutputRenderPacketDetails(ui_rp);
 
-        int** grid;
-        int w = 0, h = 0;
         getLevel(block_rp, &w, &h, &grid);
         OutputLevel(grid, w, h);
         }
     else if(isPressed(GLFW_KEY_0))
         {
-        int** grid;
-        int w = 0, h = 0;
         getLevel(block_rp, &w, &h, &grid);
-        UpdateImmovableBlocks(&block_rp, w, h, grid);
         }
 
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
+        getLevel(block_rp, &w, &h, &grid);
+        UpdateImmovableBlocks(&block_rp, w, h, grid);
         vec2 cpos = GetCursorPositionRelative(cam);
         vec2 ncpos = getCursorPosition();
 
@@ -154,6 +147,8 @@ while(!glfwWindowShouldClose(window))   // main loop
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
         {
+        getLevel(block_rp, &w, &h, &grid);
+        UpdateImmovableBlocks(&block_rp, w, h, grid);
         vec2 cpos = GetCursorPositionRelative(cam);
         if(PressedAnother(block_rp.tds, cpos))
             {
