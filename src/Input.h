@@ -15,15 +15,7 @@ typedef struct InputPacket
     int mods;
     } InputPacket;
 
-typedef struct
-    {
-    GLFWkeyfun* inpfuncs;
-    int size;
-    } InputTable;
-
 void InitialiseInput(GLFWwindow* window);
-
-InputTable InitialiseInputTable(GLFWwindow* window);
 
 InputPacket getCurrentInputInformation();
 void resetInputPacket();
