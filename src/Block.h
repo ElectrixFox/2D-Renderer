@@ -137,6 +137,8 @@ void AssignBlock(unsigned int rid, unsigned int block);
  */
 void UnassignBlock(unsigned int rid);
 
+const char* getBlockFilePath(BLOCK block);
+
 BLOCK getDefaultBlockTypeFromFilePath(const char* spfp);
 
 BLOCK getBlockTypeFromFilePath(const char* spfp);
@@ -157,13 +159,23 @@ BlockInfo getBlockInfo(unsigned int blid);
 int getBlockRenderIndex(unsigned int rid);
 
 /**
+ * Finds the block type of the renderable
+ * 
+ * @param rid The ID of the renderable to find
+ * 
+ * @returns Returns the type of block of the renderable
+ */
+BLOCK getBlockTypeFromRenderID(unsigned int rid);
+
+
+/**
  * Finds the block of the renderable
  * 
  * @param rid The ID of the renderable to find
  * 
  * @returns Returns the block of the renderable
  */
-BLOCK getBlockFromRenderID(unsigned int rid);
+unsigned int getBlockFromRenderID(unsigned int rid);
 
 /**
  * Finds the block info of the renderable

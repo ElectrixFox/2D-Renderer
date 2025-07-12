@@ -4,26 +4,26 @@ static BlockTable btab;
 
 void setBlockSpriteCount(unsigned int* blid, unsigned int nosp)
 {
-unsigned int mask = 0b011111000000000U;  // the mask for the number of sprites
-*(blid) = ((*(blid) & (~mask)) | (nosp << 9));
+unsigned int mask = 0b0111110000000000U;  // the mask for the number of sprites
+*(blid) = ((*(blid) & (~mask)) | (nosp << 10));
 }
 
 unsigned int getBlockSpriteCount(unsigned int blid)
 {
-unsigned int mask = 0b011111000000000U;  // the mask for the number of sprites
-return ((blid & mask) >> 9);
+unsigned int mask = 0b0111110000000000U;  // the mask for the number of sprites
+return ((blid & mask) >> 10);
 }
 
 void setBlockSprite(unsigned int* blid, unsigned int spr)
 {
-unsigned int mask = 0b000000111110000U;  // the mask for the current sprite
-*(blid) = ((*(blid) & ~mask) | (spr << 4));
+unsigned int mask = 0b0000001111100000U;  // the mask for the current sprite
+*(blid) = ((*(blid) & ~mask) | (spr << 5));
 }
 
 unsigned int getBlockSprite(unsigned int blid)
 {
-unsigned int mask = 0b000000111110000U;  // the mask for the current sprite
-return ((blid & mask) >> 4);
+unsigned int mask = 0b0000001111100000U;  // the mask for the current sprite
+return ((blid & mask) >> 5);
 }
 
 void setBlockType(unsigned int* blid, unsigned int type)
@@ -40,7 +40,7 @@ return (blid & mask);
 
 unsigned int InitialiseBlockVariable(BLOCK bltype, unsigned int nosp, unsigned int spr)
 {
-unsigned int block;
+unsigned int block = 0;
 setBlockType(&block, bltype);
 setBlockSpriteCount(&block, nosp);
 setBlockSprite(&block, spr);
@@ -116,9 +116,10 @@ btab.size--;    // decrease the size so it is effectively not there
 // To-Do: Could add in a sort here to sort by ID in order to realign the table
 }
 
-static const char* getBlockFilePath(BLOCK block)
+const char* getBlockFilePath(BLOCK block)
 {
-printf("\n%d", block);
+block = getBlockType(block);
+// printf("\n%d: %d %d %d", block, getBlockType(block), getBlockSpriteCount(block), getBlockSprite(block));
 switch (block)
     {
     case BLOCK_PLAYER:
@@ -155,6 +156,7 @@ BLOCK getBlockTypeFromFilePath(const char* spfp) { getDefaultBlockTypeFromFilePa
 
 BlockInfo getDefaultBlockInfo(BLOCK type)
 {
+type = getBlockType(type);
 switch (type)
     {
     case BLOCK_PLAYER:
@@ -186,12 +188,12 @@ return InitialiseBlockVariable(type, bi.nosp, bi.spr);
 
 BlockInfo getBlockInfo(unsigned int blid)
 {
-printf("\n%d", getBlockType(blid));
+printf("\n%d: %d %d %d", blid, getBlockType(blid), getBlockSpriteCount(blid), getBlockSprite(blid));
 const char* spfp = getBlockFilePath(getBlockType(blid));
 const unsigned int nosp = getBlockSpriteCount(blid);
 const unsigned int spr = getBlockSprite(blid);
 
-printf("\n%s", spfp);
+// printf("\n%s", spfp);
 
 return (BlockInfo)
     {
@@ -201,7 +203,9 @@ return (BlockInfo)
     };
 }
 
-BLOCK getBlockFromRenderID(unsigned int rid) { return (BLOCK)getBlockType(btab.blid[findRenderIDInBlockTable(rid)]); }
+BLOCK getBlockTypeFromRenderID(unsigned int rid) { return (BLOCK)getBlockType(btab.blid[findRenderIDInBlockTable(rid)]); }
+
+unsigned int getBlockFromRenderID(unsigned int rid) { return btab.blid[findRenderIDInBlockTable(rid)]; }
 
 BlockInfo getBlockInfoFromRenderID(unsigned int rid)
 {
@@ -245,6 +249,6 @@ switch (state)
 
 unsigned int getImmovableBlockInfoVar(BLOCK_IM_STATE state)
 {
-BlockInfo bi = getImmovableBlock(BLOCK_IMMOVABLE_BLOCK);
+BlockInfo bi = getImmovableBlock(state);
 return InitialiseBlockVariable(BLOCK_IMMOVABLE_BLOCK, bi.nosp, bi.spr);
 }

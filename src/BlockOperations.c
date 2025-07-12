@@ -10,15 +10,14 @@ return (vec2){roundf(pos.x / grid_size) * grid_size, roundf(pos.y / grid_size) *
 
 unsigned int _PlaceBlockCustom(RenderPacket* rp, unsigned int block, vec2 position, float theta)
 {
-const BlockInfo bi = getBlockInfo(block);
-unsigned int sprite = bi.spr;
-unsigned int nosprites = bi.nosp;
-BLOCK bltype = getBlockType(block);
-printf("\n%s %d %d", bi.spfp, bi.nosp, bi.spr);
+const char* spfp = getBlockFilePath(block);
+int spr = getBlockSprite(block);
+int nosp = getBlockSpriteCount(block);
+printf("\n%d: %s - %d %d %d", block, spfp, getBlockType(block), nosp, spr);
 
 position = snap_to_grid ? snapOperation(position) : position;   // do the snap operation if should snap to grid and if not don't
 
-unsigned int rd = CreateSpriteRenderable(&rp->rds, bi.spfp, nosprites, sprite);
+unsigned int rd = CreateSpriteRenderable(&rp->rds, spfp, nosp, spr);
 unsigned int td = AddTransformation(&rp->tds, position, (vec2){25.0f, 25.0f}, theta);
 
 AddDrawable(&rp->drabs, td, rd);

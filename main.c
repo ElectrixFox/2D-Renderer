@@ -94,6 +94,9 @@ RenderPacket block_rp = InitialiseRenderPacket();
 
 InitialiseBlockTable();
 
+unsigned int bvar = getDefaultBlockInfoVar(BLOCK_PLAYER);
+printf("\n%d: %d %d %d", bvar, getBlockType(bvar), getBlockSpriteCount(bvar), getBlockSprite(bvar));
+
 BuildSelectBar();
 
 int** grid;
