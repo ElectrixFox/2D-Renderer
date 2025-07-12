@@ -34,7 +34,6 @@ static void changeBlock(int ui_id)
 {
 RenderInformation ri = getUIRenderInformation(ui, ui_id);   // getting the render information
 BlockInfo bi = { ri.ssi.spfp, ri.ssi.nosp, ri.ssi.spr };
-// BLOCK block = getBlockFromFilePath(ri.ssi.spfp);    // getting the block
 setActiveBlock(bi);  // sets the active block
 }
 

@@ -100,6 +100,9 @@ switch (block)
     case BLOCK_COUNTABLE_BLOCK:
         return (BlockInfo){"res/sprites/countable_movable_spritesheet_short.png", 3, 1};
         break;
+    case BLOCK_MOVABLE_DESTINATION:
+        return (BlockInfo){"res/sprites/movable_spritesheet_short.png", 2, 2};
+        break;
     default:
         break;
     }
@@ -142,6 +145,25 @@ BLOCK getBlockFromFilePath(const char* fp)
 for (int i = 0; i < getBlockCount(); i++)
     {
     if(strcmp(getBlockInfo(i).spfp, fp) == 0)   // if they are the same file path they have the same base block
+        return (BLOCK)i;
+    }
+
+return -1;
+}
+
+BLOCK getBlockFromDetails(const char* spfp, unsigned int nosp, unsigned int spr)
+{
+for (int i = 0; i < getBlockCount(); i++)
+    {
+    BlockInfo bi = getBlockInfo((BLOCK)i);
+
+    if(strcmp(bi.spfp, spfp) != 0)  // if the file path isn't correct
+        continue;
+
+    if(bi.nosp != nosp) // if the number of sprites is incorrect
+        continue;
+
+    if(bi.spr == spr)   // if there is the correct sprite
         return (BLOCK)i;
     }
 

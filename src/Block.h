@@ -143,4 +143,15 @@ int getSpriteCount(BLOCK block);
  */
 BLOCK getBlockFromFilePath(const char* fp);
 
+/**
+ * Finds the block from the details
+ * 
+ * @param spfp The file path to the sprite sheet
+ * @param nosp The size of the sprite sheet
+ * @param spr The sprite
+ * 
+ * @returns The block of the sprite
+ */
+BLOCK getBlockFromDetails(const char* spfp, unsigned int nosp, unsigned int spr);
+
 #pragma endregion

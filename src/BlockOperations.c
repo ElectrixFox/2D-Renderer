@@ -13,7 +13,10 @@ unsigned int _PlaceBlockCustom(RenderPacket* rp, BlockInfo block, vec2 position,
 const BlockInfo bi = block; // renaming
 unsigned int sprite = bi.spr;
 unsigned int nosprites = bi.nosp;
-BLOCK bltype = getBlockFromFilePath(bi.spfp);   // gets the block type
+BLOCK bltype = getBlockFromDetails(bi.spfp, bi.nosp, bi.spr);
+if(getBlockFromFilePath(bi.spfp) == BLOCK_IMMOVABLE_BLOCK)
+    bltype = BLOCK_IMMOVABLE_BLOCK;
+// BLOCK bltype = getBlockFromFilePath(bi.spfp);   // gets the block type
 
 position = snap_to_grid ? snapOperation(position) : position;   // do the snap operation if should snap to grid and if not don't
 
