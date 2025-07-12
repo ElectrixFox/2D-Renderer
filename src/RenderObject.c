@@ -27,7 +27,33 @@ for (int i = 0; i < rd.size; i++)   // simple linear search
 return -1;
 }
 
-unsigned int AddRenderDetail(RenderDetails *rd, unsigned int vao, unsigned int shader, unsigned int texture)
+static void SwapRenderDetails(RenderDetails* rd, unsigned int rid1, unsigned int rid2)
+{
+int index1 = getRenderDetailsIDIndex(*rd, rid1);
+int index2 = getRenderDetailsIDIndex(*rd, rid2);
+
+// getting temporary stuff
+unsigned int tid = rd->rid[index1];
+unsigned int tvao = rd->vao[index1];
+unsigned int tshader = rd->shader[index1];
+unsigned int ttexture = rd->texture[index1];
+
+// setting the swap to the other index
+rd->rid[index1] = rd->rid[index2];
+rd->vao[index1] = rd->vao[index2];
+rd->shader[index1] = rd->shader[index2];
+rd->texture[index1] = rd->texture[index2];
+
+// setting the other index to the first temp values
+rd->rid[index2] = tid;
+rd->vao[index2] = tvao;
+rd->shader[index2] = tshader;
+rd->texture[index2] = ttexture;
+}
+
+static void BubbleSortRenderDetails(RenderDetails* rd);
+
+unsigned int AddRenderDetail(RenderDetails* rd, unsigned int vao, unsigned int shader, unsigned int texture)
 {
 // static unsigned int id = 0; // a static incrementing counter to set the new ID as
 const unsigned int n = rd->size;
@@ -65,23 +91,7 @@ if(index == -1)
 
 if(index == rd->size - 1) goto end;   // hehe the naughty goto
 
-// getting temporary stuff
-unsigned int tid = rd->rid[index];
-unsigned int tvao = rd->vao[index];
-unsigned int tshader = rd->shader[index];
-unsigned int ttexture = rd->texture[index];
-
-// setting the to delete to the end values
-rd->rid[index] = rd->rid[rd->size - 1];
-rd->vao[index] = rd->vao[rd->size - 1];
-rd->shader[index] = rd->shader[rd->size - 1];
-rd->texture[index] = rd->texture[rd->size - 1];
-
-// setting the end to the thing to delete
-rd->rid[rd->size - 1] = tid;
-rd->vao[rd->size - 1] = tvao;
-rd->shader[rd->size - 1] = tshader;
-rd->texture[rd->size - 1] = ttexture;
+SwapRenderDetails(rd, rd->rid[index], rd->rid[rd->size - 1]);   // swapping around the entries
 
 ShrinkArrayByOne(&rd->rid, n, sizeof(unsigned int));
 ShrinkArrayByOne(&rd->vao, n, sizeof(unsigned int));
