@@ -57,6 +57,7 @@ blds.size++;    // increase the number of blocks
 void UnassignBlock(unsigned int rid)
 {
 int index = getBlockRenderIndex(rid); // finding the ID
+const unsigned int n = blds.size;
 
 if(index == -1)
     return; // if the index isn't found just quit
@@ -74,6 +75,9 @@ blds.blocks[index] = blds.blocks[blds.size - 1];
 // setting the end to the thing to delete
 blds.rids[blds.size - 1] = tmpid;
 blds.blocks[blds.size - 1] = tbl;
+
+ShrinkArrayByOne(&blds.rids, n, sizeof(unsigned int));
+ShrinkArrayByOne(&blds.blocks, n, sizeof(BLOCK));
 
 end:
 blds.size--;    // decrease the size so it is effectively not there
@@ -102,6 +106,9 @@ switch (block)
         break;
     case BLOCK_MOVABLE_DESTINATION:
         return (BlockInfo){"res/sprites/movable_spritesheet_short.png", 2, 2};
+        break;
+    case BLOCK_PLAYER_DESTINATION:
+        return (BlockInfo){"res/sprites/player_spritesheet.png", 2, 2};
         break;
     default:
         break;

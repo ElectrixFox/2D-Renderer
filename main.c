@@ -132,18 +132,25 @@ while(!glfwWindowShouldClose(window))   // main loop
         {
         getLevel(block_rp, &w, &h, &grid);
         }
+    else if(isPressed(GLFW_KEY_1))
+        {
+        printf("\nCausing break");
+        }
 
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         getLevel(block_rp, &w, &h, &grid);
-        UpdateImmovableBlocks(&block_rp, w, h, grid);
         vec2 cpos = GetCursorPositionRelative(cam);
         vec2 ncpos = getCursorPosition();
+        cpos.x = 5 * roundf(cpos.x / 5);
+        cpos.y = 5 * roundf(cpos.y / 5);
 
         if(!PressedArea(block_rp.tds, cpos, 50.0f) && !PressedArea(ui_rp.tds, ncpos, 50.0f))
             {
             printf("\nPlacing block");
-            _PlaceBlockCustom(&block_rp, getActiveBlock(), cpos, 0.0f);
+            unsigned int rid = _PlaceBlockCustom(&block_rp, getActiveBlock(), cpos, 0.0f);
+            if(getBlockFromRenderID(rid) == BLOCK_IMMOVABLE_BLOCK)
+                UpdateImmovableBlocks(&block_rp, w, h, grid);
             }
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
@@ -157,6 +164,8 @@ while(!glfwWindowShouldClose(window))   // main loop
             unsigned int ttrsid = getPressedBlock(block_rp.tds, cpos);
             unsigned int trid = block_rp.drabs.rids[findDrawablesTransform(block_rp.drabs, ttrsid)];
             RemoveBlock(&block_rp, trid);
+            if(getBlockFromRenderID(trid) == BLOCK_IMMOVABLE_BLOCK)
+                UpdateImmovableBlocks(&block_rp, w, h, grid);
             }
         }
 

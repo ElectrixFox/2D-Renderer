@@ -75,10 +75,21 @@ vec2 topright = {1255.0f, 695.0f};
 const unsigned int nblocks = getBlockCount();
 const float padding = 10.0f;
 
-for (int i = 0; i < nblocks; i++)
+BLOCK menuDetails[] =   // the base blocks
+    {
+    BLOCK_PLAYER,
+    BLOCK_MOVABLE_BARRIER,
+    BLOCK_MOVABLE_BLOCK,
+    BLOCK_IMMOVABLE_BLOCK,
+    BLOCK_COUNTABLE_BLOCK
+    };
+const int nblk = sizeof(menuDetails) / sizeof(BLOCK);
+
+
+for (int i = 0; i < nblk; i++)
     {
     vec2 position = {topright.x, topright.y - (i * 50.0f + padding)}; // placing the items in a vertical line on the right side of the screen
-    BlockInfo bi = getBlockInfo((BLOCK)i);
+    BlockInfo bi = getBlockInfo(menuDetails[i]);
     RenderInformation ri;
     ri.ssi = (SpriteSheetInfo){ bi.spfp, bi.nosp, bi.spr };
     unsigned int entry = createUIElement(&ui, &ui_rp, position, 25.0f, UI_TYPE_BUTTON, ri);

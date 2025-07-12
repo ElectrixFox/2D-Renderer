@@ -54,6 +54,7 @@ return tds->trsid[n];
 void RemoveTransformation(TransformationDetails *tds, unsigned int tid)
 {
 int index = getTransformationIDIndex(*tds, tid); // finding the ID
+const unsigned int n = tds->size;
 
 if(index == -1)
     return; // if the index isn't found just quit
@@ -77,6 +78,11 @@ tds->trsid[tds->size - 1] = tmpid;
 tds->pos[tds->size - 1] = tpos;
 tds->scale[tds->size - 1] = tscale;
 tds->angle[tds->size - 1] = tangle;
+
+ShrinkArrayByOne(&tds->trsid, n, sizeof(unsigned int));
+ShrinkArrayByOne(&tds->pos, n, sizeof(vec2));
+ShrinkArrayByOne(&tds->scale, n, sizeof(vec2));
+ShrinkArrayByOne(&tds->angle, n, sizeof(float));
 
 end:
 tds->size--;    // decrease the size so it is effectively not there

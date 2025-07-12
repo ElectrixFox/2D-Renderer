@@ -71,6 +71,17 @@ void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned in
 void ExpandByOne(void** arr, const unsigned int size, unsigned int elesize);
 
 /**
+ * Decreases the size of the passed array by one
+ * 
+ * @param arr A pointer to the array to shrink
+ * @param size The size of the array
+ * @param elesize The size of an element in the array
+ * 
+ * @warning Remember to pass the array as a pointer not just an array
+ */
+void ShrinkArrayByOne(void** arr, const unsigned int size, unsigned int elesize);
+
+/**
  * Finds the next free ID slot starting from 0
  * 
  * @param arr The array

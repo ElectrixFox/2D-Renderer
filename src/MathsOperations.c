@@ -36,6 +36,8 @@ void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned in
 
 void ExpandByOne(void **arr, const unsigned int size, unsigned int elesize) { ExpandArray(arr, size, size + 1, elesize); }
 
+void ShrinkArrayByOne(void** arr, const unsigned int size, unsigned int elesize) { ExpandArray(arr, size, size - 1, elesize); }
+
 static unsigned int findArrMin(unsigned int* arr, int size)
 {
 unsigned int min = arr[0];

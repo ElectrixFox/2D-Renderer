@@ -31,7 +31,7 @@ unsigned int AddRenderDetail(RenderDetails *rd, unsigned int vao, unsigned int s
 {
 // static unsigned int id = 0; // a static incrementing counter to set the new ID as
 const unsigned int n = rd->size;
-unsigned int id = findNextIDAvailable(rd->rid, n);
+unsigned int id = findNextIDAvailable(rd->rid, rd->size);
 
 if(n == 0)   // if the size is 0 then just reinitialise the render details
     *rd = InitialiseRenderDetails(); // reinitialise the render details
@@ -58,6 +58,7 @@ return rd->rid[n];
 void RemoveRenderDetail(RenderDetails *rd, unsigned int rid)
 {
 int index = getRenderDetailsIDIndex(*rd, rid);  // finding the ID
+const unsigned int n = rd->size;
 
 if(index == -1)
     return; // if the index isn't found just quit
@@ -81,6 +82,11 @@ rd->rid[rd->size - 1] = tid;
 rd->vao[rd->size - 1] = tvao;
 rd->shader[rd->size - 1] = tshader;
 rd->texture[rd->size - 1] = ttexture;
+
+ShrinkArrayByOne(&rd->rid, n, sizeof(unsigned int));
+ShrinkArrayByOne(&rd->vao, n, sizeof(unsigned int));
+ShrinkArrayByOne(&rd->shader, n, sizeof(unsigned int));
+ShrinkArrayByOne(&rd->texture, n, sizeof(unsigned int));
 
 end:
 rd->size--; // decrease the size so it is effectively not there

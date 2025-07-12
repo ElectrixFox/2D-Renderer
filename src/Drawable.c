@@ -78,6 +78,9 @@ drabs->rids[index] = drabs->rids[drabs->size - 1];
 drabs->trsids[drabs->size - 1] = tmp_trsid;
 drabs->rids[drabs->size - 1] = tmp_rid;
 
+ShrinkArrayByOne(&drabs->rids, drabs->size, sizeof(unsigned int));
+ShrinkArrayByOne(&drabs->trsids, drabs->size, sizeof(unsigned int));
+
 end:
 drabs->size--;    // decrease the size so it is effectively not there
 }
