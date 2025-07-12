@@ -92,7 +92,7 @@ InitialiseInputManager(window);
 
 RenderPacket block_rp = InitialiseRenderPacket();
 
-InitialiseBlockDetails();
+InitialiseBlockTable();
 
 BuildSelectBar();
 

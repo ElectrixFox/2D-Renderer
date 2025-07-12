@@ -1,89 +1,161 @@
 #include "Block.h"
 
-static BlockDetails blds;
+static BlockTable btab;
 
-void setBlockSprite(unsigned int* block, unsigned int spr) { SetActiveSprite(block, spr); }
-
-unsigned int getBlockSprite(unsigned int block) { return GetActiveSprite(block); }
-
-void setBlockSpriteCount(unsigned int *block, unsigned int nospr) { SetNumberOfSprites(block, nospr); }
-
-unsigned int getBlockSpriteCount(unsigned int block) { return GetNumberOfSprites(block); }
-
-void setBlockType(unsigned int *block, unsigned int type) { SetActiveShape(block, type); }
-
-unsigned int getBlockType(unsigned int block) { return GetActiveShape(block); }
-
-void InitialiseBlockDetails()
+void setBlockSpriteCount(unsigned int* blid, unsigned int nosp)
 {
-blds.size = 0;
+unsigned int mask = 0b011111000000000U;  // the mask for the number of sprites
+*(blid) = ((*(blid) & (~mask)) | (nosp << 9));
+}
 
-// allocating a small bit of memory
-blds.rids = (unsigned int*)malloc(sizeof(unsigned int));
-blds.blocks = (BLOCK*)malloc(sizeof(BLOCK));
+unsigned int getBlockSpriteCount(unsigned int blid)
+{
+unsigned int mask = 0b011111000000000U;  // the mask for the number of sprites
+return ((blid & mask) >> 9);
+}
+
+void setBlockSprite(unsigned int* blid, unsigned int spr)
+{
+unsigned int mask = 0b000000111110000U;  // the mask for the current sprite
+*(blid) = ((*(blid) & ~mask) | (spr << 4));
+}
+
+unsigned int getBlockSprite(unsigned int blid)
+{
+unsigned int mask = 0b000000111110000U;  // the mask for the current sprite
+return ((blid & mask) >> 4);
+}
+
+void setBlockType(unsigned int* blid, unsigned int type)
+{
+unsigned int mask = 0b000000000011111U;  // the mask for the block type
+*(blid) = (((*blid) & (~mask)) | type);
+}
+
+unsigned int getBlockType(unsigned int blid)
+{
+unsigned int mask = 0b000000000011111U;  // the mask for the block type
+return (blid & mask);
+}
+
+unsigned int InitialiseBlockVariable(BLOCK bltype, unsigned int nosp, unsigned int spr)
+{
+unsigned int block;
+setBlockType(&block, bltype);
+setBlockSpriteCount(&block, nosp);
+setBlockSprite(&block, spr);
+
+return block;
 }
 
 unsigned int getBlockCount() { return BLOCK_COUNT; }
 
-int getBlockRenderIndex(unsigned int rid)
+void InitialiseBlockTable()
 {
-if(blds.size > rid)    // if the size is bigger than the ID then it is a valid ID
-    if(blds.rids[rid] == rid)   // just in case no manipulation of the table has happened
-        return rid;
+btab.size = 0;
 
-for (int i = 0; i < blds.size; i++)  // simple linear search
-    if(blds.rids[i] == rid)
+btab.blid = (unsigned int*)malloc(sizeof(unsigned int));
+btab.rids = (unsigned int*)malloc(sizeof(unsigned int));
+}
+
+static int findRenderIDInBlockTable(unsigned int rid)
+{
+for (int i = 0; i < btab.size; i++)
+    if(btab.rids[i] == rid)
         return i;
 return -1;
 }
 
-BLOCK getBlockFromRenderID(unsigned int rid) { return blds.blocks[getBlockRenderIndex(rid)]; }
-
-void AssignBlock(unsigned int rid, BLOCK block)
+static int findBlockIDInBlockTable(unsigned int blid)
 {
-const unsigned int n = blds.size;
+for (int i = 0; i < btab.size; i++)
+    if(btab.blid[i] == blid)
+        return i;
+return -1;
+}
+
+void AssignBlock(unsigned int rid, unsigned int block)
+{
+const unsigned int n = btab.size;
 
 // make all the arrays bigger by one to accomodate for the new element
-ExpandByOne(&blds.rids, n, sizeof(unsigned int));
-ExpandByOne(&blds.blocks, n, sizeof(BLOCK));
+ExpandByOne(&btab.blid, n, sizeof(unsigned int));
+ExpandByOne(&btab.rids, n, sizeof(unsigned int));
 
 // setting all the new details
-blds.rids[n] = rid;
-blds.blocks[n] = block;
+btab.blid[n] = block;
+btab.rids[n] = rid;
 
-blds.size++;    // increase the number of blocks
+btab.size++;    // increase the number of blocks
 }
 
 void UnassignBlock(unsigned int rid)
 {
-int index = getBlockRenderIndex(rid); // finding the ID
+int index = findRenderIDInBlockTable(rid);  // finding the ID
 
 if(index == -1)
     return; // if the index isn't found just quit
 
-if(index == blds.size - 1) goto end;   // hehe the naughty goto
+if(index == btab.size - 1) goto end;   // hehe the naughty goto
 
 // getting temporary stuff
-unsigned int tmpid = blds.rids[index];
-unsigned int tbl = blds.blocks[index];
+unsigned int tbtab = btab.blid[index];
+unsigned int tmpid = btab.rids[index];
 
 // setting the to delete to the end values
-blds.rids[index] = blds.rids[blds.size - 1];
-blds.blocks[index] = blds.blocks[blds.size - 1];
+btab.blid[index] = btab.blid[btab.size - 1];
+btab.rids[index] = btab.rids[btab.size - 1];
 
 // setting the end to the thing to delete
-blds.rids[blds.size - 1] = tmpid;
-blds.blocks[blds.size - 1] = tbl;
+btab.blid[btab.size - 1] = tbtab;
+btab.rids[btab.size - 1] = tmpid;
 
 end:
-blds.size--;    // decrease the size so it is effectively not there
+btab.size--;    // decrease the size so it is effectively not there
 
 // To-Do: Could add in a sort here to sort by ID in order to realign the table
 }
 
-BlockInfo getBlockInfo(BLOCK block)
+static const char* getBlockFilePath(BLOCK block)
 {
+printf("\n%d", block);
 switch (block)
+    {
+    case BLOCK_PLAYER:
+        return "res/sprites/player_spritesheet.png";
+        break;
+    case BLOCK_MOVABLE_BARRIER:
+        return "res/sprites/movable_barrier_tilesheet.png";
+        break;
+    case BLOCK_MOVABLE_BLOCK:
+        return "res/sprites/movable_spritesheet_short.png";
+        break;
+    case BLOCK_IMMOVABLE_BLOCK:
+        return "res/sprites/immovable_tilesheet_short.png";
+        break;
+    case BLOCK_COUNTABLE_BLOCK:
+        return "res/sprites/countable_movable_spritesheet_short.png";
+        break;
+    default:
+        break;
+    }
+return "";
+}
+
+BLOCK getDefaultBlockTypeFromFilePath(const char* spfp)
+{
+for (int i = 0; i < getBlockCount(); i++)
+    if(strcmp(getBlockFilePath(i), spfp) == 0)
+        return (BLOCK)i;
+
+return -1;
+}
+
+BLOCK getBlockTypeFromFilePath(const char* spfp) { getDefaultBlockTypeFromFilePath(spfp); }
+
+BlockInfo getDefaultBlockInfo(BLOCK type)
+{
+switch (type)
     {
     case BLOCK_PLAYER:
         return (BlockInfo){"res/sprites/player_spritesheet.png", 2, 1};
@@ -104,6 +176,42 @@ switch (block)
         break;
     }
 return (BlockInfo){NULL};
+}
+
+unsigned int getDefaultBlockInfoVar(BLOCK type)
+{
+BlockInfo bi = getDefaultBlockInfo(type);
+return InitialiseBlockVariable(type, bi.nosp, bi.spr);
+}
+
+BlockInfo getBlockInfo(unsigned int blid)
+{
+printf("\n%d", getBlockType(blid));
+const char* spfp = getBlockFilePath(getBlockType(blid));
+const unsigned int nosp = getBlockSpriteCount(blid);
+const unsigned int spr = getBlockSprite(blid);
+
+printf("\n%s", spfp);
+
+return (BlockInfo)
+    {
+    .spfp = spfp,
+    .nosp = nosp,
+    .spr = spr
+    };
+}
+
+BLOCK getBlockFromRenderID(unsigned int rid) { return (BLOCK)getBlockType(btab.blid[findRenderIDInBlockTable(rid)]); }
+
+BlockInfo getBlockInfoFromRenderID(unsigned int rid)
+{
+int index = findRenderIDInBlockTable(rid);
+return (BlockInfo)
+    {
+    .spfp = getBlockFilePath(btab.blid[index]),
+    .nosp = getBlockSpriteCount(btab.blid[index]),
+    .spr = getBlockSprite(btab.blid[index])
+    };
 }
 
 BlockInfo getImmovableBlock(BLOCK_IM_STATE state)
@@ -135,15 +243,8 @@ switch (state)
     }
 }
 
-int getSpriteCount(BLOCK block) { return getBlockInfo(block).nosp; }
-
-BLOCK getBlockFromFilePath(const char* fp)
+unsigned int getImmovableBlockInfoVar(BLOCK_IM_STATE state)
 {
-for (int i = 0; i < getBlockCount(); i++)
-    {
-    if(strcmp(getBlockInfo(i).spfp, fp) == 0)   // if they are the same file path they have the same base block
-        return (BLOCK)i;
-    }
-
-return -1;
+BlockInfo bi = getImmovableBlock(BLOCK_IMMOVABLE_BLOCK);
+return InitialiseBlockVariable(BLOCK_IMMOVABLE_BLOCK, bi.nosp, bi.spr);
 }

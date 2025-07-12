@@ -8,12 +8,13 @@ static vec2 snapOperation(vec2 pos)
 return (vec2){roundf(pos.x / grid_size) * grid_size, roundf(pos.y / grid_size) * grid_size};    // snap it to the nearest grid spot
 }
 
-unsigned int _PlaceBlockCustom(RenderPacket* rp, BlockInfo block, vec2 position, float theta)
+unsigned int _PlaceBlockCustom(RenderPacket* rp, unsigned int block, vec2 position, float theta)
 {
-const BlockInfo bi = block; // renaming
+const BlockInfo bi = getBlockInfo(block);
 unsigned int sprite = bi.spr;
 unsigned int nosprites = bi.nosp;
-BLOCK bltype = getBlockFromFilePath(bi.spfp);   // gets the block type
+BLOCK bltype = getBlockType(block);
+printf("\n%s %d %d", bi.spfp, bi.nosp, bi.spr);
 
 position = snap_to_grid ? snapOperation(position) : position;   // do the snap operation if should snap to grid and if not don't
 
@@ -21,32 +22,12 @@ unsigned int rd = CreateSpriteRenderable(&rp->rds, bi.spfp, nosprites, sprite);
 unsigned int td = AddTransformation(&rp->tds, position, (vec2){25.0f, 25.0f}, theta);
 
 AddDrawable(&rp->drabs, td, rd);
-
-// setBlockSprite(&bltype, sprite);
-AssignBlock(rd, bltype);
-
-return rd;
-}
-
-
-/*
-unsigned int PlaceBlock(RenderDetails* rds, TransformationDetails* tds, Drawables* drabs, BLOCK block, vec2 position)
-{
-BlockInfo bi = getBlockInfo(block);
-unsigned int sprite = bi.spr;    // To-Do: write some function to find the sprite from the enum
-unsigned int nosprites = bi.nosp; // To-Do: write some function to find the number of sprites in the sheet
-
-unsigned int rd = CreateSpriteRenderable(rds, bi.spfp, nosprites, sprite);
-unsigned int td = AddTransformation(tds, position, (vec2){25.0f, 25.0f});
-
-AddDrawable(drabs, td, rd);
 AssignBlock(rd, block);
 
 return rd;
 }
-*/
 
-unsigned int PlaceBlock(RenderPacket* rp, BLOCK block, vec2 position) { return _PlaceBlockCustom(rp, getBlockInfo(getBlockType(block)), position, 0.0f); }
+unsigned int PlaceBlock(RenderPacket* rp, BLOCK block, vec2 position) { return _PlaceBlockCustom(rp, getDefaultBlockInfoVar(block), position, 0.0f); }
 
 void RemoveBlock(RenderPacket* rp, unsigned int rid)
 {
@@ -339,7 +320,7 @@ for (int i = 0; i < h; i++)
                 {
                 unsigned int rid = rp->drabs.rids[findDrawablesTransform(rp->drabs, trsid)];
                 RemoveBlock(rp, rid);
-                rid = _PlaceBlockCustom(rp, getImmovableBlock(imstate), posi, theta);   // getting the new render ID
+                rid = _PlaceBlockCustom(rp, getImmovableBlockInfoVar(imstate), posi, theta);   // getting the new render ID
                 trsid = rp->drabs.trsids[findDrawablesRenderable(rp->drabs, rid)];
                 }
             
