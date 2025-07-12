@@ -174,11 +174,34 @@ switch (type)
     case BLOCK_COUNTABLE_BLOCK:
         return (BlockInfo){"res/sprites/countable_movable_spritesheet_short.png", 3, 1};
         break;
+    case BLOCK_MOVABLE_DESTINATION:
+        return (BlockInfo){"res/sprites/countable_movable_spritesheet_short.png", 3, 2};
+        break;
     default:
         break;
     }
 return (BlockInfo){NULL};
 }
+
+BLOCK getBlockTypeFromDetails(const char* spfp, unsigned int nosp, unsigned int spr)
+{
+for (int i = 0; i < getBlockCount(); i++)
+    {
+    BlockInfo bi = getDefaultBlockInfo(i);
+
+    if(strcmp(bi.spfp, spfp) != 0)
+        continue;
+    
+    if(bi.nosp != nosp)
+        continue;
+    
+    if(bi.spr == spr)
+        return (BLOCK)i;
+    }
+
+return -1;
+}
+
 
 unsigned int getDefaultBlockInfoVar(BLOCK type)
 {

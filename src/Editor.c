@@ -34,8 +34,10 @@ void ApplyProjection(Camera cam, RenderDetails rds) { _ApplyProjection(cam, rds.
 static void changeBlock(int ui_id)
 {
 RenderInformation ri = getUIRenderInformation(ui, ui_id);   // getting the render information
-BLOCK block = getBlockTypeFromFilePath(ri.ssi.spfp);
-setActiveBlock(InitialiseBlockVariable(block, ri.ssi.nosp, ri.ssi.spr));
+// BLOCK block = getBlockTypeFromFilePath(ri.ssi.spfp);
+BLOCK block = getBlockTypeFromDetails(ri.ssi.spfp, ri.ssi.nosp, ri.ssi.spr);
+setActiveBlock(block);
+// setActiveBlock(InitialiseBlockVariable(block, ri.ssi.nosp, ri.ssi.spr));
 }
 
 static void unfoldBlockOptions(int ui_id)

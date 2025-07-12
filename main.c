@@ -139,14 +139,16 @@ while(!glfwWindowShouldClose(window))   // main loop
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
         getLevel(block_rp, &w, &h, &grid);
-        UpdateImmovableBlocks(&block_rp, w, h, grid);
         vec2 cpos = GetCursorPositionRelative(cam);
         vec2 ncpos = getCursorPosition();
 
         if(!PressedArea(block_rp.tds, cpos, 50.0f) && !PressedArea(ui_rp.tds, ncpos, 50.0f))
             {
             printf("\nPlacing block");
-            _PlaceBlockCustom(&block_rp, getActiveBlock(), cpos, 0.0f);
+            unsigned int rid = _PlaceBlockCustom(&block_rp, getActiveBlock(), cpos, 0.0f);
+
+            if(getBlockTypeFromRenderID(rid) == BLOCK_IMMOVABLE_BLOCK)
+                UpdateImmovableBlocks(&block_rp, w, h, grid);
             }
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)

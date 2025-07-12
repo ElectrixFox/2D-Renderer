@@ -145,6 +145,8 @@ BLOCK getBlockTypeFromFilePath(const char* spfp);
 
 BlockInfo getDefaultBlockInfo(BLOCK type);
 
+BLOCK getBlockTypeFromDetails(const char* spfp, unsigned int nosp, unsigned int spr);
+
 unsigned int getDefaultBlockInfoVar(BLOCK type);
 
 BlockInfo getBlockInfo(unsigned int blid);
