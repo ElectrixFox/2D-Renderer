@@ -309,6 +309,7 @@ for (int i = 0; i < h; i++)
     {
     for (int j = 0; j < w; j++)
         {
+        // WARNING: This doesn't work with the change to the block system as the type needs to be obtained separately
         if(grid[i][j] == (int)BLOCK_IMMOVABLE_BLOCK + 1) // if there is an immovable block there
             {
             float theta = 0.0f;
