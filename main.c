@@ -64,6 +64,37 @@ printf("\nI the menu have been pressed %d", l);
 
 int main()
 {
+/*
+unsigned int srr[] = {10, 1, 4, 14, 0, 11, 9, 18, 20, 26};
+int size = 10;
+unsigned int* tarr = (unsigned int*)malloc(size * sizeof(unsigned int));
+
+for (int i = 0; i < size; i++)
+    {
+    tarr[i] = srr[i];
+    }
+
+
+unsigned int next = findNextIDAvailable(tarr, size);
+
+OutputArray((Array){tarr, size});
+printf("\nThe next free ID: %d", next);
+
+for (int i = 0; i < 10; i++)
+    {
+    ExpandByOne(&tarr, size, sizeof(unsigned int));
+    size++;
+
+    tarr[size - 1] = next;
+    next = findNextIDAvailable(tarr, size);
+    OutputArray((Array){tarr, size});
+    printf("\nThe next free ID: %d\n", next);
+    }
+
+
+return 0;
+*/
+
 unsigned int width = gwid;
 unsigned int height = ghig;
 
@@ -94,14 +125,17 @@ RenderPacket block_rp = InitialiseRenderPacket();
 
 InitialiseBlockDetails();
 
-BuildSelectBar();
+// BuildSelectBar();
 
 int** grid;
 int w, h;
 ReadLevel("res/levels/level2.txt", &w, &h, &grid);
+/*
 OutputLevel(grid, w, h);
 DrawLevel(&block_rp, w, h, grid);
 UpdateImmovableBlocks(&block_rp, w, h, grid);
+*/
+
 
 
 while(!glfwWindowShouldClose(window))   // main loop
@@ -120,7 +154,7 @@ while(!glfwWindowShouldClose(window))   // main loop
         WriteLevel("res/levels/level2.txt", w, h, grid);
         }
 
-    if(isPressed(GLFW_KEY_TAB))
+    if(isPressedSingle(GLFW_KEY_TAB))
         {
         OutputRenderPacketDetails(block_rp);
         OutputRenderPacketDetails(ui_rp);

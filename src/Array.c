@@ -1,5 +1,7 @@
 #include "Array.h"
 
+#ifdef ARRAY_H
+
 static void swap(unsigned int* x, unsigned int* y)
 {
 if(*x == *y) return;    // if they are the same then return
@@ -58,3 +60,5 @@ printf("\nArray of size %d: ", arr.size);
 for (int i = 0; i < arr.size; i++)
     printf("%d ", arr.data[i]);
 }
+
+#endif
