@@ -184,6 +184,8 @@ while(!glfwWindowShouldClose(window))   // main loop
     glfwPollEvents();
     }
 
+glfwDestroyWindow(window);
+
 glfwTerminate();    // cleans up all the glfw objects
 
 return 0;

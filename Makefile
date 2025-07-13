@@ -1,9 +1,9 @@
 CXX = gcc
-CXXFLAGS = -g -Wall -I. -mwin32
+CXXFLAGS = -g -Wall -I. # -mwin32
 CXXIGNORE = -Wno-missing-braces -Wno-format	-Wno-incompatible-pointer-types
 CXXFLAGS += $(CXXIGNORE)
 APPNAME = main
-LIBS = -L./lib -lglew32 -lopengl32 -lglfw3dll
+LIBS = -L./lib -lm -lGL -lGLEW -lglfw3dll -ldl # -lglew32 -lopengl32 -lglfw3dll
 
 SRCFILES := $(wildcard src/*.c) main.c
 OBJS := $(addprefix obj/, $(patsubst %.c, %.o, $(SRCFILES)))
