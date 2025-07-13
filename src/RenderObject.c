@@ -76,6 +76,12 @@ static void SwapRenderDetails(RenderDetails* rd, unsigned int rid1, unsigned int
 int index1 = getRenderDetailsIDIndex(*rd, rid1);
 int index2 = getRenderDetailsIDIndex(*rd, rid2);
 
+if(index1 > rd->size || index2 > rd->size)
+    {
+    printf("\nERROR: Trying to access inaccessable index %d %d", index1, index2);
+    exit(1);
+    }
+
 // getting temporary stuff
 unsigned int tid = rd->rid[index1];
 unsigned int tvao = rd->vao[index1];
