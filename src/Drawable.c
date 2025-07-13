@@ -96,12 +96,14 @@ for (int i = 0; i < drabs.size; i++)    // setting the model matrices
 // now do the rendering
 for (int i = 0; i < drabs.size; i++)    // setting all the uniforms
     {
-    const unsigned int prog = rds.shader[getRenderDetailsIDIndex(rds, drabs.rids[i])];  // may as well make this a constant here for efficiency
-    SetUniformM4(prog, "model", models[i]);
     }
 
 for (int i = 0; i < drabs.size; i++)
+    {
+    const unsigned int prog = rds.shader[getRenderDetailsIDIndex(rds, drabs.rids[i])];  // may as well make this a constant here for efficiency
+    SetUniformM4(prog, "model", models[i]);
     DrawRenderable(rds, drabs.rids[i]); // finally do the actual drawing
+    }
 }
 
 void OutputDrawables(Drawables drabs)
