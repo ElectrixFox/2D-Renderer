@@ -90,18 +90,13 @@ void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs
 // getting all we will need from the transformation objects first
 m4* models = (m4*)malloc(drabs.size * sizeof(m4));  // getting all of the transformation matrices
 
-for (int i = 0; i < drabs.size; i++)    // setting the model matrices
+for (int i = 0; i < drabs.size; i++)    // getting  the model matrices
     models[i] = getTransformModelMatrix(tds, drabs.trsids[i]);
-
-// now do the rendering
-for (int i = 0; i < drabs.size; i++)    // setting all the uniforms
-    {
-    }
 
 for (int i = 0; i < drabs.size; i++)
     {
     const unsigned int prog = rds.shader[getRenderDetailsIDIndex(rds, drabs.rids[i])];  // may as well make this a constant here for efficiency
-    SetUniformM4(prog, "model", models[i]);
+    SetUniformM4(prog, "model", models[i]); // setting the model matrix
     DrawRenderable(rds, drabs.rids[i]); // finally do the actual drawing
     }
 }

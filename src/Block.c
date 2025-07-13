@@ -76,11 +76,22 @@ blds.blocks[index] = blds.blocks[blds.size - 1];
 blds.rids[blds.size - 1] = tmpid;
 blds.blocks[blds.size - 1] = tbl;
 
-ShrinkArrayByOne(&blds.rids, n, sizeof(unsigned int));
-ShrinkArrayByOne(&blds.blocks, n, sizeof(BLOCK));
-
 end:
 blds.size--;    // decrease the size so it is effectively not there
+
+// ShrinkArrayByOne(&blds.rids, n, sizeof(unsigned int));
+
+/*
+BLOCK* tmp = (BLOCK*)malloc((n - 1) * sizeof(BLOCK));
+memcpy(tmp, blds.blocks, (n - 1) * sizeof(BLOCK));
+blds.blocks = tmp;
+*/
+
+// blds.blocks = realloc(blds.blocks, (n - 1) * sizeof(BLOCK));
+
+// blds.blocks = realloc(blds.blocks, (n - 1) * sizeof(BLOCK));
+// ShrinkArrayByOne(&blds.blocks, n, sizeof(BLOCK));
+// ShrinkArrayByOne(&(blds) + n * sizeof(unsigned int), n, sizeof(BLOCK));
 
 // To-Do: Could add in a sort here to sort by ID in order to realign the table
 }

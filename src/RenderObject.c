@@ -138,11 +138,11 @@ if(index == rd->size - 1) goto end;   // hehe the naughty goto
 SwapRenderDetails(rd, rd->rid[index], rd->rid[rd->size - 1]);   // swapping around the entries
 
 end:
-glDeleteVertexArrays(1, &rd->vao[n - 1]);
+// glDeleteVertexArrays(1, &rd->vao[n - 1]);
 // glDeleteBuffers(1, &VBO);
 // glDeleteBuffers(1, &EBO);
 // glDeleteProgram(&rd->shader[n - 1]);
-glDeleteTextures(1, &rd->texture[n - 1]);
+// glDeleteTextures(1, &rd->texture[n - 1]);
 
 rd->size--; // decrease the size so it is effectively not there
 

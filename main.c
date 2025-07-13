@@ -62,33 +62,62 @@ void menoutput(int l)
 printf("\nI the menu have been pressed %d", l);
 }
 
+/*
+enum tsl
+    {
+    BAJS,
+    SHIHIEWF,
+    WEFHIQWIFEH
+    };
+
+struct test
+    {
+    unsigned int* arr1;
+    vec3* arr2;
+    float* arr3;
+    enum tsl* arr4;
+    int size;
+    };
+
+
+void upd(struct test* tst)
+{
+const int n = tst->size;
+ExpandByOne(&tst->arr1, n, sizeof(unsigned int));
+ExpandByOne(&tst->arr2, n, sizeof(vec3));
+ExpandByOne(&tst->arr3, n, sizeof(float));
+ExpandByOne(&tst->arr4, n, sizeof(enum tsl));
+
+tst->arr1[n] = rand() % 100;
+tst->arr2[n] = (vec3){(float)rand() / rand() * (rand() % 11), (float)rand() / rand() * (rand() % 11), (float)rand() / rand() * (rand() % 11)};
+tst->arr3[n] = (float)(rand() / rand());
+tst->arr4[n] = (enum tsl)(rand() % 3);
+
+tst->size++;
+}
+*/
+
 int main()
 {
 /*
-unsigned int srr[] = {10, 1, 4, 14, 0, 11, 9, 18, 20, 26};
-int size = 10;
-unsigned int* tarr = (unsigned int*)malloc(size * sizeof(unsigned int));
+struct test tst;
+printf("\n%d %d %d %d", sizeof(unsigned int*), sizeof(vec3*), sizeof(float*), sizeof(enum tsl*));
+tst.arr1 = (unsigned int*)malloc(sizeof(unsigned int));
+tst.arr2 = (vec3*)malloc(sizeof(vec3));
+tst.arr3 = (float*)malloc(sizeof(float));
+tst.arr4 = (enum tsl*)malloc(sizeof(enum tsl));
 
-for (int i = 0; i < size; i++)
+tst.size = 0;
+const int n = 100;
+
+for (int i = 0; i < n; i++)
     {
-    tarr[i] = srr[i];
+    upd(&tst);
     }
 
-
-unsigned int next = findNextIDAvailable(tarr, size);
-
-OutputArray((Array){tarr, size});
-printf("\nThe next free ID: %d", next);
-
-for (int i = 0; i < 10; i++)
+for (int i = 0; i < n; i++)
     {
-    ExpandByOne(&tarr, size, sizeof(unsigned int));
-    size++;
-
-    tarr[size - 1] = next;
-    next = findNextIDAvailable(tarr, size);
-    OutputArray((Array){tarr, size});
-    printf("\nThe next free ID: %d\n", next);
+    printf("\n%10d\t(%2.2f, %2.2f, %2.2f)\t%-5.2f\t%2d", tst.arr1[i], tst.arr2[i].x, tst.arr2[i].y, tst.arr2[i].z, tst.arr3[i], tst.arr4[i]);
     }
 
 
@@ -125,16 +154,16 @@ RenderPacket block_rp = InitialiseRenderPacket();
 
 InitialiseBlockDetails();
 
-// BuildSelectBar();
+BuildSelectBar();
 
 int** grid;
 int w, h;
 ReadLevel("res/levels/level2.txt", &w, &h, &grid);
-/*
+
 OutputLevel(grid, w, h);
 DrawLevel(&block_rp, w, h, grid);
 UpdateImmovableBlocks(&block_rp, w, h, grid);
-*/
+
 
 
 

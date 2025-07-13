@@ -1,6 +1,6 @@
 CXX = gcc
 CXXFLAGS = -g -Wall -I. -mwin32
-CXXIGNORE = -Wno-missing-braces -Wno-format	-Wno-incompatible-pointer-types
+CXXIGNORE = -Wno-missing-braces -Wno-format	# -Wno-incompatible-pointer-types
 CXXFLAGS += $(CXXIGNORE)
 APPNAME = main
 LIBS = -L./lib -lglew32 -lopengl32 -lglfw3dll

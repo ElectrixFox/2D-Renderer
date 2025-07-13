@@ -32,11 +32,34 @@ for (int i = 0; i < 3; i++)
     }
 }
 
-void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize) { *arr = realloc(*arr, elesize * nsize); }
+void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize)
+{
+void* ptr = realloc(*arr, elesize * nsize);
+if(ptr == NULL)
+    {
+    printf("\nERROR: The reallocation shat the bed");
+    free(ptr);
+    exit(1);
+    }
+else
+    {
+    *arr = ptr;
+    }
+}
 
 void ExpandByOne(void **arr, const unsigned int size, unsigned int elesize) { ExpandArray(arr, size, size + 1, elesize); }
 
-void ShrinkArrayByOne(void** arr, const unsigned int size, unsigned int elesize) { ExpandArray(arr, size, size - 1, elesize); }
+static void _ShrinkArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize)
+{
+ExpandArray(arr, osize, nsize, elesize);
+/*
+void* tmp = (void*)malloc(nsize * elesize);
+memcpy(tmp, *arr, nsize * sizeof(elesize));
+*arr = tmp;
+*/
+}
+
+void ShrinkArrayByOne(void** arr, const unsigned int size, unsigned int elesize) { _ShrinkArray(arr, size, size - 1, elesize); }
 
 static unsigned int findArrMin(unsigned int* arr, int size)
 {
