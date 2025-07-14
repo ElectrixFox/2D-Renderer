@@ -1,7 +1,6 @@
-#include "MathsOperations.h"
-
 #ifndef ARRAY_H
 #define ARRAY_H
+#include "MathsOperations.h"
 
 typedef struct Array
     {

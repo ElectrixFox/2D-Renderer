@@ -164,9 +164,6 @@ OutputLevel(grid, w, h);
 DrawLevel(&block_rp, w, h, grid);
 UpdateImmovableBlocks(&block_rp, w, h, grid);
 
-
-
-
 while(!glfwWindowShouldClose(window))   // main loop
     {
     checkUI(ui, ui_rp);
@@ -212,14 +209,15 @@ while(!glfwWindowShouldClose(window))   // main loop
             {
             printf("\nPlacing block");
             unsigned int rid = _PlaceBlockCustom(&block_rp, getActiveBlock(), cpos, 0.0f);
-            if(getBlockFromRenderID(rid) == BLOCK_IMMOVABLE_BLOCK)
+            getLevel(block_rp, &w, &h, &grid);
+            if(getBlockFromRenderID(rid) == BLOCK_IMMOVABLE_BLOCK);
                 UpdateImmovableBlocks(&block_rp, w, h, grid);
             }
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
         {
         getLevel(block_rp, &w, &h, &grid);
-        UpdateImmovableBlocks(&block_rp, w, h, grid);
+        // UpdateImmovableBlocks(&block_rp, w, h, grid);
         vec2 cpos = GetCursorPositionRelative(cam);
         if(PressedAnother(block_rp.tds, cpos))
             {
@@ -227,8 +225,8 @@ while(!glfwWindowShouldClose(window))   // main loop
             unsigned int ttrsid = getPressedBlock(block_rp.tds, cpos);
             unsigned int trid = block_rp.drabs.rids[findDrawablesTransform(block_rp.drabs, ttrsid)];
             RemoveBlock(&block_rp, trid);
-            if(getBlockFromRenderID(trid) == BLOCK_IMMOVABLE_BLOCK)
-                UpdateImmovableBlocks(&block_rp, w, h, grid);
+            if(getBlockFromRenderID(trid) == BLOCK_IMMOVABLE_BLOCK);
+                // UpdateImmovableBlocks(&block_rp, w, h, grid);
             }
         }
 

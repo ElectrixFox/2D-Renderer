@@ -34,6 +34,10 @@ for (int i = 0; i < 3; i++)
 
 void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize)
 {
+/*
+void* ptr = (void*)malloc(nsize * elesize);
+memcpy(ptr, *arr, nsize * sizeof(elesize));
+*/
 void* ptr = realloc(*arr, elesize * nsize);
 if(ptr == NULL)
     {
@@ -51,8 +55,9 @@ void ExpandByOne(void **arr, const unsigned int size, unsigned int elesize) { Ex
 
 static void _ShrinkArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize)
 {
-ExpandArray(arr, osize, nsize, elesize);
-/*
+// ExpandArray(arr, osize, nsize, elesize);
+
+/*/
 void* tmp = (void*)malloc(nsize * elesize);
 memcpy(tmp, *arr, nsize * sizeof(elesize));
 *arr = tmp;

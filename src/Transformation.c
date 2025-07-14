@@ -27,17 +27,33 @@ for (int i = 0; i < tds.size; i++)  // simple linear search
 return -1;
 }
 
-unsigned int AddTransformation(TransformationDetails *tds, vec2 pos, vec2 scale, float theta)
+static void increaseTransformations(TransformationDetails* tds)
+{
+const unsigned int n = tds->size;
+
+ExpandByOne(&tds->trsid, n, sizeof(unsigned int));
+ExpandByOne(&tds->pos, n, sizeof(vec2));
+ExpandByOne(&tds->scale, n, sizeof(vec2));
+ExpandByOne(&tds->angle, n, sizeof(float));
+
+tds->size++;
+}
+
+unsigned int AddTransformation(TransformationDetails* tds, vec2 pos, vec2 scale, float theta)
 {
 // static unsigned int id = 0; // a static incrementing counter to set the new ID as
 const unsigned int n = tds->size;
 unsigned int id = findNextIDAvailable(tds->trsid, tds->size);
 
 // make all the arrays bigger by one to accomodate for the new element
+/*
 ExpandByOne(&tds->trsid, n, sizeof(unsigned int));
 ExpandByOne(&tds->pos, n, sizeof(vec2));
 ExpandByOne(&tds->scale, n, sizeof(vec2));
 ExpandByOne(&tds->angle, n, sizeof(float));
+*/
+
+increaseTransformations(tds);
 
 
 // setting all the new details
@@ -46,7 +62,7 @@ tds->pos[n] = pos;
 tds->scale[n] = scale;
 tds->angle[n] = theta;
 
-tds->size++;    // increase the number of transforms
+// tds->size++;    // increase the number of transforms
 
 return tds->trsid[n];
 }

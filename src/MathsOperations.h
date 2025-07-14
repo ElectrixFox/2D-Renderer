@@ -57,7 +57,7 @@ void OutputMat3(mat3 A);
  * 
  * @warning Remember to pass the array as a pointer not just an array
  */
-void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize);
+inline void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned int elesize);
 
 /**
  * Increases the size of the passed array by one
@@ -68,7 +68,7 @@ void ExpandArray(void** arr, unsigned int osize, unsigned int nsize, unsigned in
  * 
  * @warning Remember to pass the array as a pointer not just an array
  */
-void ExpandByOne(void** arr, const unsigned int size, unsigned int elesize);
+inline void ExpandByOne(void** arr, const unsigned int size, unsigned int elesize);
 
 /**
  * Decreases the size of the passed array by one
