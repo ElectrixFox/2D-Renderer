@@ -15,6 +15,13 @@ typedef struct
     } SHADER_CONTAINER;
 static SHADER_CONTAINER shad_cont;
 
+typedef struct 
+    {
+    
+    } VAO_CONTAINER;
+static VAO_CONTAINER vao_cont;
+
+
 static int shaderExists(const char* vsfp, const char* fsfp)
 {
 int check = 0;
@@ -202,6 +209,53 @@ if(texfp != NULL)   // if there is a texture
     tex = CreateTexture(texfp);
     SetUniform1i(prog, "intexture", 0); // set the texture to be used (the 0th active texture)
     }
+
+return AddRenderDetail(rd, vao, prog, tex);
+}
+
+static unsigned int _CreateSpriteSheetRenderable(RenderDetails* rd, unsigned int shape, const char* vsfp, const char* fsfp, const char* texfp)
+{
+unsigned int vao, vbo, ibo, prog, tex = 0;
+
+if(!shaderExists(vsfp, fsfp))
+    {
+    prog = CreateShader(vsfp, fsfp);    // creates the shader object
+    AppendToArray(shad_cont.progs, prog);   // add the program to the shader array to enable for reuse
+    }
+else
+    {
+    prog = getShader(vsfp, fsfp);
+    printf("\nUsing cached");
+    }
+SetUniformM4(prog, "projection", getProjection(1020, 960, 1));  // setting up the projection
+
+if(texfp != NULL)   // if there is a texture
+    {
+    tex = CreateTexture(texfp);
+    SetUniform1i(prog, "intexture", 0); // set the texture to be used (the 0th active texture)
+    }
+
+int nosp = GetNumberOfSprites(shape);   // getting the number of sprites
+int spr = GetActiveSprite(shape);   // getting the sprite to show
+
+
+
+viBundle vbund = GetShapeVertices(shape);   // the bundle containing the vertices and count
+float* vertices = vbund.vi.vertices;
+
+viBundle ibund = GetShapeIndices(shape);    // the bundle containing the indices and count
+unsigned int* indices = ibund.vi.indices;
+
+vao = CreateVAO();  // creating the vao
+ibo = CreateIBO(indices, ibund.n); // creating the ibo
+BindIBO(ibo);  // binding the ibo to the vao
+vbo = CreateVBO(vertices, vbund.n);  // creating the vbo
+BindVBO(vbo);  // binding the vbo to the vao
+
+unsigned int ilay[1] = {3};
+VAOLayout layout = CreateVertexLayout(ilay, 5, 1);  // setting up the layout to receive
+AddToVertexLayout(&layout, 2);  // adding the texture coords to the layout
+InitialiseVertexLayout(layout); // initialising the layout to be used
 
 return AddRenderDetail(rd, vao, prog, tex);
 }
