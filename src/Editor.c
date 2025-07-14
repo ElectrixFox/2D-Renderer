@@ -24,6 +24,14 @@ setActiveBlock(getBlockFromRenderID(drabs.rids[index]));    // sets the active b
 
 void ApplyCamera(Camera cam, RenderDetails rds) { _ApplyCamera(cam, rds.shader, rds.size); }
 
+void ClearCamera(RenderDetails rds)
+{
+for (int i = 0; i < rds.size; i++)
+    {
+    SetUniformM4(rds.shader[i], "view", getM4ID());
+    }
+}
+
 void ApplyProjection(Camera cam, RenderDetails rds) { _ApplyProjection(cam, rds.shader, rds.size); }
 
 #pragma endregion

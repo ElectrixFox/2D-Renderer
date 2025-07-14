@@ -156,13 +156,19 @@ InitialiseBlockDetails();
 
 BuildSelectBar();
 
-int** grid;
-int w, h;
-ReadLevel("res/levels/level2.txt", &w, &h, &grid);
-
-OutputLevel(grid, w, h);
-DrawLevel(&block_rp, w, h, grid);
-UpdateImmovableBlocks(&block_rp, w, h, grid);
+    {
+    int** grid;
+    int w, h;
+    ReadLevel("res/levels/level3.txt", &w, &h, &grid);
+    
+    OutputLevel(grid, w, h);
+    if(w != 0 && h != 0)
+        {
+        DrawLevel(&block_rp, w, h, grid);
+        UpdateImmovableBlocks(&block_rp, w, h, grid);
+        }
+    free(grid);
+    }
 
 while(!glfwWindowShouldClose(window))   // main loop
     {
@@ -175,22 +181,31 @@ while(!glfwWindowShouldClose(window))   // main loop
     
     if(isHeldDown(GLFW_KEY_LEFT_CONTROL) && isPressedSingle(GLFW_KEY_S))
         {
+        int** grid;
+        int w, h;
         printf("\nSaving");
         getLevel(block_rp, &w, &h, &grid);
-        WriteLevel("res/levels/level2.txt", w, h, grid);
+        WriteLevel("res/levels/level3.txt", w, h, grid);
+        free(grid);
         }
 
     if(isPressedSingle(GLFW_KEY_TAB))
         {
+        int** grid;
+        int w, h;
         OutputRenderPacketDetails(block_rp);
         OutputRenderPacketDetails(ui_rp);
 
         getLevel(block_rp, &w, &h, &grid);
         OutputLevel(grid, w, h);
+        free(grid);
         }
     else if(isPressed(GLFW_KEY_0))
         {
+        int** grid;
+        int w, h;
         getLevel(block_rp, &w, &h, &grid);
+        free(grid);
         }
     else if(isPressed(GLFW_KEY_1))
         {
@@ -210,8 +225,11 @@ while(!glfwWindowShouldClose(window))   // main loop
             unsigned int rid = _PlaceBlockCustom(&block_rp, getActiveBlock(), cpos, 0.0f);
             if(getBlockFromRenderID(rid) == BLOCK_IMMOVABLE_BLOCK)
                 {
+                int** grid;
+                int w, h;
                 getLevel(block_rp, &w, &h, &grid);
                 UpdateImmovableBlocks(&block_rp, w, h, grid);
+                free(grid);
                 }
             }
         }
@@ -231,8 +249,11 @@ while(!glfwWindowShouldClose(window))   // main loop
 
             if(check == 1)
                 {
+                int** grid;
+                int w, h;
                 getLevel(block_rp, &w, &h, &grid);
                 UpdateImmovableBlocks(&block_rp, w, h, grid);
+                free(grid);
                 }
             }
         }
@@ -246,6 +267,7 @@ while(!glfwWindowShouldClose(window))   // main loop
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
     DrawRenderPacket(block_rp);
+    ClearCamera(ui_rp.rds);
     DrawRenderPacket(ui_rp);
     
     glfwSwapBuffers(window);
