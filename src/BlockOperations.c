@@ -23,10 +23,10 @@ position = snap_to_grid ? snapOperation(position) : position;   // do the snap o
 unsigned int rd = CreateSpriteRenderable(&rp->rds, bi.spfp, nosprites, sprite);
 unsigned int td = AddTransformation(&rp->tds, position, (vec2){25.0f, 25.0f}, theta);
 
-AddDrawable(&rp->drabs, td, rd);
 
 // setBlockSprite(&bltype, sprite);
 AssignBlock(rd, bltype);
+AddDrawable(&rp->drabs, td, rd);
 
 return rd;
 }

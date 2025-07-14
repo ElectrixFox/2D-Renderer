@@ -19,8 +19,8 @@ void InitialiseBlockDetails()
 blds.size = 0;
 
 // allocating a small bit of memory
-blds.rids = (unsigned int*)malloc(sizeof(unsigned int));
-blds.blocks = (BLOCK*)malloc(sizeof(BLOCK));
+blds.rids = malloc(sizeof(unsigned int) * 1024);
+blds.blocks = malloc(sizeof(BLOCK) * 1024);
 }
 
 unsigned int getBlockCount() { return BLOCK_COUNT; }
@@ -44,8 +44,10 @@ void AssignBlock(unsigned int rid, BLOCK block)
 const unsigned int n = blds.size;
 
 // make all the arrays bigger by one to accomodate for the new element
+/*
 ExpandByOne(&blds.rids, n, sizeof(unsigned int));
 ExpandByOne(&blds.blocks, n, sizeof(BLOCK));
+*/
 
 // setting all the new details
 blds.rids[n] = rid;

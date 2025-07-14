@@ -51,10 +51,10 @@ RenderDetails rd;   // creating the details
 rd.size = 0;    // setting the size to 0
 
 // allocating a small bit of memory
-rd.rid = (unsigned int*)malloc(sizeof(unsigned int));
-rd.vao = (unsigned int*)malloc(sizeof(unsigned int));
-rd.shader = (unsigned int*)malloc(sizeof(unsigned int));
-rd.texture = (unsigned int*)malloc(sizeof(unsigned int));
+rd.rid = malloc(1024 * sizeof(unsigned int));
+rd.vao = malloc(1024 * sizeof(unsigned int));
+rd.shader = malloc(1024 * sizeof(unsigned int));
+rd.texture = malloc(1024 * sizeof(unsigned int));
 
 return rd;
 }
@@ -115,10 +115,14 @@ if(n == 0)   // if the size is 0 then just reinitialise the render details
 SetUniformM4(shader, "view", getM4ID());
 
 // make all the arrays bigger by one to accomodate for the new element
+
+/*
 ExpandByOne(&rd->rid, n, sizeof(unsigned int));
 ExpandByOne(&rd->vao, n, sizeof(unsigned int));
 ExpandByOne(&rd->shader, n, sizeof(unsigned int));
 ExpandByOne(&rd->texture, n, sizeof(unsigned int));
+*/
+
 
 // setting all the new details
 rd->rid[n] = id;

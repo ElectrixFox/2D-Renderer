@@ -7,10 +7,10 @@ TransformationDetails tds;  // creating the details
 tds.size = 0;  // setting the size to 0
 
 // allocating a small bit of memory
-tds.trsid = (unsigned int*)malloc(sizeof(unsigned int));
-tds.pos = (vec2*)malloc(sizeof(vec2));
-tds.scale = (vec2*)malloc(sizeof(vec2));
-tds.angle = (float*)malloc(sizeof(float));
+tds.trsid = malloc(1024 * sizeof(unsigned int));
+tds.pos = malloc(1024 * sizeof(vec2));
+tds.scale = malloc(1024 * sizeof(vec2));
+tds.angle = malloc(1024 * sizeof(float));
 
 return tds;
 }
@@ -31,10 +31,12 @@ static void increaseTransformations(TransformationDetails* tds)
 {
 const unsigned int n = tds->size;
 
+/*
 ExpandByOne(&tds->trsid, n, sizeof(unsigned int));
 ExpandByOne(&tds->pos, n, sizeof(vec2));
 ExpandByOne(&tds->scale, n, sizeof(vec2));
 ExpandByOne(&tds->angle, n, sizeof(float));
+*/
 
 tds->size++;
 }

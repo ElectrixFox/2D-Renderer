@@ -5,8 +5,8 @@ Drawables InitialiseDrawables()
 Drawables drabs;
 drabs.size = 0;
 
-drabs.trsids = (unsigned int*)malloc(sizeof(unsigned int));
-drabs.rids = (unsigned int*)malloc(sizeof(unsigned int));
+drabs.trsids = malloc(1024 * sizeof(unsigned int));
+drabs.rids = malloc(1024 * sizeof(unsigned int));
 
 return drabs;
 }
@@ -16,8 +16,10 @@ int AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid)
 const unsigned int n = drabs->size;
 
 // make all the arrays bigger by one to accomodate for the new element
+/*
 ExpandByOne(&drabs->rids, n, sizeof(unsigned int));
 ExpandByOne(&drabs->trsids, n, sizeof(unsigned int));
+*/
 
 // setting all the new details
 drabs->rids[n] = rid;
