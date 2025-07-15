@@ -12,7 +12,7 @@ else
 	LIBS += -lm -lGL -lGLEW -lglfw3dll -ldl
 endif
 
-SRCFILES := $(wildcard src/*.c) main.c
+SRCFILES := $(wildcard src/*.c) main.c $(wildcard src/Rendering/*.c)
 OBJS := $(addprefix obj/, $(patsubst %.c, %.o, $(SRCFILES)))
 
 obj/%.o: %.c

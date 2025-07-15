@@ -1,5 +1,5 @@
 #pragma once
-#include "Buffer.h"
+#include "Rendering/Buffer.h"
 #include "Array.h"
 
 struct RenderDetails
