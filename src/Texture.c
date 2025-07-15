@@ -53,7 +53,7 @@ int width, height, nrChannels;
 unsigned char* data = stbi_load(path, &width, &height, &nrChannels, 0);
 if(!data)
     {
-    printf("\nERROR: Failed to load texture\n");
+    printf("ERROR: Failed to load texture\n");
     stbi_image_free(data);
     return -1;
     }

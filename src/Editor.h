@@ -1,5 +1,7 @@
 #pragma once
 #include "Drawable.h"
+#include "Block.h"
+#include "BlockOperations.h"
 #include "Camera.h"
 #include "Level.h"
 #include "SystemUI.h"
@@ -20,14 +22,14 @@
  * 
  * @returns The block type to be created
  */
-unsigned int getActiveBlock();
+BlockInfo getActiveBlock();
 
 /**
  * Sets the block to be created
  * 
  * @param block The block which should be used when blocks are created
  */
-void setActiveBlock(unsigned int block);
+void setActiveBlock(BlockInfo block);
 
 /**
  * Selects the block type to be placed

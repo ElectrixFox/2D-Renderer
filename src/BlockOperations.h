@@ -10,13 +10,13 @@
  * 
  * @param rds The rendering table
  * @param tds The transform table
- * @param block The block ID variable containing all of the information
+ * @param block The block information of the block to create
  * @param position Where to create the block
  * @param theta The angle of the block to be placed
  * 
  * @returns The render ID for the new block
  */
-unsigned int _PlaceBlockCustom(RenderPacket* rp, unsigned int block, vec2 position, float theta);
+unsigned int _PlaceBlockCustom(RenderPacket* rp, BlockInfo block, vec2 position, float theta);
 
 /**
  * Creates a block at the position with default scale (25x25)
