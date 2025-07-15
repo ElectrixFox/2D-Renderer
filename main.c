@@ -74,7 +74,6 @@ BuildSelectBar();
         DrawLevel(&block_rp, w, h, grid);
         UpdateImmovableBlocks(&block_rp, w, h, grid);
         }
-    free(grid);
     }
 
 while(!glfwWindowShouldClose(window))   // main loop
@@ -93,7 +92,6 @@ while(!glfwWindowShouldClose(window))   // main loop
         printf("\nSaving");
         getLevel(block_rp, &w, &h, &grid);
         WriteLevel("res/levels/level3.txt", w, h, grid);
-        free(grid);
         }
 
     if(isPressedSingle(GLFW_KEY_TAB))
@@ -105,14 +103,12 @@ while(!glfwWindowShouldClose(window))   // main loop
 
         getLevel(block_rp, &w, &h, &grid);
         OutputLevel(grid, w, h);
-        free(grid);
         }
     else if(isPressed(GLFW_KEY_0))
         {
         int** grid;
         int w, h;
         getLevel(block_rp, &w, &h, &grid);
-        free(grid);
         }
     else if(isPressed(GLFW_KEY_1))
         {
@@ -136,7 +132,6 @@ while(!glfwWindowShouldClose(window))   // main loop
                 int w, h;
                 getLevel(block_rp, &w, &h, &grid);
                 UpdateImmovableBlocks(&block_rp, w, h, grid);
-                free(grid);
                 }
             }
         }
@@ -160,8 +155,6 @@ while(!glfwWindowShouldClose(window))   // main loop
                 int w, h;
                 getLevel(block_rp, &w, &h, &grid);
                 UpdateImmovableBlocks(&block_rp, w, h, grid);
-                if(w != 1 && h != 1)
-                    free(grid);
                 }
             }
         }

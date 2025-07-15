@@ -1,56 +1,5 @@
 #include "RenderObject.h"
 
-typedef struct
-    {
-    char txfps[32][64];  // array of texture file paths
-    Array tex[32];  // array of textures
-    } TEXTURE_CONTAINER;
-static TEXTURE_CONTAINER tex_cont;
-
-typedef struct
-    {
-    char vsfps[32][64];  // array of vertex shader file paths
-    char fsfps[32][64];  // array of fragment shader file paths
-    Array progs[32];    // array of shaders
-    } SHADER_CONTAINER;
-static SHADER_CONTAINER shad_cont;
-
-typedef struct 
-    {
-    
-    } VAO_CONTAINER;
-static VAO_CONTAINER vao_cont;
-
-
-static int shaderExists(const char* vsfp, const char* fsfp)
-{
-int check = 0;
-
-int nfps = shad_cont.progs->size;
-    
-for (int i = 0; i < nfps; i++)  // loop through all of the file paths
-    if(strcmp(shad_cont.vsfps[i], vsfp) == 0) // if the file path is already in the array
-        return 1;
-
-// ASSUMPTION: If the vertex shader is unique then the fragment one is too
-strcpy(shad_cont.vsfps[nfps], vsfp);    // copy the new file path into the filepaths array
-strcpy(shad_cont.fsfps[nfps], fsfp);    // add the fragment shader too as then it keeps them together
-
-return 0;
-}
-
-static unsigned int getShader(const char* vsfp, const char* fsfp)
-{
-int check = 0;
-
-int nfps = shad_cont.progs->size;
-    
-for (int i = 0; i < nfps; i++)  // loop through all of the file paths
-    if(strcmp(shad_cont.vsfps[i], vsfp) == 0) // if the file path is already in the array
-        return shad_cont.progs->data[i];
-return 0;
-}
-
 RenderDetails InitialiseRenderDetails()
 {
 RenderDetails rd;   // creating the details
@@ -204,16 +153,7 @@ VAOLayout layout = CreateVertexLayout(ilay, 5, 1);  // setting up the layout to 
 AddToVertexLayout(&layout, 2);  // adding the texture coords to the layout
 InitialiseVertexLayout(layout); // initialising the layout to be used
 
-if(!shaderExists(vsfp, fsfp))
-    {
-    prog = CreateShader(vsfp, fsfp);    // creates the shader object
-    AppendToArray(shad_cont.progs, prog);   // add the program to the shader array to enable for reuse
-    }
-else
-    {
-    prog = getShader(vsfp, fsfp);
-    printf("\nUsing cached");
-    }
+prog = CreateShader(vsfp, fsfp);    // creates the shader object
 SetUniformM4(prog, "projection", getProjection(1020, 960, 1));  // setting up the projection
 
 if(texfp != NULL)   // if there is a texture
@@ -229,16 +169,8 @@ static unsigned int _CreateSpriteSheetRenderable(RenderDetails* rd, unsigned int
 {
 unsigned int vao, vbo, ibo, prog, tex = 0;
 
-if(!shaderExists(vsfp, fsfp))
-    {
-    prog = CreateShader(vsfp, fsfp);    // creates the shader object
-    AppendToArray(shad_cont.progs, prog);   // add the program to the shader array to enable for reuse
-    }
-else
-    {
-    prog = getShader(vsfp, fsfp);
-    printf("\nUsing cached");
-    }
+
+prog = CreateShader(vsfp, fsfp);    // creates the shader object
 SetUniformM4(prog, "projection", getProjection(1020, 960, 1));  // setting up the projection
 
 if(texfp != NULL)   // if there is a texture
