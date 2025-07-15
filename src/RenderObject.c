@@ -235,11 +235,6 @@ if(texfp != NULL)   // if there is a texture
     SetUniform1i(prog, "intexture", 0); // set the texture to be used (the 0th active texture)
     }
 
-int nosp = GetNumberOfSprites(shape);   // getting the number of sprites
-int spr = GetActiveSprite(shape);   // getting the sprite to show
-
-
-
 viBundle vbund = GetShapeVertices(shape);   // the bundle containing the vertices and count
 float* vertices = vbund.vi.vertices;
 
@@ -265,7 +260,7 @@ unsigned int CreateSpriteRenderable(RenderDetails* rd, const char* spfp, unsigne
 unsigned int shape = SQUARE;
 GeneralInitialise(&shape, sprites, sprite, SQUARE);
 
-return _CreateRenderable(rd, shape, "res/texvert.shader", "res/texfrag.shader", spfp);
+return _CreateSpriteSheetRenderable(rd, shape, "res/texvert.shader", "res/texfrag.shader", spfp);
 }
 
 unsigned int CreateSquareRenderable(RenderDetails* rd)

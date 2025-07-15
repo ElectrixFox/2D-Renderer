@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <pthread.h>
 
 #include <include/GL/glew.h>
 #include <include/GLFW/glfw3.h>
@@ -16,21 +17,6 @@
 #include "src/Editor.h"
 #include "src/SystemUI.h"
 
-void processInput(GLFWwindow* window)
-{
-if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  // if the escape key is pressed close the window
-    {
-    glfwSetWindowShouldClose(window, 1);
-    }
-if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-    {
-    /*double x, y;
-    vec2 posy = GetMousePositionRelative(window);
-    glfwGetCursorPos(window, &x, &y);
-    */
-    }
-}
-
 int gwid = 1280, ghig = 720;
 
 void on_window_resize(GLFWwindow* window, int width, int height)
@@ -44,86 +30,8 @@ UI_Table ui;
 RenderPacket ui_rp;
 InputManager inpman;
 
-void output(int ui_id)
-{
-printf("\nI have been pressed %d", ui_id);
-
-if(ui_id == 0)
-    {
-    unsigned int trsid = getUITransform(ui, ui_id);
-    unsigned int rid = ui_rp.drabs.rids[findDrawablesTransform(ui_rp.drabs, trsid)];
-    int index = getRenderDetailsIDIndex(ui_rp.rds, rid);
-    SetUniform4f(ui_rp.rds.shader[index], "colour", (vec4){1.0f, 0.62f, 0.0f, 1.0f});
-    }
-}
-
-void menoutput(int l)
-{
-printf("\nI the menu have been pressed %d", l);
-}
-
-/*
-enum tsl
-    {
-    BAJS,
-    SHIHIEWF,
-    WEFHIQWIFEH
-    };
-
-struct test
-    {
-    unsigned int* arr1;
-    vec3* arr2;
-    float* arr3;
-    enum tsl* arr4;
-    int size;
-    };
-
-
-void upd(struct test* tst)
-{
-const int n = tst->size;
-ExpandByOne(&tst->arr1, n, sizeof(unsigned int));
-ExpandByOne(&tst->arr2, n, sizeof(vec3));
-ExpandByOne(&tst->arr3, n, sizeof(float));
-ExpandByOne(&tst->arr4, n, sizeof(enum tsl));
-
-tst->arr1[n] = rand() % 100;
-tst->arr2[n] = (vec3){(float)rand() / rand() * (rand() % 11), (float)rand() / rand() * (rand() % 11), (float)rand() / rand() * (rand() % 11)};
-tst->arr3[n] = (float)(rand() / rand());
-tst->arr4[n] = (enum tsl)(rand() % 3);
-
-tst->size++;
-}
-*/
-
 int main()
 {
-/*
-struct test tst;
-printf("\n%d %d %d %d", sizeof(unsigned int*), sizeof(vec3*), sizeof(float*), sizeof(enum tsl*));
-tst.arr1 = (unsigned int*)malloc(sizeof(unsigned int));
-tst.arr2 = (vec3*)malloc(sizeof(vec3));
-tst.arr3 = (float*)malloc(sizeof(float));
-tst.arr4 = (enum tsl*)malloc(sizeof(enum tsl));
-
-tst.size = 0;
-const int n = 100;
-
-for (int i = 0; i < n; i++)
-    {
-    upd(&tst);
-    }
-
-for (int i = 0; i < n; i++)
-    {
-    printf("\n%10d\t(%2.2f, %2.2f, %2.2f)\t%-5.2f\t%2d", tst.arr1[i], tst.arr2[i].x, tst.arr2[i].y, tst.arr2[i].z, tst.arr3[i], tst.arr4[i]);
-    }
-
-
-return 0;
-*/
-
 unsigned int width = gwid;
 unsigned int height = ghig;
 
@@ -144,7 +52,6 @@ glewInit();
 glEnable(GL_BLEND);
 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-// InitialiseInput(window);
 Camera cam = CreateCamera((vec2){0, 0}, (vec2){gwid, ghig}, &gwid, &ghig);
 ui = InitialiseUI();
 ui_rp = InitialiseRenderPacket();
@@ -253,7 +160,8 @@ while(!glfwWindowShouldClose(window))   // main loop
                 int w, h;
                 getLevel(block_rp, &w, &h, &grid);
                 UpdateImmovableBlocks(&block_rp, w, h, grid);
-                free(grid);
+                if(w != 1 && h != 1)
+                    free(grid);
                 }
             }
         }
