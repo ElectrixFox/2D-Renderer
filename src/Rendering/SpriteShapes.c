@@ -50,7 +50,7 @@ unsigned int sprite = GetActiveSprite(shape);
 if(sprites == 1)    // if there is only one sprite
     sprite = 1; // default to the first sprite
 
-printf("\n%.2f / %.2f = %.2f", (float)sprite, (float)sprites, (float)sprite / (float)sprites);
+// printf("\n%.2f / %.2f = %.2f", (float)sprite, (float)sprites, (float)sprite / (float)sprites);
 
 switch (GetActiveShape(shape))  // gets the shape by masking
     {

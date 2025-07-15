@@ -50,6 +50,13 @@ void SelectBlock(Drawables drabs, unsigned int trsid);
 void ApplyCamera(Camera cam, RenderDetails rds);
 
 /**
+ * Clears the camera from all the following renderables
+ * 
+ * @param rds The render table
+ */
+void ClearCamera(RenderDetails rds);
+
+/**
  * Applies the projection matrix to all render details in the given table
  * 
  * @param cam The camera to apply

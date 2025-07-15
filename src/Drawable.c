@@ -5,8 +5,8 @@ Drawables InitialiseDrawables()
 Drawables drabs;
 drabs.size = 0;
 
-drabs.trsids = (unsigned int*)malloc(sizeof(unsigned int));
-drabs.rids = (unsigned int*)malloc(sizeof(unsigned int));
+drabs.trsids = malloc(1024 * sizeof(unsigned int));
+drabs.rids = malloc(1024 * sizeof(unsigned int));
 
 return drabs;
 }
@@ -16,8 +16,10 @@ int AddDrawable(Drawables* drabs, unsigned int trid, unsigned int rid)
 const unsigned int n = drabs->size;
 
 // make all the arrays bigger by one to accomodate for the new element
+/*
 ExpandByOne(&drabs->rids, n, sizeof(unsigned int));
 ExpandByOne(&drabs->trsids, n, sizeof(unsigned int));
+*/
 
 // setting all the new details
 drabs->rids[n] = rid;
@@ -85,23 +87,20 @@ end:
 drabs->size--;    // decrease the size so it is effectively not there
 }
 
-void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs)
+void DrawDrawables(const RenderDetails rds, const TransformationDetails tds, const Drawables drabs)
 {
 // getting all we will need from the transformation objects first
 m4* models = (m4*)malloc(drabs.size * sizeof(m4));  // getting all of the transformation matrices
 
-for (int i = 0; i < drabs.size; i++)    // setting the model matrices
+for (int i = 0; i < drabs.size; i++)    // getting  the model matrices
     models[i] = getTransformModelMatrix(tds, drabs.trsids[i]);
 
-// now do the rendering
-for (int i = 0; i < drabs.size; i++)    // setting all the uniforms
+for (int i = 0; i < drabs.size; i++)
     {
     const unsigned int prog = rds.shader[getRenderDetailsIDIndex(rds, drabs.rids[i])];  // may as well make this a constant here for efficiency
-    SetUniformM4(prog, "model", models[i]);
-    }
-
-for (int i = 0; i < drabs.size; i++)
+    SetUniformM4(prog, "model", models[i]); // setting the model matrix
     DrawRenderable(rds, drabs.rids[i]); // finally do the actual drawing
+    }
 }
 
 void OutputDrawables(Drawables drabs)
@@ -145,7 +144,7 @@ int index = AddDrawable(&rp->drabs, trsid, rid);    // adds the drawable
 return index;
 }
 
-void DrawRenderPacket(RenderPacket rp) { DrawDrawables(rp.rds, rp.tds, rp.drabs); }
+void DrawRenderPacket(const RenderPacket rp) { DrawDrawables(rp.rds, rp.tds, rp.drabs); }
 
 void OutputRenderPacketDetails(RenderPacket rp)
 {

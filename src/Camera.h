@@ -1,7 +1,7 @@
 #pragma once
 #include "MathsOperations.h"
 #include "InputManager.h"
-#include "Shader.h"
+#include "Rendering/Shader.h"
 
 struct Camera
     {

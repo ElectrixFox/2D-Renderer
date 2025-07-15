@@ -57,7 +57,7 @@ void RemoveDrawable(Drawables* drabs, RenderDetails* rds, TransformationDetails*
 
 void UpdateImmovables(TransformationDetails* tds, Drawables* drabs);
 
-void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs);
+void DrawDrawables(const RenderDetails rds, const TransformationDetails tds, const Drawables drabs);
 
 /**
  * Outputs the drawables table
@@ -93,7 +93,7 @@ int CreateBasicSquare(RenderPacket* rp, vec2 position, float scale, vec4 incol);
  * 
  * @param rp The render packet of the things to draw
  */
-void DrawRenderPacket(RenderPacket rp);
+void DrawRenderPacket(const RenderPacket rp);
 
 /**
  * Outputs all of the render packet details

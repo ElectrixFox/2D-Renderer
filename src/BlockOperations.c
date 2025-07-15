@@ -1,5 +1,30 @@
 #include "BlockOperations.h"
 
+#pragma region Block Manager
+
+void InitialiseBlockManager()
+{
+BlockManager bm;
+const int noblk = getBlockCount();  // gets the number of blocks
+const int nimstates = 6;    // the number of states for the immovable block
+
+RenderDetails rds;
+
+// doing all of the standard blocks
+for (int i = 0; i < noblk; i++)
+    {
+    BlockInfo bi = getBlockInfo(i);
+    unsigned int rid = CreateSpriteRenderable(&rds, bi.spfp, bi.nosp, bi.spr); // creates the sprite renderable
+    bm.block[i] = (BLOCK)i;
+    bm.rids[i] = rid;
+    }
+
+}
+
+#pragma endregion
+
+#pragma region Block Operations
+
 extern const int snap_to_grid;
 extern const int grid_size;
 
@@ -23,10 +48,10 @@ position = snap_to_grid ? snapOperation(position) : position;   // do the snap o
 unsigned int rd = CreateSpriteRenderable(&rp->rds, bi.spfp, nosprites, sprite);
 unsigned int td = AddTransformation(&rp->tds, position, (vec2){25.0f, 25.0f}, theta);
 
-AddDrawable(&rp->drabs, td, rd);
 
 // setBlockSprite(&bltype, sprite);
 AssignBlock(rd, bltype);
+AddDrawable(&rp->drabs, td, rd);
 
 return rd;
 }
@@ -232,25 +257,25 @@ switch (lnecnt)
             }
         else if((layout[0] || layout[2]) && (layout[1] || layout[3]))   // then it is a corner
             {
-            outputLayout(layout);
+            // outputLayout(layout);
             if(layout[0] && layout[1])  // top and right
                 {
-                printf("\nTop right");
+                // printf("\nTop right");
                 *angle = 90 * M_PI / 180;
                 }
             else if(layout[0] && layout[3]) // top and left
                 {
-                printf("\nTop left");
+                // printf("\nTop left");
                 *angle = 180 * M_PI / 180;
                 }
             else if(layout[2] && layout[3]) // bottom and left
                 {
-                printf("\nBottom left");
+                // printf("\nBottom left");
                 *angle = 270 * M_PI / 180;
                 }
             else if(layout[2] && layout[1]) // bottom and right
                 {
-                printf("\nBottom right");
+                // printf("\nBottom right");
                 *angle = 0 * M_PI / 180;
                 }
 
@@ -352,3 +377,5 @@ for (int i = 0; i < h; i++)
 
 return 0;
 }
+
+#pragma endregion

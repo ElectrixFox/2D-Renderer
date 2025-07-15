@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <pthread.h>
 
 #include <include/GL/glew.h>
 #include <include/GLFW/glfw3.h>
@@ -16,21 +17,6 @@
 #include "src/Editor.h"
 #include "src/SystemUI.h"
 
-void processInput(GLFWwindow* window)
-{
-if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  // if the escape key is pressed close the window
-    {
-    glfwSetWindowShouldClose(window, 1);
-    }
-if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-    {
-    /*double x, y;
-    vec2 posy = GetMousePositionRelative(window);
-    glfwGetCursorPos(window, &x, &y);
-    */
-    }
-}
-
 int gwid = 1280, ghig = 720;
 
 void on_window_resize(GLFWwindow* window, int width, int height)
@@ -43,24 +29,6 @@ printf("\n%dx%d", gwid, ghig);
 UI_Table ui;
 RenderPacket ui_rp;
 InputManager inpman;
-
-void output(int ui_id)
-{
-printf("\nI have been pressed %d", ui_id);
-
-if(ui_id == 0)
-    {
-    unsigned int trsid = getUITransform(ui, ui_id);
-    unsigned int rid = ui_rp.drabs.rids[findDrawablesTransform(ui_rp.drabs, trsid)];
-    int index = getRenderDetailsIDIndex(ui_rp.rds, rid);
-    SetUniform4f(ui_rp.rds.shader[index], "colour", (vec4){1.0f, 0.62f, 0.0f, 1.0f});
-    }
-}
-
-void menoutput(int l)
-{
-printf("\nI the menu have been pressed %d", l);
-}
 
 int main()
 {
@@ -84,7 +52,6 @@ glewInit();
 glEnable(GL_BLEND);
 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-// InitialiseInput(window);
 Camera cam = CreateCamera((vec2){0, 0}, (vec2){gwid, ghig}, &gwid, &ghig);
 ui = InitialiseUI();
 ui_rp = InitialiseRenderPacket();
@@ -96,13 +63,18 @@ InitialiseBlockDetails();
 
 BuildSelectBar();
 
-int** grid;
-int w, h;
-ReadLevel("res/levels/level2.txt", &w, &h, &grid);
-OutputLevel(grid, w, h);
-DrawLevel(&block_rp, w, h, grid);
-UpdateImmovableBlocks(&block_rp, w, h, grid);
-
+    {
+    int** grid;
+    int w, h;
+    ReadLevel("res/levels/level3.txt", &w, &h, &grid);
+    
+    OutputLevel(grid, w, h);
+    if(w != 0 && h != 0)
+        {
+        DrawLevel(&block_rp, w, h, grid);
+        UpdateImmovableBlocks(&block_rp, w, h, grid);
+        }
+    }
 
 while(!glfwWindowShouldClose(window))   // main loop
     {
@@ -115,13 +87,17 @@ while(!glfwWindowShouldClose(window))   // main loop
     
     if(isHeldDown(GLFW_KEY_LEFT_CONTROL) && isPressedSingle(GLFW_KEY_S))
         {
+        int** grid;
+        int w, h;
         printf("\nSaving");
         getLevel(block_rp, &w, &h, &grid);
-        WriteLevel("res/levels/level2.txt", w, h, grid);
+        WriteLevel("res/levels/level3.txt", w, h, grid);
         }
 
-    if(isPressed(GLFW_KEY_TAB))
+    if(isPressedSingle(GLFW_KEY_TAB))
         {
+        int** grid;
+        int w, h;
         OutputRenderPacketDetails(block_rp);
         OutputRenderPacketDetails(ui_rp);
 
@@ -130,6 +106,8 @@ while(!glfwWindowShouldClose(window))   // main loop
         }
     else if(isPressed(GLFW_KEY_0))
         {
+        int** grid;
+        int w, h;
         getLevel(block_rp, &w, &h, &grid);
         }
     else if(isPressed(GLFW_KEY_1))
@@ -139,7 +117,6 @@ while(!glfwWindowShouldClose(window))   // main loop
 
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         {
-        getLevel(block_rp, &w, &h, &grid);
         vec2 cpos = GetCursorPositionRelative(cam);
         vec2 ncpos = getCursorPosition();
         cpos.x = 5 * roundf(cpos.x / 5);
@@ -150,22 +127,35 @@ while(!glfwWindowShouldClose(window))   // main loop
             printf("\nPlacing block");
             unsigned int rid = _PlaceBlockCustom(&block_rp, getActiveBlock(), cpos, 0.0f);
             if(getBlockFromRenderID(rid) == BLOCK_IMMOVABLE_BLOCK)
+                {
+                int** grid;
+                int w, h;
+                getLevel(block_rp, &w, &h, &grid);
                 UpdateImmovableBlocks(&block_rp, w, h, grid);
+                }
             }
         }
     else if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
         {
-        getLevel(block_rp, &w, &h, &grid);
-        UpdateImmovableBlocks(&block_rp, w, h, grid);
         vec2 cpos = GetCursorPositionRelative(cam);
         if(PressedAnother(block_rp.tds, cpos))
             {
             printf("\nTrying to remove");
             unsigned int ttrsid = getPressedBlock(block_rp.tds, cpos);
             unsigned int trid = block_rp.drabs.rids[findDrawablesTransform(block_rp.drabs, ttrsid)];
+            int check = 0;  // the check to see if the immovables should be updated
+
+            if(getBlockFromRenderID(trid) == BLOCK_IMMOVABLE_BLOCK) check = 1;
+
             RemoveBlock(&block_rp, trid);
-            if(getBlockFromRenderID(trid) == BLOCK_IMMOVABLE_BLOCK)
+
+            if(check == 1)
+                {
+                int** grid;
+                int w, h;
+                getLevel(block_rp, &w, &h, &grid);
                 UpdateImmovableBlocks(&block_rp, w, h, grid);
+                }
             }
         }
 
@@ -178,11 +168,14 @@ while(!glfwWindowShouldClose(window))   // main loop
     glClear(GL_COLOR_BUFFER_BIT);   // clears colour buffer
 
     DrawRenderPacket(block_rp);
+    ClearCamera(ui_rp.rds);
     DrawRenderPacket(ui_rp);
     
     glfwSwapBuffers(window);
     glfwPollEvents();
     }
+
+glfwDestroyWindow(window);
 
 glfwTerminate();    // cleans up all the glfw objects
 

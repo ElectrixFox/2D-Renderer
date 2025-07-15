@@ -1,6 +1,7 @@
 #pragma once
 #include "MathsOperations.h"
-#include "SpriteShapes.h"
+#include "Rendering/SpriteShapes.h"
+#include <stddef.h>
 
 #pragma region Block Object
 

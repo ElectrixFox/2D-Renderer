@@ -29,6 +29,13 @@ void ReadLevel(const char* levelfp, int* w, int* h, int*** grid)
 {
 const char* filcont = readFile(levelfp);
 int l = strlen(filcont);
+if(l == 0)  // if the file is empty
+    {
+    // set the width and height to 0
+    *w = 0;
+    *h = 0;
+    return; // early return
+    }
 int gridw = 0;
 int gridh = 0;
 
