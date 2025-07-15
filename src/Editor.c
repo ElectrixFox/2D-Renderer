@@ -105,7 +105,7 @@ for (int i = 0; i < nblk; i++)
     if(ri.ssi.nosp > 1 && getBlockFromFilePath(bi.spfp) != BLOCK_IMMOVABLE_BLOCK)   // if there is more than one sprite and the block isn't the immovable type
         {
         RenderInformation tri;
-        tri.meni = (GUI_MENU){(Array){NULL, 0}, entry};
+        tri.meni = (GUI_MENU){(Array){NULL, NULL}, entry};
         unsigned int menhead = createUIElement(&ui, &ui_rp, position, 25.0f, UI_TYPE_MENU, tri);
         assignButtonAction(&ui, menhead, UI_TRIGGER_HOVER, &unfoldBlockOptions);
         RenderInformation ntri = getUIRenderInformation(ui, menhead);

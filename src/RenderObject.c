@@ -60,6 +60,8 @@ rd.size = 0;    // setting the size to 0
 // allocating a small bit of memory
 rd.rid = malloc(1024 * sizeof(unsigned int));
 rd.vao = malloc(1024 * sizeof(unsigned int));
+rd.vbo = malloc(1024 * sizeof(unsigned int));
+rd.ibo = malloc(1024 * sizeof(unsigned int));
 rd.shader = malloc(1024 * sizeof(unsigned int));
 rd.texture = malloc(1024 * sizeof(unsigned int));
 
@@ -92,25 +94,31 @@ if(index1 > rd->size || index2 > rd->size)
 // getting temporary stuff
 unsigned int tid = rd->rid[index1];
 unsigned int tvao = rd->vao[index1];
+unsigned int tvbo = rd->vbo[index1];
+unsigned int tibo = rd->ibo[index1];
 unsigned int tshader = rd->shader[index1];
 unsigned int ttexture = rd->texture[index1];
 
 // setting the swap to the other index
 rd->rid[index1] = rd->rid[index2];
 rd->vao[index1] = rd->vao[index2];
+rd->vbo[index1] = rd->vbo[index2];
+rd->ibo[index1] = rd->ibo[index2];
 rd->shader[index1] = rd->shader[index2];
 rd->texture[index1] = rd->texture[index2];
 
 // setting the other index to the first temp values
 rd->rid[index2] = tid;
 rd->vao[index2] = tvao;
+rd->vbo[index2] = tvbo;
+rd->ibo[index2] = tibo;
 rd->shader[index2] = tshader;
 rd->texture[index2] = ttexture;
 }
 
 static void BubbleSortRenderDetails(RenderDetails* rd);
 
-unsigned int AddRenderDetail(RenderDetails* rd, unsigned int vao, unsigned int shader, unsigned int texture)
+unsigned int AddRenderDetail(RenderDetails* rd, unsigned int vao, unsigned int vbo, unsigned int ibo, unsigned int shader, unsigned int texture)
 {
 // static unsigned int id = 0; // a static incrementing counter to set the new ID as
 const unsigned int n = rd->size;
@@ -134,6 +142,8 @@ ExpandByOne(&rd->texture, n, sizeof(unsigned int));
 // setting all the new details
 rd->rid[n] = id;
 rd->vao[n] = vao;
+rd->vbo[n] = vbo;
+rd->ibo[n] = ibo;
 rd->shader[n] = shader;
 rd->texture[n] = texture;
 
@@ -165,6 +175,8 @@ rd->size--; // decrease the size so it is effectively not there
 
 ShrinkArrayByOne(&rd->rid, n, sizeof(unsigned int));
 ShrinkArrayByOne(&rd->vao, n, sizeof(unsigned int));
+ShrinkArrayByOne(&rd->vbo, n, sizeof(unsigned int));
+ShrinkArrayByOne(&rd->ibo, n, sizeof(unsigned int));
 ShrinkArrayByOne(&rd->shader, n, sizeof(unsigned int));
 ShrinkArrayByOne(&rd->texture, n, sizeof(unsigned int));
 
@@ -210,7 +222,7 @@ if(texfp != NULL)   // if there is a texture
     SetUniform1i(prog, "intexture", 0); // set the texture to be used (the 0th active texture)
     }
 
-return AddRenderDetail(rd, vao, prog, tex);
+return AddRenderDetail(rd, vao, vbo, ibo, prog, tex);
 }
 
 static unsigned int _CreateSpriteSheetRenderable(RenderDetails* rd, unsigned int shape, const char* vsfp, const char* fsfp, const char* texfp)
@@ -252,7 +264,7 @@ VAOLayout layout = CreateVertexLayout(ilay, 5, 1);  // setting up the layout to 
 AddToVertexLayout(&layout, 2);  // adding the texture coords to the layout
 InitialiseVertexLayout(layout); // initialising the layout to be used
 
-return AddRenderDetail(rd, vao, prog, tex);
+return AddRenderDetail(rd, vao, vbo, ibo, prog, tex);
 }
 
 unsigned int CreateSpriteRenderable(RenderDetails* rd, const char* spfp, unsigned int sprites, unsigned int sprite)

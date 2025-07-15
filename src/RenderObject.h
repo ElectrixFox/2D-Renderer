@@ -6,6 +6,8 @@ struct RenderDetails
     {
     unsigned int* rid;
     unsigned int* vao;
+    unsigned int* vbo;
+    unsigned int* ibo;
     unsigned int* shader;
     unsigned int* texture;
     unsigned int size;
@@ -34,12 +36,14 @@ int getRenderDetailsIDIndex(RenderDetails rd, unsigned int rid);
  * 
  * @param rd A pointer to the details
  * @param vao The new vao to add
+ * @param vbo The new vbo to add
+ * @param ibo the new ibo to add
  * @param shader The new shader to add
  * @param texture The new texture to add
  * 
  * @returns The ID of the newly added detail object
  */
-unsigned int AddRenderDetail(RenderDetails* rd, unsigned int vao, unsigned int shader, unsigned int texture);
+unsigned int AddRenderDetail(RenderDetails* rd, unsigned int vao, unsigned int vbo, unsigned int ibo, unsigned int shader, unsigned int texture);
 
 /**
  * Removes a render object from the details

@@ -87,7 +87,7 @@ end:
 drabs->size--;    // decrease the size so it is effectively not there
 }
 
-void DrawDrawables(RenderDetails rds, TransformationDetails tds, Drawables drabs)
+void DrawDrawables(const RenderDetails rds, const TransformationDetails tds, const Drawables drabs)
 {
 // getting all we will need from the transformation objects first
 m4* models = (m4*)malloc(drabs.size * sizeof(m4));  // getting all of the transformation matrices
@@ -144,7 +144,7 @@ int index = AddDrawable(&rp->drabs, trsid, rid);    // adds the drawable
 return index;
 }
 
-void DrawRenderPacket(RenderPacket rp) { DrawDrawables(rp.rds, rp.tds, rp.drabs); }
+void DrawRenderPacket(const RenderPacket rp) { DrawDrawables(rp.rds, rp.tds, rp.drabs); }
 
 void OutputRenderPacketDetails(RenderPacket rp)
 {
