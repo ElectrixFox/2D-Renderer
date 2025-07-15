@@ -11,6 +11,22 @@
  * Sprite | Block
  */
 
+/**
+ * Block ID variable:
+ * 0        | 0 0 0 0 0 | 0 0 0 0 0 | 0 0 0 0 0
+ * Check    | No spr    | Sprites   | Block type
+ * 
+ * Lookup function for Block type to find the file path of the sprite sheet
+ * 
+ * ----------
+ * | Blocks |
+ * ----------
+ * | Bl ID  |
+ * | rid    |
+ * ----------
+ * 
+ */
+
 enum BLOCK {
     BLOCK_PLAYER = 0,
     BLOCK_MOVABLE_BARRIER = 1,
@@ -23,6 +39,14 @@ enum BLOCK {
 };
 typedef enum BLOCK BLOCK;
 
+struct BlockTable
+    {
+    unsigned int* blid;
+    unsigned int* rids;
+    unsigned int size;
+    };
+typedef struct BlockTable BlockTable;
+
 struct BlockInfo
     {
     const char* spfp;
@@ -31,37 +55,64 @@ struct BlockInfo
     };
 typedef struct BlockInfo BlockInfo;
 
-struct BlockDetails
-    {
-    unsigned int* rids;
-    BLOCK* blocks;
-    unsigned int size;
-    };
-typedef struct BlockDetails BlockDetails;
+/**
+ * Sets the sprite count for the block spritesheet
+ * 
+ * @param blid A pointer to the block ID
+ * @param nospr The number of sprites for the base block
+ */
+void setBlockSpriteCount(unsigned int* blid, unsigned int nospr);
+
+/**
+ * Gets the number of sprites for the block
+ * 
+ * @param blid The ID of the block
+ * 
+ * @returns The number of sprites of the block
+ */
+unsigned int getBlockSpriteCount(unsigned int blid);
 
 /**
  * Sets the active sprite of the block
  * 
- * @param block A pointer to the block variable
+ * @param blid A pointer to the block ID
  * @param spr The sprite to set the block
  */
-void setBlockSprite(unsigned int* block, unsigned int spr);
+void setBlockSprite(unsigned int* blid, unsigned int spr);
 
-unsigned int getBlockSprite(unsigned int block);
-
-void setBlockSpriteCount(unsigned int* block, unsigned int nospr);
-
-unsigned int getBlockSpriteCount(unsigned int block);
-
-void setBlockType(unsigned int* block, unsigned int type);
-
-unsigned int getBlockType(unsigned int block);
+/**
+ * Gets the sprite for the block
+ * 
+ * @param blid The ID of the block
+ * 
+ * @returns The sprite of the block
+ */
+unsigned int getBlockSprite(unsigned int blid);
 
 
 /**
- * Initialises the block details to enable assigning of blocks to drawables
+ * Sets the block type
+ * 
+ * @param blid A pointer to the block ID
+ * @param type The type of block
  */
-void InitialiseBlockDetails();
+void setBlockType(unsigned int* blid, unsigned int type);
+
+/**
+ * Gets the type of the block
+ * 
+ * @param blid The ID of the block
+ * 
+ * @returns The type of the block
+ */
+unsigned int getBlockType(unsigned int blid);
+
+unsigned int InitialiseBlockVariable(BLOCK bltype, unsigned int nosp, unsigned int spr);
+
+/**
+ * Initialises the block table to enable the render IDs to be assigned
+ */
+void InitialiseBlockTable();
 
 /**
  * Gets the number of blocks
@@ -70,6 +121,37 @@ void InitialiseBlockDetails();
  */
 unsigned int getBlockCount();
 
+unsigned int getRenderIDBlockVariable(unsigned int rid);
+
+/**
+ * Adds a block to the details
+ * 
+ * @param rid The ID of the renderable
+ * @param block The block to assign
+ */
+void AssignBlock(unsigned int rid, unsigned int block);
+
+/**
+ * Unassigns a block from the render object
+ * 
+ * @param blds A pointer to the details
+ * @param rid The ID of the object to remove
+ */
+void UnassignBlock(unsigned int rid);
+
+const char* getBlockFilePath(BLOCK block);
+
+BLOCK getDefaultBlockTypeFromFilePath(const char* spfp);
+
+BLOCK getBlockTypeFromFilePath(const char* spfp);
+
+BlockInfo getDefaultBlockInfo(BLOCK type);
+
+BLOCK getBlockTypeFromDetails(const char* spfp, unsigned int nosp, unsigned int spr);
+
+unsigned int getDefaultBlockInfoVar(BLOCK type);
+
+BlockInfo getBlockInfo(unsigned int blid);
 
 /**
  * Returns the index of the renderable
@@ -81,31 +163,32 @@ unsigned int getBlockCount();
 int getBlockRenderIndex(unsigned int rid);
 
 /**
+ * Finds the block type of the renderable
+ * 
+ * @param rid The ID of the renderable to find
+ * 
+ * @returns Returns the type of block of the renderable
+ */
+BLOCK getBlockTypeFromRenderID(unsigned int rid);
+
+
+/**
  * Finds the block of the renderable
  * 
  * @param rid The ID of the renderable to find
  * 
  * @returns Returns the block of the renderable
  */
-BLOCK getBlockFromRenderID(unsigned int rid);
+unsigned int getBlockFromRenderID(unsigned int rid);
 
 /**
- * Adds a block to the details
+ * Finds the block info of the renderable
  * 
- * @param rid The ID of the renderable
- * @param block The block to assign
- */
-void AssignBlock(unsigned int rid, BLOCK block);
-
-/**
- * Unassigns a block from the render object
+ * @param rid The ID of the renderable to find
  * 
- * @param blds A pointer to the details
- * @param rid The ID of the object to remove
+ * @returns Returns the block info of the renderable
  */
-void UnassignBlock(unsigned int rid);
-
-BlockInfo getBlockInfo(BLOCK block);
+BlockInfo getBlockInfoFromRenderID(unsigned int rid);
 
 enum BLOCK_IM_STATE {
     BLOCK_NULL,
@@ -127,23 +210,7 @@ typedef enum BLOCK_IM_STATE BLOCK_IM_STATE;
  */
 BlockInfo getImmovableBlock(BLOCK_IM_STATE state);
 
-/**
- * Gets the sprite count of the passed block
- * 
- * @param block The block to get
- * 
- * @returns The block info
- */
-int getSpriteCount(BLOCK block);
-
-/**
- * Finds the block from the path to its sprite sheet
- * 
- * @param fp The file path to the sprite sheet
- * 
- * @returns The block of the sprite
- */
-BLOCK getBlockFromFilePath(const char* fp);
+unsigned int getImmovableBlockInfoVar(BLOCK_IM_STATE state);
 
 /**
  * Finds the block from the details

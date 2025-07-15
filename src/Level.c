@@ -19,7 +19,7 @@ for (int y = 0; y < h; y++)
     {
     for (int x = 0; x < w; x++)
         {
-        printf("%d ", grid[y][x]);
+        printf("%4d ", grid[y][x]);
         }
     printf("\n");
     }
@@ -152,7 +152,7 @@ for (float y = maxy; miny <= y; y -= (float)grid_size)
             continue;
         unsigned int trid = rp.drabs.rids[findDrawablesTransform(rp.drabs, tid)]; // gets the render ID from the renderables
         int btype = (int)getBlockFromRenderID(trid) + 1;  // finding the type of block and adding 1
-        tgrid[ygrid][xgrid] = btype;    // setting the block
+        tgrid[ygrid][xgrid] = getBlockType(btype);    // setting the block
         }
     }
 
