@@ -1,5 +1,30 @@
 #include "BlockOperations.h"
 
+#pragma region Block Manager
+
+void InitialiseBlockManager()
+{
+BlockManager bm;
+const int noblk = getBlockCount();  // gets the number of blocks
+const int nimstates = 6;    // the number of states for the immovable block
+
+RenderDetails rds;
+
+// doing all of the standard blocks
+for (int i = 0; i < noblk; i++)
+    {
+    BlockInfo bi = getBlockInfo(i);
+    unsigned int rid = CreateSpriteRenderable(&rds, bi.spfp, bi.nosp, bi.spr); // creates the sprite renderable
+    bm.block[i] = (BLOCK)i;
+    bm.rids[i] = rid;
+    }
+
+}
+
+#pragma endregion
+
+#pragma region Block Operations
+
 extern const int snap_to_grid;
 extern const int grid_size;
 
@@ -352,3 +377,5 @@ for (int i = 0; i < h; i++)
 
 return 0;
 }
+
+#pragma endregion

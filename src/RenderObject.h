@@ -62,14 +62,14 @@ unsigned int CreateSquareRenderable(RenderDetails* rd);
  * 
  * @param rd Pointer the the render details
  * @param spfp File path to the sprite sheet
- * @param sprites Number of sprites on the sheet
- * @param sprite The sprite to render
+ * @param nosp Number of sprites on the sheet
+ * @param spr The sprite to render
  * 
  * @warning This only works for sprite sheets 75x75n where n is the number of sprites - it has only been tested in this case
  * 
  * @returns The ID of the render object
  */
-unsigned int CreateSpriteRenderable(RenderDetails* rd, const char* spfp, unsigned int sprites, unsigned int sprite);
+unsigned int CreateSpriteRenderable(RenderDetails* rd, const char* spfp, unsigned int nosp, unsigned int spr);
 
 /**
  * Just creates a standard coloured square

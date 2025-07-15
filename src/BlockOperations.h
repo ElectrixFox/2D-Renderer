@@ -2,6 +2,21 @@
 #include "Drawable.h"
 #include "Block.h"
 
+#ifndef BLOCK_MANAGER_H
+#define BLOCK_MANAGER_H
+
+struct BlockManager
+    {
+    const size_t size;
+    unsigned int* rids;
+    BLOCK* block;
+    };
+typedef struct BlockManager BlockManager;
+
+void InitialiseBlockManager();
+
+#endif
+
 #ifndef BLOCK_OPERATIONS_H
 #define BLOCK_OPERATIONS_H
 

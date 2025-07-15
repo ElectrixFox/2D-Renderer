@@ -165,25 +165,31 @@ if(texfp != NULL)   // if there is a texture
 return AddRenderDetail(rd, vao, vbo, ibo, prog, tex);
 }
 
-static unsigned int _CreateSpriteSheetRenderable(RenderDetails* rd, unsigned int shape, const char* vsfp, const char* fsfp, const char* texfp)
+static unsigned int _CreateSpriteSheetRenderable(RenderDetails* rd, unsigned int nosp, unsigned int spr, const char* vsfp, const char* fsfp, const char* texfp)
 {
 unsigned int vao, vbo, ibo, prog, tex = 0;
 
+// sorting out the vertices and indices
 
-prog = CreateShader(vsfp, fsfp);    // creates the shader object
-SetUniformM4(prog, "projection", getProjection(1020, 960, 1));  // setting up the projection
-
-if(texfp != NULL)   // if there is a texture
-    {
-    tex = CreateTexture(texfp);
-    SetUniform1i(prog, "intexture", 0); // set the texture to be used (the 0th active texture)
-    }
+unsigned int shape = 0;
+GeneralInitialise(&shape, nosp, spr, SQUARE);
 
 viBundle vbund = GetShapeVertices(shape);   // the bundle containing the vertices and count
 float* vertices = vbund.vi.vertices;
 
 viBundle ibund = GetShapeIndices(shape);    // the bundle containing the indices and count
 unsigned int* indices = ibund.vi.indices;
+
+// creating the shader
+prog = CreateShader(vsfp, fsfp);    // creates the shader object
+SetUniformM4(prog, "projection", getProjection(1020, 960, 1));  // setting up the projection
+
+// creating the texture
+if(texfp != NULL)   // if there is a texture
+    {
+    tex = CreateTexture(texfp);
+    SetUniform1i(prog, "intexture", 0); // set the texture to be used (the 0th active texture)
+    }
 
 vao = CreateVAO();  // creating the vao
 ibo = CreateIBO(indices, ibund.n); // creating the ibo
@@ -199,12 +205,9 @@ InitialiseVertexLayout(layout); // initialising the layout to be used
 return AddRenderDetail(rd, vao, vbo, ibo, prog, tex);
 }
 
-unsigned int CreateSpriteRenderable(RenderDetails* rd, const char* spfp, unsigned int sprites, unsigned int sprite)
+unsigned int CreateSpriteRenderable(RenderDetails* rd, const char* spfp, unsigned int nosp, unsigned int spr)
 {
-unsigned int shape = SQUARE;
-GeneralInitialise(&shape, sprites, sprite, SQUARE);
-
-return _CreateSpriteSheetRenderable(rd, shape, "res/texvert.shader", "res/texfrag.shader", spfp);
+return _CreateSpriteSheetRenderable(rd, nosp, spr, "res/texvert.shader", "res/texfrag.shader", spfp);
 }
 
 unsigned int CreateSquareRenderable(RenderDetails* rd)
